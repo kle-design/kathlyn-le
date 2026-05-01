@@ -1,0 +1,10 @@
+# Large media files — keep local, don't push to GitHub
+FinThrive/FT Dark Mode.png
+temporary screenshots/
+.claude/
+
+# Video files
+**/*.mp4
+
+# Large PDFs
+**/*.pdf

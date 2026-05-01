@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VendGo Case Study — k.le</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face { font-family:'JayaGiri'; src:url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype'); }
+    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Quicksand',sans-serif; background:#f2f4f8; color:#333; overflow-y:auto; overflow-x:hidden; cursor:none; }
+
+    /* ── Nav ── */
+    nav { position:fixed; top:0; left:0; right:0; z-index:35; display:flex; align-items:center; justify-content:space-between; padding:0 20%; height:54px; background:rgba(51,51,51,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .logo { font-family:'JayaGiri','Quicksand',sans-serif; font-size:22px; font-weight:600; color:#f2f4f8; letter-spacing:-0.02em; text-decoration:none; }
+    .nav-links { display:flex; gap:24px; }
+    .nav-links a { font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; color:rgba(255,255,255,.70); text-decoration:none; letter-spacing:.02em; transition:color .18s ease; }
+    .nav-links a:hover, .nav-links a.active { color:#fff; }
+
+    .page-wrap { padding-top:54px; }
+
+    /* ── Phone frames (no camera island, white fill) ── */
+    .vg-phone { position:relative; width:240px; height:520px; border-radius:44px; background:#fff; border:7px solid #111; overflow:hidden; box-shadow:0 32px 72px rgba(0,0,0,0.22),0 8px 24px rgba(0,0,0,0.12),inset 0 0 0 1px #2a2a2a; flex-shrink:0; }
+    .vg-phone::after { content:''; position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:76px; height:4px; background:#333; border-radius:2px; z-index:20; opacity:0.32; }
+    .vg-screen { position:absolute; inset:0; border-radius:37px; overflow:hidden; background:#fff; }
+    .vg-screen video { position:absolute; bottom:0; left:0; width:100%; height:100%; object-fit:cover; object-position:bottom; display:block; }
+
+    /* ── Three phones row ── */
+    .three-phones { display:flex; align-items:center; justify-content:center; gap:24px; padding:56px 20% 0; }
+
+    /* ── Two phones row ── */
+    .two-phones { display:flex; align-items:center; justify-content:center; gap:32px; margin:36px 0 28px; }
+
+    /* ── Tags + Title + Overview + Sidebar ── */
+    .cs-hero-info { padding:52px 20% 0; }
+    .cs-tags { font-size:11px; font-weight:600; color:#aaa; letter-spacing:0.14em; text-transform:uppercase; display:block; margin-bottom:20px; }
+    .cs-title { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:#333; letter-spacing:-0.04em; line-height:0.92; margin-bottom:40px; }
+    .hero-grid { display:grid; grid-template-columns:1fr 200px; gap:52px; align-items:start; padding-bottom:64px; }
+    .overview-text { font-size:15px; font-weight:400; color:#555; line-height:1.88; }
+    .overview-text + .overview-text { margin-top:14px; }
+    .hero-sidebar { display:flex; flex-direction:column; gap:22px; }
+    .sidebar-label { font-size:9px; font-weight:700; color:#bbb; letter-spacing:0.16em; text-transform:uppercase; display:block; margin-bottom:4px; }
+    .sidebar-value { font-size:13px; font-weight:600; color:#333; line-height:1.5; }
+
+    /* ── Section layout ── */
+    .cs-section { padding:64px 20%; }
+    .cs-divider { border:none; border-top:1px solid rgba(51,51,51,0.1); margin:0 20%; }
+    .sec-label { font-size:9px; font-weight:700; color:#aaa; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:14px; display:block; }
+    .sec-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(24px,2.8vw,40px); font-weight:700; color:#333; letter-spacing:-0.03em; line-height:1.1; margin-bottom:20px; }
+    .sec-body { font-size:15px; font-weight:400; color:#555; line-height:1.88; }
+    .sec-body + .sec-body { margin-top:14px; }
+    .sec-body strong { font-weight:600; color:#333; }
+
+    /* ── Section images ── */
+    .section-img { width:100%; display:block; border-radius:16px; margin-bottom:32px; box-shadow:0 8px 32px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.04); }
+    .section-img-below { width:100%; display:block; border-radius:16px; margin-top:32px; box-shadow:0 8px 32px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.04); }
+
+    /* ── Design bullets ── */
+    .design-bullets { margin-top:20px; display:flex; flex-direction:column; gap:14px; list-style:none; padding-left:0; }
+    .design-bullets li { font-size:14px; font-weight:400; color:#555; line-height:1.84; padding-left:22px; position:relative; }
+    .design-bullets li::before { content:'✦'; position:absolute; left:0; color:#ccc; font-size:9px; top:5px; }
+    .design-bullets strong { font-weight:600; color:#333; }
+
+    /* ── Embed (FigJam / Figma) ── */
+    .embed-wrap { width:100%; border-radius:12px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.05); margin-top:28px; }
+    .embed-wrap iframe { display:block; width:100%; border:none; }
+
+    /* ── Key insights dark strip ── */
+    .dark-strip { background:#333; border-radius:40px; padding:52px 20% 64px; margin:40px 0; }
+    .dark-strip .sec-label { color:rgba(242,244,248,0.45); }
+    .dark-strip .sec-heading { color:#f2f4f8; }
+    .dark-strip .sec-body { color:rgba(242,244,248,0.82); }
+    .dark-strip .sec-body strong { color:#f2f4f8; }
+    .insight-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:32px; }
+    .insight-card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.09); border-radius:16px; padding:28px 24px; }
+    .insight-num { font-size:9px; font-weight:700; color:rgba(242,244,248,0.4); letter-spacing:0.16em; text-transform:uppercase; margin-bottom:12px; display:block; }
+    .insight-heading { font-family:'Quicksand',sans-serif; font-size:13px; font-weight:600; color:#f2f4f8; letter-spacing:0.08em; text-transform:uppercase; line-height:1.3; margin-bottom:10px; }
+    .insight-body { font-size:14px; font-weight:400; color:rgba(242,244,248,0.65); line-height:1.72; }
+
+    /* ── SUS + testing ── */
+    .sus-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:28px 0; }
+    .sus-stat { background:#fff; border:1px solid rgba(51,51,51,0.08); border-radius:14px; padding:24px 20px; }
+    .sus-num { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(28px,3vw,42px); font-weight:700; color:#333; letter-spacing:-0.03em; margin-bottom:6px; }
+    .sus-lbl { font-size:12px; font-weight:500; color:#777; line-height:1.5; }
+    .task-list { display:flex; flex-direction:column; gap:10px; margin-top:20px; list-style:none; padding-left:0; }
+    .task-list li { font-size:14px; color:#555; line-height:1.78; padding-left:22px; position:relative; }
+    .task-list li::before { content:'✦'; position:absolute; left:0; color:#ccc; font-size:9px; top:4px; }
+    .improvement-cols { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:28px; }
+    .imp-col h4 { font-size:11px; font-weight:700; color:#333; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:14px; }
+    .imp-list { list-style:none; padding-left:0; display:flex; flex-direction:column; gap:10px; }
+    .imp-list li { font-size:14px; color:#555; line-height:1.78; padding-left:20px; position:relative; }
+    .imp-list li::before { content:'✦'; position:absolute; left:0; color:#ccc; font-size:9px; top:4px; }
+    .takeaway-list { display:flex; flex-direction:column; gap:10px; margin-top:20px; list-style:none; padding-left:0; counter-reset:tk; }
+    .takeaway-list li { font-size:14px; color:#555; line-height:1.78; padding-left:32px; position:relative; }
+    .takeaway-list li::before { counter-increment:tk; content:counter(tk); position:absolute; left:0; width:20px; height:20px; background:#333; color:#f2f4f8; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; top:2px; }
+
+    /* ── Reflection dark strip ── */
+    .reflect-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(22px,2.8vw,36px); font-weight:700; color:#f2f4f8; letter-spacing:-0.03em; line-height:1.15; margin-bottom:24px; max-width:680px; }
+    .reflect-bullets { list-style:none; padding-left:0; display:flex; flex-direction:column; gap:12px; margin-top:20px; }
+    .reflect-bullets li { font-size:15px; color:rgba(242,244,248,0.82); line-height:1.84; padding-left:22px; position:relative; }
+
+    /* ── Mobile Nav ── */
+    .nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; padding:6px; z-index:36; cursor:none; }
+    .nav-hamburger span { display:block; width:22px; height:2px; background:#f2f4f8; border-radius:1px; transition:transform .25s ease, opacity .2s ease; }
+    .nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity:0; }
+    .nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+    .nav-mobile { display:none; position:fixed; top:54px; left:0; right:0; background:rgba(30,30,30,0.98); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); z-index:34; flex-direction:column; padding:8px 24px 16px; border-top:1px solid rgba(255,255,255,0.08); }
+    .nav-mobile.open { display:flex; }
+    .nav-mobile a { font-family:'Quicksand',sans-serif; font-size:15px; font-weight:500; color:rgba(255,255,255,0.75); text-decoration:none; padding:13px 0; border-bottom:1px solid rgba(255,255,255,0.07); display:block; transition:color .18s ease; letter-spacing:.02em; }
+    .nav-mobile a:last-child { border-bottom:none; }
+    .nav-mobile a:hover, .nav-mobile a.active { color:#fff; }
+
+    /* ── Responsive ── */
+    @media (max-width:768px) {
+      nav { padding:0 20px; }
+      .nav-links { display:none; }
+      .nav-hamburger { display:flex; }
+
+      .three-phones, .two-phones { flex-wrap:wrap; gap:16px; padding:20px 16px 0; justify-content:center; }
+      .vg-phone { width:160px; height:346px; border-radius:30px; border-width:5px; }
+      .vg-phone::after { width:52px; height:3px; }
+      .vg-screen { border-radius:25px; }
+
+      .cs-hero-info { padding:28px 20px 0; }
+      .cs-title { margin-bottom:24px; }
+      .hero-grid { grid-template-columns:1fr; gap:24px; padding-bottom:36px; }
+      .hero-sidebar { flex-direction:row; flex-wrap:wrap; gap:12px 24px; padding-top:16px; border-top:1px solid rgba(51,51,51,0.1); }
+
+      .cs-section { padding:32px 20px; }
+      .cs-divider { margin:0 20px; }
+      .dark-strip { padding:32px 20px 40px; border-radius:20px; margin:20px 0; }
+
+      .insight-grid { grid-template-columns:1fr; gap:12px; }
+      .sus-stats { grid-template-columns:1fr 1fr; gap:10px; }
+      .improvement-cols { grid-template-columns:1fr; gap:24px; }
+
+      footer { padding:40px 20px 32px; }
+      .footer-links { gap:16px; flex-wrap:wrap; justify-content:center; }
+    }
+
+    @media (min-width:769px) and (max-width:1024px) {
+      nav { padding:0 5%; }
+      .three-phones, .two-phones { padding:36px 5% 0; }
+      .cs-hero-info { padding:40px 5% 0; }
+      .cs-section { padding:52px 5%; }
+      .cs-divider { margin:0 5%; }
+      .dark-strip { padding:44px 5% 52px; }
+      .insight-grid { grid-template-columns:repeat(2,1fr); }
+    }
+    .reflect-bullets li::before { content:'✦'; position:absolute; left:0; color:rgba(242,244,248,0.35); font-size:9px; top:5px; }
+
+    /* ── Footer ── */
+    footer { text-align:center; padding:64px 40px 48px; display:flex; flex-direction:column; align-items:center; gap:20px; background:#f2f4f8; border-top:1px solid rgba(51,51,51,0.08); }
+    .footer-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(20px,2.4vw,30px); font-weight:700; color:#333; letter-spacing:-0.06em; }
+    .footer-links { display:flex; gap:32px; }
+    .footer-links a { font-size:14px; font-weight:700; color:#333; opacity:.75; text-decoration:none; transition:opacity .2s; }
+    .footer-links a:hover { opacity:1; }
+    .footer-copy { font-size:13px; font-weight:400; color:#999; }
+
+    /* ── Cursor ── */
+    #cdot { position:fixed; z-index:9999; width:6px; height:6px; border-radius:50%; background:rgba(51,51,51,.55); transform:translate(-50%,-50%); pointer-events:none; }
+    #cring { position:fixed; z-index:9998; width:32px; height:32px; border-radius:50%; border:1px solid rgba(51,51,51,.22); transform:translate(-50%,-50%); pointer-events:none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">k.l&#234;</a>
+  <div class="nav-links">
+    <a href="index.html#projects" class="active">Work</a>
+    <a href="about.html">About</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="index.html#projects" class="active">Work</a>
+  <a href="about.html">About</a>
+  <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+</div>
+
+<div class="page-wrap">
+
+  <!-- ── HERO: Three phone videos ── -->
+  <div class="three-phones">
+    <div class="vg-phone">
+      <div class="vg-screen">
+        <video src="VendGo Projects Page/VG2.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+    <div class="vg-phone">
+      <div class="vg-screen">
+        <video src="VendGo Projects Page/VG1.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+    <div class="vg-phone">
+      <div class="vg-screen">
+        <video src="VendGo Projects Page/VG3.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tags + Title + Overview + Sidebar ── -->
+  <div class="cs-hero-info">
+    <span class="cs-tags">UX Design &#x2726; Usability Testing &#x2726; Wireframing</span>
+    <h1 class="cs-title">VendGo</h1>
+    <div class="hero-grid">
+      <div>
+        <p class="overview-text">VendGo is a local vendor app prototype designed to help users discover nearby shops, pop-up markets, and events while giving vendors a dedicated space to reach their community. The design process took us from research and persona development all the way through to a high-fidelity prototype, including a round of usability testing that shaped the final version. This was a school project built as a team of four.</p>
+      </div>
+      <div class="hero-sidebar">
+        <div>
+          <span class="sidebar-label">Role</span>
+          <span class="sidebar-value">UX Designer &amp; Researcher</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Timeline</span>
+          <span class="sidebar-value">Fall 2023</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Tools</span>
+          <span class="sidebar-value">Figma, FigJam</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Team</span>
+          <span class="sidebar-value">6 designers</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- ── PROBLEM ── -->
+  <div class="cs-section">
+    <span class="sec-label">The Problem</span>
+    <h2 class="sec-heading">the vendors worth finding don't show up on Google</h2>
+    <p class="sec-body">Local markets, pop-up shops, and craft vendors are some of the most interesting parts of a city, and they're basically invisible online. Yelp and Google Maps are built for brick-and-mortar businesses with fixed addresses. If you want to find your favorite food truck or that jewelry vendor from last month's market, your best bet is a friend who already knew about them.</p>
+    <p class="sec-body">We wanted to change that which is how this whole app idea started for our project. The goal was to build something that actually served both sides of this community: shoppers looking for local finds and vendors trying to reach them.</p>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- ── RESEARCH ── -->
+  <div class="cs-section">
+    <span class="sec-label">Research</span>
+    <h2 class="sec-heading">getting to know the problem firsthand</h2>
+    <img src="VendGo Projects Page/Research Phase.PNG" alt="Research phase" class="section-img" />
+    <p class="sec-body">Before opening Figma, we ran interviews and surveys with fellow classmates to build a real picture of how people discover local vendors and what was getting in the way. We wanted to understand the who, what, why, and how of our target audience: who was actually looking for local vendors, what they were trying to do, why current tools kept falling short, and how they go about finding local businesses today.</p>
+    <p class="sec-body">From those conversations, we built user personas to give our findings a face and a story. Creating specific personas helped us stay anchored to real people throughout the rest of the process rather than designing for abstract assumptions. We also mapped out recurring pain points from the research, from algorithm-buried social posts to having to check multiple platforms just to find out if a market was even open that weekend. Those pain points became the foundation for every feature decision we made going forward.</p>
+    <ul class="design-bullets" style="margin-top:24px;">
+      <li><strong>Interviews and surveys</strong> with classmates revealed that word of mouth was still the dominant way people heard about local vendors, not apps or search engines</li>
+      <li><strong>User personas</strong> helped us address the needs of both shoppers browsing for local finds and vendors trying to build a consistent audience outside of social media</li>
+      <li><strong>Pain point mapping</strong> surfaced recurring frustrations: fragmented discovery across platforms, unpredictable social reach for vendors, and no single place to track local events</li>
+    </ul>
+    <img src="VendGo Projects Page/Personas.PNG" alt="User personas" class="section-img-below" />
+  </div>
+
+  <!-- ── BRAINSTORMING ── -->
+  <div class="cs-section">
+    <span class="sec-label">Process</span>
+    <h2 class="sec-heading">brainstorming: getting everything out of our heads</h2>
+    <p class="sec-body">Before anyone started sketching, we ran a full brainstorming session in FigJam. We mapped out user needs, feature ideas, and pain points all at once without filtering anything yet. This session is where we landed on the core features we knew the app had to have: vendor discovery, a filter system, vendor profiles, and accessibility options like dark mode.</p>
+    <p class="sec-body">Having everyone contribute to the same board early on meant we were aligned on direction before splitting into individual workstreams. It made the handoff to lo-fi a lot smoother.</p>
+  </div>
+
+  <!-- ── KEY INSIGHTS (dark strip, after brainstorming) ── -->
+  <div class="dark-strip">
+    <span class="sec-label">Key Insights</span>
+    <h2 class="sec-heading">three things we kept coming back to</h2>
+    <div class="insight-grid">
+      <div class="insight-card">
+        <span class="insight-num">01</span>
+        <h3 class="insight-heading">Discovery is luck, not design.</h3>
+        <p class="insight-body">Nobody had a system for finding local vendors. People relied on friends, chance encounters, or checking five different apps. There was no intentional experience holding any of it together.</p>
+      </div>
+      <div class="insight-card">
+        <span class="insight-num">02</span>
+        <h3 class="insight-heading">The motivation to buy local is already there.</h3>
+        <p class="insight-body">We didn't need to convince anyone to support small vendors. People wanted to. They just needed a path from intention to action that didn't require that much effort.</p>
+      </div>
+      <div class="insight-card">
+        <span class="insight-num">03</span>
+        <h3 class="insight-heading">This problem has two sides.</h3>
+        <p class="insight-body">Any solution had to work for both shoppers and vendors. An app with a great discovery experience but incomplete vendor listings would fail from day one.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LO-FI WIREFRAMES ── -->
+  <div class="cs-section">
+    <span class="sec-label">Process</span>
+    <h2 class="sec-heading">lo-fi wireframes: two rounds, one team</h2>
+    <img src="VendGo Projects Page/VendGo Lo-Fi.png" alt="VendGo lo-fi wireframes" class="section-img" />
+    <p class="sec-body">Once we had our feature list, each team member took ownership of a different section of the app and sketched lo-fi versions of what those flows could look like. Splitting up the features meant we could cover more ground quickly and bring different perspectives to the same problem before coming back together.</p>
+    <p class="sec-body">We went through two full rounds of low-fidelity wireframes. The first round was about getting ideas down and figuring out what was missing. The second incorporated feedback and refined layout and flow before we moved into high-fidelity. Each round was reviewed with real people, which led to some real structural changes before we ever touched color or type.</p>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- ── COLOR & BRANDING ── -->
+  <div class="cs-section">
+    <span class="sec-label">Process</span>
+    <h2 class="sec-heading">color and branding: setting the visual direction</h2>
+    <p class="sec-body">Deciding on the visual identity was one of the more collaborative parts of the project. We chose a muted <strong>olive green</strong> as our primary color because local markets are outdoor, organic spaces. Green communicates freshness and community without the sterile feel of a tech-forward palette. A <strong>warm terracotta accent</strong> nods to the handmade, artisan character of the vendor scene. Together they felt authentic to the kind of people and places the app was built around.</p>
+    <p class="sec-body">We built out a shared component library in Figma to keep everything consistent as we worked in parallel. Every button, card, icon, and input state was defined and documented before we started applying them to screens. Having that system in place made it much easier to stay aligned as a team and move faster through the high-fidelity phase without second-guessing visual decisions.</p>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- ── HIGH-FIDELITY ── -->
+  <div class="cs-section">
+    <span class="sec-label">Design</span>
+    <h2 class="sec-heading">high-fidelity: where it all came together</h2>
+    <p class="sec-body">The high-fidelity prototype brought together everything we had learned across the lo-fi process, testing feedback, and branding work. Every screen was designed with a real user task in mind, and the visual polish came after the structure was solid.</p>
+  </div>
+
+  <div class="three-phones" style="padding-top:0; padding-bottom:0;">
+    <div class="vg-phone">
+      <div class="vg-screen">
+        <video src="VendGo Projects Page/VG3.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+    <div class="vg-phone">
+      <div class="vg-screen">
+        <video src="VendGo Projects Page/MicrosoftTeams-video (5).mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+    <div class="vg-phone">
+      <div class="vg-screen">
+        <video src="VendGo Projects Page/VG2.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DARK MODE ── -->
+  <div class="cs-section">
+    <span class="sec-label">Design</span>
+    <h2 class="sec-heading">dark mode: built in from the start</h2>
+    <p class="sec-body">Dark mode wasn't an afterthought. We scoped it into the project early and treated it as an equally important version of the experience. We adjusted contrast ratios across every screen, tested text legibility in low-light conditions, and made sure our olive green and terracotta palette translated just as well on dark backgrounds as it did on light ones. Every interactive state, icon, and text level was reviewed to make sure the dark version held up the same way the light version did.</p>
+    <div class="two-phones">
+      <div class="vg-phone">
+        <div class="vg-screen">
+          <video src="VendGo Projects Page/MicrosoftTeams-video (1).mp4" muted autoplay loop playsinline></video>
+        </div>
+      </div>
+      <div class="vg-phone">
+        <div class="vg-screen">
+          <video src="VendGo Projects Page/MicrosoftTeams-video.mp4" muted autoplay loop playsinline></video>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- ── USABILITY TESTING ── -->
+  <div class="cs-section">
+    <span class="sec-label">Usability Testing</span>
+    <h2 class="sec-heading">8 tasks, real feedback, honest results</h2>
+    <p class="sec-body">Each participant was asked to navigate through our prototype and complete 8 tasks. We used the System Usability Scale to measure how intuitive the experience felt overall. The results pointed us toward clear areas to improve.</p>
+
+    <img src="VendGo Projects Page/Overall SUS Scores.PNG" alt="Overall SUS Scores" class="section-img" style="margin-top:32px; max-width:60%; display:block; margin-left:auto; margin-right:auto;" />
+
+    <div class="sus-stats">
+      <div class="sus-stat">
+        <div class="sus-num">57.2</div>
+        <div class="sus-lbl">SUS Mean Score</div>
+      </div>
+      <div class="sus-stat">
+        <div class="sus-num">25.6</div>
+        <div class="sus-lbl">Total Raw Average</div>
+      </div>
+      <div class="sus-stat">
+        <div class="sus-num">2.33</div>
+        <div class="sus-lbl">Raw Average Per SUS Question</div>
+      </div>
+    </div>
+
+    <p class="sec-body" style="margin-top:8px;">Tasks participants completed:</p>
+    <ul class="task-list">
+      <li><strong>Task 1:</strong> Sign up and make an account on VendGo</li>
+      <li><strong>Task 2:</strong> Like an event</li>
+      <li><strong>Task 3:</strong> RSVP for an event</li>
+      <li><strong>Task 4:</strong> Check an event host's profile</li>
+      <li><strong>Task 5:</strong> Check your own user profile</li>
+      <li><strong>Task 6:</strong> Check upcoming events</li>
+      <li><strong>Task 7:</strong> Find a vendor's products</li>
+      <li><strong>Task 8:</strong> Filter out searches</li>
+    </ul>
+
+    <h3 style="font-size:15px;font-weight:700;color:#333;margin:40px 0 16px;letter-spacing:-0.01em;">Plans for Improvement</h3>
+    <p class="sec-body">Based on user suggestions and critique, we compiled a list of changes to address in our next iteration, as well as new features to explore:</p>
+    <div class="improvement-cols">
+      <div class="imp-col">
+        <h4>Fixes</h4>
+        <ul class="imp-list">
+          <li>Added back arrows on the vendor host page</li>
+          <li>RSVP confirmation no longer redirects to the calendar page unexpectedly</li>
+          <li>User icon now links directly to the user info page</li>
+          <li>Sign-up text made darker for better visibility</li>
+          <li>Added profile picture next to event host name</li>
+          <li>Expanded the "forgot my password" flow</li>
+        </ul>
+      </div>
+      <div class="imp-col">
+        <h4>New Features</h4>
+        <ul class="imp-list">
+          <li>Down arrow on search bar for better filter indication</li>
+          <li>Events and products merged into a single "post" button for event host pages</li>
+          <li>"Follow" button added to event host profiles</li>
+          <li>Checkout page for in-app purchases</li>
+          <li>Direct messaging page for buyer-seller communication</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:700;color:#333;margin:40px 0 16px;letter-spacing:-0.01em;">Takeaways From Testing</h3>
+    <ol class="takeaway-list">
+      <li>Most tasks were completed with a 100% success rate, except "Check Your Profile" and "Check Upcoming Events"</li>
+      <li>The app scored below average usability on the SUS, pointing to real structural issues we needed to address</li>
+      <li>The User Profile and Event Host pages were hard for users to tell apart</li>
+      <li>There was confusion between the Events Page, Upcoming Events Page, and the Calendar</li>
+      <li>Certain text needed more contrast for readability</li>
+      <li>Nav bar icons needed adjustment so users could tell when they were on or off a page</li>
+      <li>Users wanted better tools to sort and filter information</li>
+      <li>More buttons to confirm completion and return to previous pages were needed</li>
+    </ol>
+  </div>
+
+  <div class="three-phones">
+    <div class="vg-phone">
+      <div class="vg-screen">
+        <video src="VendGo Projects Page/VG2.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+    <div class="vg-phone">
+      <div class="vg-screen">
+        <video src="VendGo Projects Page/VG1.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+    <div class="vg-phone">
+      <div class="vg-screen">
+        <video src="VendGo Projects Page/VG3.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── REFLECTION: dark strip ── -->
+  <div class="dark-strip">
+    <span class="sec-label">Reflection</span>
+    <h2 class="reflect-heading">designing all the way through: research to final product</h2>
+    <p class="sec-body">VendGo was a school project, but it gave us a chance to go through the full design process as a team. Here's what I took away from it:</p>
+    <ul class="reflect-bullets">
+      <li>Going through research, brainstorming, lo-fi, iterations, hi-fi, usability testing, and presenting to a final audience in one project gave me a real sense of how each phase connects to the next</li>
+      <li>Usability testing changed how I think about design decisions. Reading your own work with a user in front of you is completely different from reviewing it yourself. The SUS results and task observations pushed us to make changes we wouldn't have caught on our own</li>
+      <li>Keeping the user in mind at every stage, especially when implementing fixes after testing, meant we had to make decisions that weren't always the easiest or most visually exciting ones</li>
+      <li>Working as part of a team on a shared Figma file and FigJam board helped me practice staying aligned and communicating design decisions clearly, not just making them</li>
+      <li>This project was where I got real practice in prototyping, building component systems, and iterating based on structured feedback</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  <h2 class="footer-heading">thanks for stopping by, let's chat!</h2>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/kathlyn-le/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:kathlynle.design@gmail.com">kathlynle.design@gmail.com</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Kathlyn Le &#x2726; Made with 🍵</p>
+</footer>
+
+<div id="cdot"></div>
+<div id="cring"></div>
+
+<script>
+  history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  const dot = document.getElementById('cdot');
+  const ring = document.getElementById('cring');
+  let rx = innerWidth * .5, ry = innerHeight * .5, rawX = rx, rawY = ry;
+  document.addEventListener('mousemove', e => {
+    dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+    rawX = e.clientX; rawY = e.clientY;
+  });
+  (function animRing() {
+    rx += (rawX - rx) * .10; ry += (rawY - ry) * .10;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  const hamburger = document.getElementById('nav-hamburger');
+  const navMobile = document.getElementById('nav-mobile');
+  if (hamburger && navMobile) {
+    hamburger.addEventListener('click', () => { navMobile.classList.toggle('open'); hamburger.classList.toggle('open'); });
+    navMobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { navMobile.classList.remove('open'); hamburger.classList.remove('open'); }));
+  }
+</script>
+</body>
+</html>
