@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>k.le — Product Designer & Researcher</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @font-face {
+      font-family: 'JayaGiri';
+      src: url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype');
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: #c8ccd0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── Stone canvas: fixed so both home & footer show it ── */
+    #bg {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0; display: block;
+    }
+
+    /* Two-scale grain — sits above canvas, below everything else */
+    #grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    }
+    #grain::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 160px 160px; opacity: .12; mix-blend-mode: multiply;
+    }
+    #grain::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.90' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='70' height='70' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 70px 70px; opacity: .07; mix-blend-mode: multiply;
+    }
+
+    /* ════════════════════════════════════════════
+       HOME LAYER — fixed, stone canvas behind it
+    ════════════════════════════════════════════ */
+    #home {
+      position: fixed; inset: 0; z-index: 2;
+      pointer-events: none; /* let scroll pass through to body */
+    }
+
+    /* ── Nav — matches homepage.PNG: semi-transparent gradient,
+               centered k.le, links right, items close together ── */
+    nav {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: center;
+      height: 42px;
+      background: linear-gradient(
+        to bottom,
+        rgba(138,136,133,0.72),
+        rgba(128,126,123,0.50)
+      );
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      pointer-events: auto;
+    }
+    .logo {
+      font-family: 'JayaGiri', 'Quicksand', sans-serif;
+      font-size: 20px; font-weight: 600; color: #333;
+      /* JayaGiri letter-spacing: 1/2 smaller than previous -0.013em → -0.02em */
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+    .nav-links {
+      position: absolute; right: 44px;
+      display: flex; gap: 20px;
+    }
+    .nav-links a {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 13px; font-weight: 500; color: #333;
+      opacity: .80; text-decoration: none; letter-spacing: .02em;
+      transition: opacity .18s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { opacity: 1; }
+
+    /* ── Hero ───────────────────────────────────── */
+    .hero {
+      position: absolute;
+      top: 42px; left: 0; right: 0; bottom: 0; z-index: 10;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 0 40px;
+    }
+
+    /* Label ABOVE heading — bigger than before */
+    .hero-label {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 17px; font-weight: 500;
+      letter-spacing: .10em; text-transform: uppercase;
+      color: #333; opacity: .58; margin-bottom: 18px;
+    }
+
+    /* Main heading */
+    .hero-heading {
+      font-family: 'JayaGiri', 'Quicksand', sans-serif;
+      font-size: clamp(52px, 6.8vw, 82px);
+      font-weight: 700; color: #333;
+      /* JayaGiri letter-spacing: 1/2 smaller than previous -0.04em → -0.06em */
+      letter-spacing: -0.06em;
+      line-height: 1.04; white-space: nowrap;
+      margin-bottom: 22px;
+      pointer-events: auto; display: inline-block; cursor: default;
+      transition:
+        transform .50s cubic-bezier(0.34, 1.56, 0.64, 1),
+        color .28s ease;
+    }
+    .hero-heading:hover {
+      transform: translateY(-5px) scale(1.018);
+      color: #555;
+    }
+
+    /* ── Vertical facts loop — BELOW the heading ──────── */
+    .facts-viewport {
+      overflow: hidden;
+      height: 1.65em;         /* exactly one line tall */
+      pointer-events: auto;
+    }
+    .facts-track {
+      display: flex; flex-direction: column;
+      /* 9 facts × 3.2s = 28.8s for one full cycle through the list */
+      animation: factsScroll 28.8s linear infinite;
+    }
+    .fact-item {
+      flex-shrink: 0;
+      height: 1.65em;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Quicksand', sans-serif;
+      /* bigger than before (was 17px) */
+      font-size: 22px; font-weight: 400;
+      color: #333; opacity: .68;
+      letter-spacing: .01em; line-height: 1.65;
+      white-space: nowrap;
+    }
+    /* Animate upward by exactly 9 items (half of the 18-item duplicated list) */
+    @keyframes factsScroll {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(calc(-9 * 1.65em)); }
+    }
+
+    /* ── Scroll arrow ─────────────────────────────────── */
+    .scroll-btn {
+      position: absolute; bottom: 28px;
+      left: 50%; transform: translateX(-50%);
+      z-index: 15; pointer-events: auto;
+      background: none; border: none; padding: 8px; cursor: pointer;
+      animation: bob 2.6s ease-in-out infinite;
+    }
+    .scroll-btn svg {
+      width: 22px; height: 14px;
+      stroke: #333; stroke-width: 1.6; opacity: .48;
+      fill: none; stroke-linecap: round; stroke-linejoin: round;
+      transition: opacity .2s ease;
+    }
+    .scroll-btn:hover svg { opacity: .88; }
+    @keyframes bob {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ════════════════════════════════════════════
+       SCROLL SPACER
+    ════════════════════════════════════════════ */
+    .home-spacer { height: 100vh; }
+
+    /* ════════════════════════════════════════════
+       PROJECTS — dark island, covers home on scroll
+    ════════════════════════════════════════════ */
+    #projects {
+      position: relative; z-index: 30;
+      background: #333;
+      /* fully rounded — creates the "floating island" look from ref 4 */
+      border-radius: 24px;
+      margin: -24px 0 24px;   /* peek above fold, gap before footer */
+      padding: 52px 44px 64px;
+      min-height: 100vh;
+    }
+
+    /* "Selected Work" eyebrow — bigger + #fefefe */
+    .projects-eyebrow {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 20px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: #fefefe;
+      margin-bottom: 28px;
+    }
+
+    /* ── Card grid ──────────────────────────────── */
+    .row-1 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: 400px;
+      gap: 12px; margin-bottom: 12px;
+    }
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 360px;
+      gap: 12px;
+    }
+
+    .card {
+      border-radius: 12px; overflow: hidden;
+      cursor: pointer; display: block;
+      transition: transform .38s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  box-shadow .38s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 24px 64px rgba(0,0,0,.40);
+    }
+    .card img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block;
+      transition: transform .50s ease;
+    }
+    .card:hover img { transform: scale(1.04); }
+
+    /* ════════════════════════════════════════════
+       FOOTER — transparent so fixed stone shows through
+    ════════════════════════════════════════════ */
+    footer {
+      position: relative; z-index: 5;
+      background: transparent;
+      padding: 80px 40px 48px;
+      text-align: center;
+      min-height: 280px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0;
+    }
+
+    .footer-heading {
+      font-family: 'JayaGiri', 'Quicksand', sans-serif;
+      font-size: clamp(28px, 3.6vw, 44px);
+      font-weight: 700; color: #333;
+      /* JayaGiri: 1/2 tighter */
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .footer-links {
+      display: flex; align-items: center; gap: 32px;
+      margin-bottom: 32px;
+    }
+    .footer-links a {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px; font-weight: 500; color: #333;
+      opacity: .75; text-decoration: none; letter-spacing: .03em;
+      transition: opacity .2s ease;
+    }
+    .footer-links a:hover { opacity: 1; }
+
+    .footer-copy {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 12px; font-weight: 400;
+      color: #333; opacity: .45; letter-spacing: .02em;
+    }
+
+    /* ── Custom cursor ──────────────────────────── */
+    #cdot {
+      position: fixed; z-index: 9999;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(51,51,51,.55);
+      transform: translate(-50%,-50%); pointer-events: none;
+      transition: background .3s ease;
+    }
+    #cring {
+      position: fixed; z-index: 9998;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid rgba(51,51,51,.22);
+      transform: translate(-50%,-50%); pointer-events: none;
+      transition: border-color .3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Stone canvas — fixed, visible behind home AND footer -->
+  <canvas id="bg"></canvas>
+  <div id="grain"></div>
+
+  <!-- ══ HOME — fixed layer ══════════════════════════════ -->
+  <div id="home">
+
+    <!-- Nav: centered logo, links right, translucent gradient -->
+    <nav>
+      <a href="#" class="logo">k.le</a>
+      <div class="nav-links">
+        <a href="#" class="active">Home</a>
+        <a href="#">About</a>
+        <a href="#">Resume</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <!-- Label above — bigger -->
+      <p class="hero-label">Product Designer &amp; Researcher</p>
+
+      <!-- Main heading with hover spring -->
+      <h1 class="hero-heading">hello, i'm kathlyn!</h1>
+
+      <!-- Vertical infinite loop of facts — bigger than before -->
+      <div class="facts-viewport">
+        <div class="facts-track">
+          <!-- Original 9 facts -->
+          <div class="fact-item">I'm a serial Winner</div>
+          <div class="fact-item">I am very nosy about how people work</div>
+          <div class="fact-item">I will try everything at least once</div>
+          <div class="fact-item">I'm a certified scuba diver</div>
+          <div class="fact-item">I have a famous Hot Pot sauce</div>
+          <div class="fact-item">I'm obsessed with all things art &amp; design</div>
+          <div class="fact-item">I'm a not-so-secret Nerd</div>
+          <div class="fact-item">Considered a serious #Empath</div>
+          <div class="fact-item">I try to find the fun in everything :D</div>
+          <!-- Duplicated for seamless loop -->
+          <div class="fact-item">I'm a serial Winner</div>
+          <div class="fact-item">I am very nosy about how people work</div>
+          <div class="fact-item">I will try everything at least once</div>
+          <div class="fact-item">I'm a certified scuba diver</div>
+          <div class="fact-item">I have a famous Hot Pot sauce</div>
+          <div class="fact-item">I'm obsessed with all things art &amp; design</div>
+          <div class="fact-item">I'm a not-so-secret Nerd</div>
+          <div class="fact-item">Considered a serious #Empath</div>
+          <div class="fact-item">I try to find the fun in everything :D</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll arrow — clicks to projects -->
+    <button class="scroll-btn" id="scroll-arrow" aria-label="Scroll to projects">
+      <svg viewBox="0 0 22 14"><polyline points="1 1 11 12 21 1"/></svg>
+    </button>
+
+  </div>
+
+  <!-- Spacer: keeps body tall enough to scroll into projects -->
+  <div class="home-spacer"></div>
+
+  <!-- ══ PROJECTS — scrolls up over the fixed home ════════ -->
+  <section id="projects">
+
+    <p class="projects-eyebrow">Selected Work</p>
+
+    <!-- Row 1: 2fr wide + 1fr narrow (ref 2.PNG layout) -->
+    <div class="row-1">
+      <a href="#" class="card">
+        <img src="brand_assets/FinThrive Long Thumbnail.png"
+             alt="FinThrive — UX Design Internship" />
+      </a>
+      <a href="#" class="card">
+        <img src="brand_assets/LiveDive Thumbnail.png"
+             alt="LiveDive — App Mockup Project" />
+      </a>
+    </div>
+
+    <!-- Row 2: 1fr + 1fr equal (ref 3.PNG layout) -->
+    <div class="row-2">
+      <a href="#" class="card">
+        <img src="brand_assets/FinThrive Thumbnail.png"
+             alt="FinThrive — Various Projects" />
+      </a>
+      <a href="#" class="card">
+        <img src="brand_assets/VendGo Long Thumbnail.png"
+             alt="VendGo — UX/UI Design" />
+      </a>
+    </div>
+
+  </section>
+
+  <!-- ══ FOOTER — transparent, stone canvas shows through ══ -->
+  <footer>
+    <h2 class="footer-heading">thanks for stopping by, let's chat!</h2>
+    <div class="footer-links">
+      <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:kathlynle.design@gmail.com">kathlynle.design@gmail.com</a>
+      <a href="#">Resume</a>
+    </div>
+    <p class="footer-copy">© 2025 Kathlyn Le &bull; Made with 🍜</p>
+  </footer>
+
+  <!-- Custom cursor -->
+  <div id="cdot"></div>
+  <div id="cring"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   LIQUID STONE CANVAS
+   More fluid than before: circular blobs (no asp/ang stretch),
+   smoother gradient falloff, larger overlap, slightly faster.
+   Result looks like liquid colour in water rather than
+   distinct geological patches.
+═══════════════════════════════════════════════════════ */
+const canvas = document.getElementById('bg');
+const ctx    = canvas.getContext('2d');
+let W = canvas.width  = window.innerWidth;
+let H = canvas.height = window.innerHeight;
+
+const raw    = { x: W*.5, y: H*.5 };
+const smooth = { x: W*.5, y: H*.5 };
+document.addEventListener('mousemove', e => { raw.x=e.clientX; raw.y=e.clientY; });
+window.addEventListener('resize', () => {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+});
+
+/*
+  Circular blobs — no rotation or stretch — create the smooth
+  overlapping colour pools of a liquid surface.
+  Higher amp + slightly faster spd than before.
+*/
+const blobs = [
+  /* Large, slow base pools — define macro liquid zones */
+  { bx:.18, by:.70, r:.48, c:[ 86, 90, 98], amp:.09, spd:.00022, ph:0.00, cw:.06 },
+  { bx:.82, by:.28, r:.44, c:[ 94, 98,106], amp:.10, spd:.00025, ph:1.80, cw:.05 },
+  { bx:.55, by:.82, r:.42, c:[ 82, 86, 94], amp:.08, spd:.00020, ph:3.40, cw:.05 },
+  { bx:.12, by:.18, r:.44, c:[ 90, 94,102], amp:.09, spd:.00023, ph:5.20, cw:.06 },
+  { bx:.68, by:.12, r:.40, c:[ 88, 92,100], amp:.08, spd:.00019, ph:2.60, cw:.05 },
+
+  /* Medium flowing pools */
+  { bx:.38, by:.48, r:.32, c:[126,130,138], amp:.11, spd:.00036, ph:0.80, cw:.10 },
+  { bx:.72, by:.58, r:.30, c:[118,122,130], amp:.12, spd:.00042, ph:2.90, cw:.10 },
+  { bx:.22, by:.65, r:.28, c:[134,138,146], amp:.10, spd:.00038, ph:4.50, cw:.11 },
+  { bx:.84, by:.74, r:.26, c:[122,126,134], amp:.11, spd:.00040, ph:1.30, cw:.11 },
+  { bx:.48, by:.22, r:.28, c:[130,134,142], amp:.10, spd:.00035, ph:6.10, cw:.10 },
+
+  /* Light surface shimmer — responsive to cursor */
+  { bx:.50, by:.38, r:.24, c:[202,206,212], amp:.13, spd:.00056, ph:1.90, cw:.30 },
+  { bx:.64, by:.62, r:.22, c:[210,214,220], amp:.14, spd:.00064, ph:3.60, cw:.34 },
+  { bx:.28, by:.50, r:.20, c:[198,202,208], amp:.15, spd:.00060, ph:0.30, cw:.28 },
+  { bx:.76, by:.38, r:.22, c:[216,220,226], amp:.13, spd:.00052, ph:5.80, cw:.32 },
+  { bx:.40, by:.72, r:.20, c:[204,208,214], amp:.12, spd:.00058, ph:4.00, cw:.26 },
+
+  /* Cursor-chasing bright highlights — give the liquid "light" effect */
+  { bx:.50, by:.50, r:.20, c:[234,238,243], amp:.04, spd:.00018, ph:6.30, cw:.70 },
+  { bx:.50, by:.50, r:.30, c:[218,222,228], amp:.05, spd:.00021, ph:2.10, cw:.54 },
+];
+
+const pos = blobs.map(b => ({ x: b.bx*W, y: b.by*H }));
+const lerp = (a,b,t) => a+(b-a)*t;
+
+function draw(now) {
+  smooth.x = lerp(smooth.x, raw.x, .09);
+  smooth.y = lerp(smooth.y, raw.y, .09);
+
+  /* cool stone base */
+  ctx.fillStyle = '#c8ccd0';
+  ctx.fillRect(0, 0, W, H);
+
+  blobs.forEach((b, i) => {
+    /* Liquid drift: two independent sine waves per axis */
+    const dx = Math.sin(now*b.spd + b.ph) * W * b.amp
+             + Math.sin(now*b.spd*.61 + b.ph+1.2) * W * b.amp*.4;
+    const dy = Math.cos(now*b.spd*.79 + b.ph+.7) * H * b.amp
+             + Math.cos(now*b.spd*.47 + b.ph+2.1) * H * b.amp*.4;
+
+    const tx = b.bx*W + dx + (smooth.x - W*.5)*b.cw;
+    const ty = b.by*H + dy + (smooth.y - H*.5)*b.cw;
+
+    pos[i].x = lerp(pos[i].x, tx, .048);
+    pos[i].y = lerp(pos[i].y, ty, .048);
+
+    const r = b.r * Math.min(W,H);
+    const [cr,cg,cb] = b.c;
+
+    /* Smooth liquid gradient — no hard edge, blobs merge organically */
+    const g = ctx.createRadialGradient(pos[i].x,pos[i].y,0, pos[i].x,pos[i].y,r);
+    g.addColorStop(0,   `rgba(${cr},${cg},${cb},.90)`);
+    g.addColorStop(.25, `rgba(${cr},${cg},${cb},.70)`);
+    g.addColorStop(.52, `rgba(${cr},${cg},${cb},.36)`);
+    g.addColorStop(.78, `rgba(${cr},${cg},${cb},.10)`);
+    g.addColorStop(1,   `rgba(${cr},${cg},${cb},0)`);
+
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(pos[i].x, pos[i].y, r, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+
+
+/* ═══════════════════════════════════════════════════════
+   SCROLL ARROW
+═══════════════════════════════════════════════════════ */
+document.getElementById('scroll-arrow').addEventListener('click', () => {
+  document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
+});
+
+
+/* ═══════════════════════════════════════════════════════
+   CUSTOM CURSOR — colour adapts home ↔ dark projects
+═══════════════════════════════════════════════════════ */
+const dot  = document.getElementById('cdot');
+const ring = document.getElementById('cring');
+let rx = W*.5, ry = H*.5;
+
+document.addEventListener('mousemove', e => {
+  dot.style.left = e.clientX+'px';
+  dot.style.top  = e.clientY+'px';
+});
+
+window.addEventListener('scroll', () => {
+  const onDark = window.scrollY > window.innerHeight * .55;
+  dot.style.background   = onDark ? 'rgba(255,255,255,.65)' : 'rgba(51,51,51,.55)';
+  ring.style.borderColor = onDark ? 'rgba(255,255,255,.30)' : 'rgba(51,51,51,.22)';
+}, { passive: true });
+
+(function animRing() {
+  rx = lerp(rx, raw.x, .10);
+  ry = lerp(ry, raw.y, .10);
+  ring.style.left = rx+'px';
+  ring.style.top  = ry+'px';
+  requestAnimationFrame(animRing);
+})();
+</script>
+
+</body>
+</html>

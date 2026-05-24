@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Content Producer — k.le</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face { font-family:'JayaGiri'; src:url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype'); }
+    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Quicksand',sans-serif; background:#f2f4f8; color:#333; overflow-y:auto; overflow-x:hidden; cursor:none; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:35; display:flex; align-items:center; justify-content:space-between; padding:0 20%; height:54px; background:rgba(51,51,51,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .logo { font-family:'JayaGiri','Quicksand',sans-serif; font-size:22px; font-weight:600; color:#f2f4f8; letter-spacing:-0.02em; text-decoration:none; }
+    .nav-links { display:flex; gap:24px; }
+    .nav-links a { font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; color:rgba(255,255,255,.70); text-decoration:none; letter-spacing:.02em; transition:color .18s ease; }
+    .nav-links a:hover, .nav-links a.active { color:#fff; }
+
+    .page-wrap { padding-top:54px; }
+    .page-header { padding:64px 20% 52px; }
+    .breadcrumb { font-size:15px; font-weight:500; color:#777; letter-spacing:.18em; text-transform:uppercase; margin-bottom:16px; }
+    .page-title { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:#333; letter-spacing:-0.05em; line-height:1.0; }
+
+    .blocks-wrap { padding:0 20% 80px; display:flex; flex-direction:column; }
+
+    .brand-block { display:flex; gap:72px; align-items:center; padding:72px 0; border-top:1px solid rgba(51,51,51,0.1); }
+    .brand-block.alt { flex-direction:row-reverse; }
+    .brand-block:first-child { border-top:none; padding-top:0; }
+
+    .phone-side { flex:0 0 auto; display:flex; align-items:center; justify-content:center; }
+    .text-side { flex:1; display:flex; flex-direction:column; justify-content:center; }
+
+    .brand-name { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(22px,2.4vw,36px); font-weight:700; color:#333; letter-spacing:-0.02em; line-height:1.1; margin-bottom:6px; }
+    .brand-role { font-family:'Quicksand',sans-serif; font-size:11px; font-weight:500; color:#777; letter-spacing:.18em; text-transform:uppercase; margin-bottom:24px; }
+    .brand-desc { font-size:14px; font-weight:400; color:#555; line-height:1.84; margin-bottom:10px; }
+    .brand-desc strong { font-weight:600; color:#333; }
+
+    .check-label { font-size:11px; font-weight:500; color:#777; letter-spacing:.18em; text-transform:uppercase; margin:28px 0 12px; padding-top:20px; border-top:1px solid rgba(51,51,51,0.1); }
+    .brand-links { display:flex; flex-wrap:wrap; gap:8px; }
+    .brand-link {
+      font-family:'Quicksand',sans-serif;
+      font-size:14px; font-weight:700; letter-spacing:.01em;
+      color:#333; border:1px solid rgba(51,51,51,0.28);
+      border-radius:50px; padding:5px 16px;
+      white-space:nowrap; display:inline-block;
+      text-decoration:none;
+      transition:opacity .2s;
+    }
+    .brand-link:hover { opacity:0.6; }
+
+    /* ── Phone mockup ── */
+    .phone { width:238px; height:498px; background:#000; border-radius:44px; border:7px solid #111; position:relative; overflow:hidden;
+      box-shadow: 0 32px 72px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.1), inset 0 0 0 1px #2a2a2a; }
+    .phone::before { content:''; position:absolute; top:11px; left:50%; transform:translateX(-50%); width:76px; height:26px; background:#000; border-radius:18px; z-index:20; }
+    .phone::after { content:''; position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:76px; height:4px; background:#fff; border-radius:2px; z-index:20; opacity:0.32; }
+
+    /* Remove dynamic island for Nuu Moon phone */
+    .phone.no-island::before { display:none; }
+
+    .pscreen { position:absolute; inset:0; overflow:hidden; border-radius:37px; background:#000; }
+    .pframe { position:absolute; inset:0; opacity:0; will-change:transform,opacity; }
+    .pframe img { width:100%; height:100%; object-fit:cover; object-position:top; background:#000; display:block; }
+    .pframe video { width:100%; height:100%; object-fit:cover; object-position:top; background:#000; display:block; }
+    .phone-flash { position:absolute; inset:0; background:#000; opacity:0; z-index:10; pointer-events:none; }
+
+    .tap-dot { position:absolute; border-radius:50%; background:rgba(255,255,255,0.45); width:34px; height:34px; pointer-events:none; z-index:15; opacity:0; transform:translate(-50%,-50%) scale(0); }
+    @keyframes ripple { 0% { transform:translate(-50%,-50%) scale(0.2); opacity:0.9; } 100% { transform:translate(-50%,-50%) scale(2.5); opacity:0; } }
+    .tap-dot.fire { animation:ripple 0.52s ease-out forwards; }
+
+    footer { text-align:center; padding:64px 40px 48px; display:flex; flex-direction:column; align-items:center; gap:20px; background:#f2f4f8; border-top:1px solid rgba(51,51,51,0.08); }
+    .footer-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(20px,2.4vw,30px); font-weight:700; color:#333; letter-spacing:-0.06em; }
+    .footer-links { display:flex; gap:32px; }
+    .footer-links a { font-size:14px; font-weight:700; color:#333; opacity:.75; text-decoration:none; transition:opacity .2s; }
+    .footer-links a:hover { opacity:1; }
+    .footer-copy { font-size:13px; font-weight:400; color:#999; }
+
+    #cdot { position:fixed; z-index:9999; width:6px; height:6px; border-radius:50%; background:rgba(51,51,51,.55); transform:translate(-50%,-50%); pointer-events:none; }
+    #cring { position:fixed; z-index:9998; width:32px; height:32px; border-radius:50%; border:1px solid rgba(51,51,51,.22); transform:translate(-50%,-50%); pointer-events:none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">k.l&#234;</a>
+  <div class="nav-links">
+    <a href="index.html#projects" class="active">Work</a>
+    <a href="about.html">About</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <p class="breadcrumb">FREELANCE</p>
+    <h1 class="page-title">digital content producer roles</h1>
+  </div>
+
+  <div class="blocks-wrap">
+
+    <!-- ── THE MILLION — phone LEFT ── -->
+    <div class="brand-block" id="block-million">
+      <div class="phone-side">
+        <div class="phone">
+          <div class="pscreen" id="tm-screen">
+            <!-- IG screenshots: contain + #1E3347 fill -->
+            <div class="pframe" id="tm-f1"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643326/portfolio/images/dcp-page/tm-ig1.jpg" alt="" style="object-fit:contain;background:#090c11;object-position:bottom;" /></div>
+            <div class="pframe" id="tm-f2"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643326/portfolio/images/dcp-page/tm-ig2-2.jpg" alt="" style="object-fit:contain;background:#090c11;object-position:bottom;" /></div>
+            <!-- Videos: keep cover -->
+            <div class="pframe" id="tm-fv1"><video id="tm-v1" src="https://res.cloudinary.com/dzuzsoi1i/video/upload/v1779642506/portfolio/dcp/tm-vid-1.mp4" muted playsinline preload="auto"></video></div>
+            <div class="pframe" id="tm-fv2"><video id="tm-v2" src="https://res.cloudinary.com/dzuzsoi1i/video/upload/v1779642507/portfolio/dcp/tm-vid-2.mp4" muted playsinline preload="auto"></video></div>
+            <div class="tap-dot" id="tm-tap"></div>
+            <div class="phone-flash" id="tm-flash"></div>
+          </div>
+        </div>
+      </div>
+      <div class="text-side">
+        <h2 class="brand-name">the million</h2>
+        <p class="brand-role">Co-founder &#x2726; Chief Marketing Officer</p>
+        <p class="brand-desc"><strong>The Million</strong> is an event-focused brand that brings together collectors, fans, and creators within the trading card and anime communities. Its events function as dynamic marketplaces and social spaces where vendors sell Pokémon cards, sports cards, anime merchandise, and original artwork. Attendees also experience interactive elements such as artist alleys, Beyblade competitions, and arcade-style attractions like claw machines. The brand has partnered with companies like <strong>Enso Matcha</strong> to elevate the overall event atmosphere and create a more immersive experience.</p>
+        <p class="brand-desc">I played a key role in building the brand and driving audience growth. I developed and executed marketing campaigns that <strong>increased The Million's social media following by 1,000+</strong> through targeted content and consistent engagement. I also planned and executed a three-day public event at POST Houston in Houston, which featured <strong>200+</strong> vendors and attracted <strong>1,000+</strong> attendees.</p>
+        <p class="brand-desc">In addition to marketing strategy, I contributed to the brand's creative direction by designing merchandise, including apparel, with <strong>200</strong> shirts sold during event promotions. My role combined branding, event execution, and audience development to help establish The Million as a growing presence in the collector and anime event space.</p>
+        <p class="check-label">Check it out for yourself</p>
+        <div class="brand-links">
+          <a href="https://www.instagram.com/themillion.cards/" class="brand-link" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://themillion.cards/" class="brand-link" target="_blank" rel="noopener">themillion.cards</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── THE NUU MOON — phone RIGHT ── -->
+    <div class="brand-block alt" id="block-nuumoon">
+      <div class="phone-side">
+        <!-- no-island removes dynamic island pill -->
+        <div class="phone no-island">
+          <div class="pscreen" id="nm-screen">
+            <!-- TikTok images: contain + black fill -->
+            <div class="pframe" id="nm-f1"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643327/portfolio/images/dcp-page/tnm-tt.jpg" alt="" style="object-fit:contain;background:#000;object-position:bottom;" /></div>
+            <div class="pframe" id="nm-f2"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643328/portfolio/images/dcp-page/tamstt.jpg" alt="" style="object-fit:contain;background:#000;object-position:bottom;" /></div>
+            <div class="pframe" id="nm-f3"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643324/portfolio/images/dcp-page/8thhouse.jpg" alt="" style="object-fit:contain;background:#000;object-position:bottom;" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="text-side">
+        <h2 class="brand-name">the nuu moon</h2>
+        <p class="brand-role">Digital Content Producer &#x2726; Video Editor</p>
+        <p class="brand-desc"><strong>The Nuu Moon</strong> is a creative brand whose personal mission is to make spiritual tools more accessible, intentional, and aligned with real life. Centered around its CEO, Ty — an experienced content creator — the brand blends spirituality with modern digital culture in a way that feels both authentic and relatable. Operating across multiple social media platforms, The Nuu Moon also includes <strong>sub-brands like Tamberlands and 8thHouseEmpath.</strong></p>
+        <p class="brand-desc">I helped shape and expand the brand's online presence by creating high-quality video and visual content tailored for platforms such as TikTok, YouTube Shorts, Instagram, and Lemon8, ensuring each piece aligned with platform trends and audience behavior. My work enhanced audience engagement and strengthened brand visibility across channels.</p>
+        <p class="brand-desc">Through targeted content strategies and trend-based posting, I <strong>increased The Nuu Moon's follower count by 300+</strong>, demonstrating measurable growth in community engagement. I also contributed to the expansion of Tamberlands by <strong>growing its social media presence by 25%.</strong> In addition, I designed and launched its website, featuring <strong>20+ products</strong> and establishing a cohesive, user-friendly digital storefront. Together, these efforts reflect my ability to combine creative direction with strategic execution to drive tangible results.</p>
+        <p class="check-label">Check it out for yourself</p>
+        <div class="brand-links">
+          <a href="https://linktr.ee/tnm_portfolio" class="brand-link" target="_blank" rel="noopener">Linktree</a>
+          <a href="https://www.thenuumoon.com/" class="brand-link" target="_blank" rel="noopener">thenuumoon.com</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TIFFANY G'LAM PRO — phone LEFT ── -->
+    <div class="brand-block" id="block-tgp">
+      <div class="phone-side">
+        <div class="phone">
+          <div class="pscreen" id="tgp-screen">
+            <!-- IG screenshot: contain + #1E3347 fill -->
+            <div class="pframe" id="tgp-f1"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643325/portfolio/images/dcp-page/tgp-ig.jpg" alt="" style="object-fit:contain;background:#090c11;object-position:bottom;" /></div>
+            <!-- Video: contain + #273149 fill -->
+            <div class="pframe" id="tgp-fv1"><video id="tgp-v1" src="https://res.cloudinary.com/dzuzsoi1i/video/upload/v1779642508/portfolio/dcp/tgp-vid.mp4" muted playsinline preload="auto" style="object-fit:cover;background:#090c11;object-position:bottom;width:100%;height:100%;"></video></div>
+            <div class="tap-dot" id="tgp-tap"></div>
+          </div>
+        </div>
+      </div>
+      <div class="text-side">
+        <h2 class="brand-name">tiffany g'lam pro</h2>
+        <p class="brand-role">Content Creator &#x2726; Social Media Producer</p>
+        <p class="brand-desc"><strong>Tiffany G'lam Pro</strong> is a collective of professional makeup artists and hairstylists operating under TIFFANY G'LAM MAKEUP, LLC. Trained by Tiffany Lam, the team specializes in luxury hair styling and high-end makeup artistry, with a primary focus on bridal services. The brand emphasizes elegance, precision, and a personalized client experience, using Instagram as its main platform to showcase transformations, promote services, and connect with its audience through visually refined content.</p>
+        <p class="brand-desc">I focused on strengthening the brand's Instagram presence through strategic content creation and audience engagement. I developed and optimized content tailored to platform trends, which helped <strong>boost social media engagement and grow the brand's following by 20%.</strong></p>
+        <p class="brand-desc">I collaborated closely with brand owners to develop marketing strategies aligned with their business goals, ensuring that all content supported the brand's vision and positioning in the luxury bridal market. Additionally, I analyzed performance metrics on Instagram to refine content strategies, identify high-performing content, and maximize reach and overall growth. These efforts highlight my ability to combine creative direction with data-driven insights to deliver measurable results.</p>
+        <p class="check-label">Check it out for yourself</p>
+        <div class="brand-links">
+          <a href="https://www.instagram.com/tiffanyglampro/" class="brand-link" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.tiffanyglam.com/" class="brand-link" target="_blank" rel="noopener">tiffanyglam.com</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <h2 class="footer-heading">thanks for stopping by, let's chat!</h2>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/kathlyn-le/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:kathlynle.design@gmail.com">kathlynle.design@gmail.com</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Kathlyn Le &#x2726; Made with 🍵</p>
+</footer>
+
+<div id="cdot"></div>
+<div id="cring"></div>
+
+<script>
+  /* ── Cursor ── */
+  const dot = document.getElementById('cdot');
+  const ring = document.getElementById('cring');
+  let rx = innerWidth * .5, ry = innerHeight * .5, rawX = rx, rawY = ry;
+  document.addEventListener('mousemove', e => {
+    dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+    rawX = e.clientX; rawY = e.clientY;
+  });
+  (function animRing() {
+    rx += (rawX - rx) * .10; ry += (rawY - ry) * .10;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  /* ── Helpers ── */
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+  const videoEnd = v => new Promise(r => { v.addEventListener('ended', r, { once: true }); });
+
+  function show(el, ms = 340) {
+    el.style.transition = `opacity ${ms}ms ease`;
+    el.style.opacity = '1';
+  }
+  function hide(el, ms = 340) {
+    el.style.transition = `opacity ${ms}ms ease`;
+    el.style.opacity = '0';
+  }
+  function slideIn(el, from = 'right', ms = 440) {
+    el.style.transition = 'none';
+    el.style.transform = `translateX(${from === 'right' ? '100%' : '-100%'})`;
+    el.style.opacity = '1';
+    el.offsetHeight;
+    el.style.transition = `transform ${ms}ms cubic-bezier(0.22,0.61,0.36,1)`;
+    el.style.transform = 'translateX(0)';
+  }
+  function slideOut(el, to = 'left', ms = 440) {
+    el.style.transition = `transform ${ms}ms cubic-bezier(0.22,0.61,0.36,1)`;
+    el.style.transform = `translateX(${to === 'left' ? '-100%' : '100%'})`;
+  }
+  function resetEl(el) {
+    el.style.transition = 'none';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(0)';
+  }
+  async function fireTap(tapEl, xPct, yPct) {
+    tapEl.style.left = xPct;
+    tapEl.style.top = yPct;
+    tapEl.classList.remove('fire');
+    tapEl.offsetHeight;
+    tapEl.classList.add('fire');
+    await delay(540);
+  }
+  async function flashScreen(flashEl) {
+    flashEl.style.transition = 'opacity 0.12s ease';
+    flashEl.style.opacity = '0.38';
+    await delay(160);
+    flashEl.style.transition = 'opacity 0.18s ease';
+    flashEl.style.opacity = '0';
+    await delay(140);
+  }
+
+  /* ── THE MILLION ── */
+  async function millionLoop() {
+    const f1  = document.getElementById('tm-f1');
+    const f2  = document.getElementById('tm-f2');
+    const fv1 = document.getElementById('tm-fv1');
+    const fv2 = document.getElementById('tm-fv2');
+    const tap   = document.getElementById('tm-tap');
+    const flash = document.getElementById('tm-flash');
+    const v1  = document.getElementById('tm-v1');
+    const v2  = document.getElementById('tm-v2');
+
+    [f1, f2, fv1, fv2].forEach(resetEl);
+    v1.pause(); v1.currentTime = 0;
+    v2.pause(); v2.currentTime = 0;
+
+    show(f1, 300);
+    await delay(2600);
+
+    await fireTap(tap, '16%', '88%');
+    await delay(200);
+
+    show(f2, 380);
+    await delay(300);
+    hide(f1, 260);
+    await delay(2400);
+
+    await flashScreen(flash);
+    slideOut(f2, 'left', 460);
+    slideIn(fv1, 'right', 460);
+    await delay(220);
+    v1.currentTime = 0;
+    v1.play();
+    await Promise.race([videoEnd(v1), delay(9000)]);
+
+    await flashScreen(flash);
+    slideOut(fv1, 'left', 460);
+    slideIn(fv2, 'right', 460);
+    await delay(220);
+    v2.currentTime = 0;
+    v2.play();
+    await Promise.race([videoEnd(v2), delay(9000)]);
+
+    await delay(700);
+    millionLoop();
+  }
+
+  /* ── THE NUU MOON ── */
+  async function nuuMoonLoop() {
+    const f1 = document.getElementById('nm-f1');
+    const f2 = document.getElementById('nm-f2');
+    const f3 = document.getElementById('nm-f3');
+
+    [f1, f2, f3].forEach(resetEl);
+    await delay(16);
+
+    show(f1, 300);
+    await delay(2600);
+
+    slideOut(f1, 'left', 420);
+    slideIn(f2, 'right', 420);
+    await delay(2600);
+
+    slideOut(f2, 'left', 420);
+    slideIn(f3, 'right', 420);
+    await delay(2600);
+
+    slideOut(f3, 'right', 420);
+    slideIn(f1, 'left', 420);
+    await delay(2600);
+
+    nuuMoonLoop();
+  }
+
+  /* ── TIFFANY G'LAM PRO ── */
+  async function tgpLoop() {
+    const f1  = document.getElementById('tgp-f1');
+    const fv1 = document.getElementById('tgp-fv1');
+    const tap = document.getElementById('tgp-tap');
+    const v1  = document.getElementById('tgp-v1');
+
+    [f1, fv1].forEach(resetEl);
+    v1.pause(); v1.currentTime = 0;
+
+    show(f1, 300);
+    await delay(2200);
+
+    await fireTap(tap, '83%', '86%');
+    await delay(200);
+
+    slideOut(f1, 'left', 460);
+    slideIn(fv1, 'right', 460);
+    await delay(220);
+    v1.currentTime = 0;
+    v1.play();
+    await Promise.race([videoEnd(v1), delay(9000)]);
+
+    slideOut(fv1, 'right', 460);
+    slideIn(f1, 'left', 460);
+    await delay(1400);
+
+    tgpLoop();
+  }
+
+  /* ── Start on scroll ── */
+  const started = new Set();
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !started.has(e.target.id)) {
+        started.add(e.target.id);
+        if (e.target.id === 'block-million') millionLoop();
+        if (e.target.id === 'block-nuumoon') nuuMoonLoop();
+        if (e.target.id === 'block-tgp') tgpLoop();
+      }
+    });
+  }, { threshold: 0.25 });
+  ['block-million', 'block-nuumoon', 'block-tgp'].forEach(id => {
+    observer.observe(document.getElementById(id));
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UX Research Projects — k.le</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face { font-family:'JayaGiri'; src:url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype'); }
+    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Quicksand',sans-serif; background:#f2f4f8; color:#333; overflow-y:auto; overflow-x:hidden; cursor:none; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:35; display:flex; align-items:center; justify-content:space-between; padding:0 20%; height:54px; background:rgba(51,51,51,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .logo { font-family:'JayaGiri','Quicksand',sans-serif; font-size:22px; font-weight:600; color:#f2f4f8; letter-spacing:-0.02em; text-decoration:none; }
+    .nav-links { display:flex; gap:24px; }
+    .nav-links a { font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; color:rgba(255,255,255,.70); text-decoration:none; letter-spacing:.02em; transition:color .18s ease; }
+    .nav-links a:hover, .nav-links a.active { color:#fff; }
+
+    .page-wrap { padding-top:54px; }
+
+    .page-header { padding:64px 20% 52px; }
+    .breadcrumb { font-size:15px; font-weight:500; color:#777; letter-spacing:.18em; text-transform:uppercase; margin-bottom:16px; }
+    .page-title { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:#333; letter-spacing:-0.05em; line-height:1.0; }
+
+    .blocks-wrap { padding:0 20% 80px; display:flex; flex-direction:column; }
+
+    .proj-block { display:flex; gap:72px; align-items:center; padding:72px 0; border-top:1px solid rgba(51,51,51,0.1); }
+    .proj-block.alt { flex-direction:row-reverse; }
+    .proj-block:first-child { border-top:none; padding-top:0; }
+
+    .media-side { flex:0 0 380px; display:flex; align-items:center; justify-content:center; }
+    .text-side { flex:1; display:flex; flex-direction:column; justify-content:center; }
+
+    /* YouTube embed */
+    .yt-wrap { width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06); }
+    .yt-wrap iframe { width:100%; height:100%; display:block; border:none; }
+
+    /* JOLO image */
+    .proj-img { width:100%; border-radius:12px; display:block; box-shadow: 0 24px 64px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06); }
+
+    /* Toyota browser mockup */
+    .browser-wrap { width:100%; border-radius:12px; overflow:hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06); }
+    .browser-bar { background:#e8e8ec; padding:10px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(0,0,0,0.08); }
+    .browser-dots { display:flex; gap:6px; }
+    .browser-dots span { width:10px; height:10px; border-radius:50%; display:block; }
+    .browser-dots .rd { background:#ff5f57; }
+    .browser-dots .yl { background:#ffbd2e; }
+    .browser-dots .gn { background:#28c840; }
+    .browser-url { flex:1; background:#fff; border-radius:6px; padding:4px 10px; font-size:11px; font-weight:500; color:#888; font-family:'Quicksand',sans-serif; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .browser-body { height:280px; overflow:hidden; position:relative; background:#fff; }
+    .browser-body iframe { width:100%; height:500px; border:none; transform-origin:top left; transform:scale(0.7); pointer-events:none; }
+    .browser-fade { position:absolute; bottom:0; left:0; right:0; height:80px; background:linear-gradient(to bottom, transparent, #fff); }
+
+    .proj-name { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(22px,2.4vw,36px); font-weight:700; color:#333; letter-spacing:-0.02em; line-height:1.1; margin-bottom:6px; }
+    .proj-role { font-size:11px; font-weight:500; color:#777; letter-spacing:.18em; text-transform:uppercase; margin-bottom:24px; }
+    .proj-desc { font-size:14px; font-weight:400; color:#555; line-height:1.84; margin-bottom:10px; }
+    .proj-desc strong { font-weight:600; color:#333; }
+    .methods-label { font-size:11px; font-weight:500; color:#777; letter-spacing:.18em; text-transform:uppercase; margin:28px 0 12px; padding-top:20px; border-top:1px solid rgba(51,51,51,0.1); }
+
+    /* Phone mockup (Toyota Center) */
+    .phone { width:238px; height:498px; background:#000; border-radius:44px; border:7px solid #111; position:relative; overflow:hidden; box-shadow:0 32px 72px rgba(0,0,0,0.2),0 8px 24px rgba(0,0,0,0.1),inset 0 0 0 1px #2a2a2a; }
+    .phone::before { content:''; position:absolute; top:11px; left:50%; transform:translateX(-50%); width:76px; height:26px; background:#000; border-radius:18px; z-index:20; }
+    .phone::after { content:''; position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:76px; height:4px; background:#fff; border-radius:2px; z-index:20; opacity:0.32; }
+    .phone.no-island::before { display:none; }
+    .pscreen { position:absolute; inset:0; overflow:hidden; border-radius:37px; background:#000; }
+
+    /* JOLO persona carousel */
+    .carousel-wrap { position:relative; width:100%; border-radius:12px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.12),0 4px 16px rgba(0,0,0,0.06); }
+    .carousel-img { width:100%; display:block; transition:opacity 0.5s ease; }
+    .carousel-img:not(:first-child) { position:absolute; top:0; left:0; opacity:0; }
+    .carousel-img.active { opacity:1; }
+    .carousel-dots { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:7px; }
+    .cdot-btn { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.45); cursor:pointer; transition:background 0.2s; border:none; padding:0; }
+    .cdot-btn.active { background:#fff; }
+    .carousel-img { cursor:pointer; }
+    .methods-tags { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:20px; }
+    .tag { font-size:14px; font-weight:700; letter-spacing:.01em; text-transform:lowercase; color:#333; background:transparent; border:1px solid rgba(51,51,51,0.28); border-radius:50px; padding:5px 16px; white-space:nowrap; display:inline-block; }
+    .case-link { font-size:13px; font-weight:600; color:#333; text-decoration:none; opacity:.55; transition:opacity .2s; width:fit-content; display:inline-block; }
+    .case-link:hover { opacity:1; }
+
+    /* Testimonial quote */
+    .testimonial { margin:24px 0 0; padding:20px 24px; background:rgba(51,51,51,0.04); border-left:3px solid rgba(51,51,51,0.14); border-radius:0 8px 8px 0; }
+    .testimonial p { font-size:13px; font-weight:400; color:#555; line-height:1.84; font-style:italic; margin-bottom:10px; }
+    .testimonial p:last-of-type { margin-bottom:0; }
+    .testimonial-attr { font-size:11px; font-weight:600; color:#777; letter-spacing:.12em; text-transform:uppercase; margin-top:12px; display:block; font-style:normal; }
+
+    /* Lightbox */
+    .lb-overlay { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0); pointer-events:none; opacity:0; transition:background .28s ease,opacity .28s ease; }
+    .lb-overlay.open { background:rgba(0,0,0,0.88); pointer-events:all; opacity:1; }
+    .lb-inner { display:flex; flex-direction:column; align-items:center; gap:20px; max-width:82vw; max-height:90vh; }
+    #jolo-lb-img { max-width:78vw; max-height:68vh; object-fit:contain; border-radius:10px; box-shadow:0 24px 80px rgba(0,0,0,0.55); animation:lbIn .34s cubic-bezier(0.34,1.40,0.64,1) forwards; }
+    @keyframes lbIn { from{opacity:0;transform:scale(0.86)} to{opacity:1;transform:scale(1)} }
+    .lb-close-btn { position:fixed; top:22px; right:28px; background:none; border:none; color:rgba(255,255,255,0.65); font-size:34px; line-height:1; cursor:pointer; padding:6px 10px; transition:color .2s ease,transform .2s ease; z-index:1001; }
+    .lb-close-btn:hover { color:#fff; transform:scale(1.12); }
+    .lb-thumbs-row { display:flex; gap:12px; align-items:center; justify-content:center; }
+    .lb-thumb { height:72px; width:auto; border-radius:6px; cursor:pointer; opacity:0.5; border:2px solid transparent; transition:opacity .2s,transform .2s,border-color .2s; }
+    .lb-thumb:hover { opacity:0.8; transform:translateY(-2px); }
+    .lb-thumb.lb-sel { opacity:1; border-color:rgba(255,255,255,0.70); }
+
+    footer { text-align:center; padding:64px 40px 48px; display:flex; flex-direction:column; align-items:center; gap:20px; background:#f2f4f8; border-top:1px solid rgba(51,51,51,0.08); }
+    .footer-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(20px,2.4vw,30px); font-weight:700; color:#333; letter-spacing:-0.06em; }
+    .footer-links { display:flex; gap:32px; }
+    .footer-links a { font-size:14px; font-weight:700; color:#333; opacity:.75; text-decoration:none; transition:opacity .2s; }
+    .footer-links a:hover { opacity:1; }
+    .footer-copy { font-size:13px; font-weight:400; color:#999; }
+
+    #cdot { position:fixed; z-index:9999; width:6px; height:6px; border-radius:50%; background:rgba(51,51,51,.55); transform:translate(-50%,-50%); pointer-events:none; }
+    #cring { position:fixed; z-index:9998; width:32px; height:32px; border-radius:50%; border:1px solid rgba(51,51,51,.22); transform:translate(-50%,-50%); pointer-events:none; }
+
+    /* ── Mobile Nav ── */
+    .nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; padding:6px; z-index:36; cursor:none; }
+    .nav-hamburger span { display:block; width:22px; height:2px; background:#f2f4f8; border-radius:1px; transition:transform .25s ease, opacity .2s ease; }
+    .nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity:0; }
+    .nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+    .nav-mobile { display:none; position:fixed; top:54px; left:0; right:0; background:rgba(30,30,30,0.98); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); z-index:34; flex-direction:column; padding:8px 24px 16px; border-top:1px solid rgba(255,255,255,0.08); }
+    .nav-mobile.open { display:flex; }
+    .nav-mobile a { font-family:'Quicksand',sans-serif; font-size:15px; font-weight:500; color:rgba(255,255,255,0.75); text-decoration:none; padding:13px 0; border-bottom:1px solid rgba(255,255,255,0.07); display:block; transition:color .18s ease; letter-spacing:.02em; }
+    .nav-mobile a:last-child { border-bottom:none; }
+    .nav-mobile a:hover, .nav-mobile a.active { color:#fff; }
+
+    /* ── Responsive ── */
+    @media (max-width:768px) {
+      nav { padding:0 20px; }
+      .nav-links { display:none; }
+      .nav-hamburger { display:flex; }
+
+      .page-header { padding:36px 20px 28px; }
+      .blocks-wrap { padding:0 20px 56px; }
+      .proj-block, .proj-block.alt { flex-direction:column; gap:32px; padding:40px 0; }
+      .media-side { flex:none; width:100%; }
+      .phone { width:180px; height:376px; border-radius:34px; border-width:6px; margin:0 auto; }
+      .browser-body { height:200px; }
+      .browser-body iframe { transform:scale(0.52); }
+
+      footer { padding:40px 20px 32px; }
+      .footer-links { gap:16px; flex-wrap:wrap; justify-content:center; }
+    }
+
+    @media (min-width:769px) and (max-width:1024px) {
+      nav { padding:0 5%; }
+      .page-header { padding:52px 5% 40px; }
+      .blocks-wrap { padding:0 5% 64px; }
+      .proj-block { gap:48px; }
+      .media-side { flex:0 0 300px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">k.l&#234;</a>
+  <div class="nav-links">
+    <a href="index.html#projects" class="active">Work</a>
+    <a href="about.html">About</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="index.html#projects" class="active">Work</a>
+  <a href="about.html">About</a>
+  <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+</div>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <p class="breadcrumb">Real-world clients &#x2726; Case Studies</p>
+    <h1 class="page-title">ux research projects</h1>
+  </div>
+
+  <div class="blocks-wrap">
+
+    <!-- ── ETHNOTE — video TOP, text BELOW ── -->
+    <div class="proj-block" style="flex-direction:column; align-items:stretch; gap:40px;">
+      <div style="width:100%; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.12),0 4px 16px rgba(0,0,0,0.06); border-radius:12px; clip-path:inset(0 3px round 12px);">
+        <video src="https://res.cloudinary.com/dzuzsoi1i/video/upload/v1779642510/portfolio/uxr/ethnote-video.mp4" muted autoplay loop playsinline style="width:100%;display:block;"></video>
+      </div>
+      <div class="text-side" style="max-width:none; flex:none;">
+        <h2 class="proj-name">Ethnote</h2>
+        <p class="proj-role">Lead Researcher</p>
+        <p class="proj-desc">Ethnote is a mobile-first tool that helps UX researchers capture and organize observations in real time without interrupting their workflow. It was designed to reduce the need to switch between paper notes and digital tools during fieldwork. As one of the lead researchers in the University of Houston UX Lab, I helped guide the project through research and testing.</p>
+        <p class="proj-desc">We conducted <strong>remote usability testing with seven participants</strong> who had varying levels of experience with digital note-taking tools. Participants completed task-based scenarios while sharing their screens, and we observed their interactions and gathered feedback through follow-up questions. We also used SEQ scores to measure task difficulty and SUS scores to evaluate overall usability.</p>
+        <p class="proj-desc">The results showed that while basic features like logging in and adding hashtags were easy to use, navigation was a major issue. Users struggled to find key features and move between sections. <strong>The average SUS score was 48.6, below the industry standard, and SEQ scores varied across tasks.</strong> Key problems included unclear navigation, confusing layout, and unclear labels, which guided improvements to make the app more intuitive.</p>
+        <div class="testimonial">
+          <p>"Great to hear from the UX team again and thank you so much for the report! Please thank the students for all of their hard work and patience completing the test and report! The team is excited (and a bit afraid) to dive further into your findings and see how we can improve EthNote on the UX front!</p>
+          <p>It really means a lot for a project like ours to get feedback from the outside so also a big thank you to you for coordinating everything and communicating with us. We might be doing a whole new platform in the fall/spring as we have realized it might be better to rethink the entire platform from scratch to realize our qualitative end-to-end platform-vision but for now we're sticking to get this platform to a place where we can properly launch it."</p>
+          <span class="testimonial-attr">&#x2014; Ethnote Team, in response to our research findings</span>
+        </div>
+        <p class="methods-label">Research Methods</p>
+        <div class="methods-tags">
+          <span class="tag">User Interviews</span>
+          <span class="tag">Direct Observation</span>
+          <span class="tag">Task-Based Usability Testing</span>
+          <span class="tag">SEQ</span>
+          <span class="tag">SUS</span>
+        </div>
+        <a href="https://www.dropbox.com/scl/fi/p78tbmlt0ksjkcu4ikurv/Ethnote.pdf?rlkey=p13v05v40dvb5uwducdty6lig&st=jx00nk6y&dl=0" class="case-link" target="_blank" rel="noopener">View Case Study</a>
+      </div>
+    </div>
+
+    <!-- ── JOLO AI — text LEFT, carousel RIGHT ── -->
+    <div class="proj-block alt">
+      <div class="media-side" style="flex:0 0 460px;">
+        <div class="carousel-wrap" id="jolo-carousel">
+          <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643361/portfolio/images/uxr-jolo-personas/jo.png" class="carousel-img active" alt="Jo" data-src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643361/portfolio/images/uxr-jolo-personas/jo.png" />
+          <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643362/portfolio/images/uxr-jolo-personas/josie.png" class="carousel-img" alt="Josie" data-src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643362/portfolio/images/uxr-jolo-personas/josie.png" />
+          <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643361/portfolio/images/uxr-jolo-personas/isabel.png" class="carousel-img" alt="Isabel" data-src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643361/portfolio/images/uxr-jolo-personas/isabel.png" />
+          <div class="carousel-dots">
+            <button class="cdot-btn active" data-i="0" aria-label="Jo"></button>
+            <button class="cdot-btn" data-i="1" aria-label="Josie"></button>
+            <button class="cdot-btn" data-i="2" aria-label="Isabel"></button>
+          </div>
+        </div>
+      </div>
+      <div class="text-side">
+        <h2 class="proj-name">JOLO AI</h2>
+        <p class="proj-role">UX Researcher</p>
+        <p class="proj-desc">This project focused on understanding user needs and challenges in the job search process, with a focus on <strong>JOLO AI</strong>, an AI-powered platform that matches candidates to jobs based on skills, preferences, and fit while reducing bias through features like anonymized profiles. <strong>My goal was to gather insights on user demographics, job search behaviors, and expectations to help improve the overall experience.</strong></p>
+        <p class="proj-desc">To conduct the research, a survey was distributed and received 22 responses with a 100 percent completion rate. The survey included multiple choice, checkbox, and one open-ended question, covering demographics, job search methods, satisfaction with job notifications, and common challenges. <strong>The data was analyzed to identify patterns in user behavior and key pain points.</strong></p>
+        <p class="proj-desc">The results showed that most users relied on job listing websites and networking, with many already employed and familiar with job platforms. Common challenges included lack of relevant opportunities, competition, and low response rates from employers. Users prioritized salary and wanted features like better filtering, personalized recommendations, and tools to reduce job ghosting. These insights I found highlighted areas where JOLO AI can improve usability and better support job seekers.</p>
+        <p class="methods-label">Research Methods</p>
+        <div class="methods-tags">
+          <span class="tag">Quantitative Survey Research</span>
+          <span class="tag">Qualitative Input</span>
+          <span class="tag">User Feedback Analysis</span>
+        </div>
+        <a href="https://www.dropbox.com/scl/fi/fcek20ubk6brs2u8znsgh/Jolo-AI-Results.pdf?rlkey=ye4e6vg5j6mo91nptjzfl53fi&st=5y25iusk&dl=0" class="case-link" target="_blank" rel="noopener">View Full Results</a>
+      </div>
+    </div>
+
+    <!-- ── TOYOTA CENTER — phone LEFT, text RIGHT ── -->
+    <div class="proj-block">
+      <div class="media-side" style="justify-content:center;">
+        <div class="phone no-island">
+          <div class="pscreen">
+            <video src="https://res.cloudinary.com/dzuzsoi1i/video/upload/v1779642511/portfolio/uxr/tc-video.mp4" muted autoplay loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:bottom;background:#000;display:block;"></video>
+          </div>
+        </div>
+      </div>
+      <div class="text-side">
+        <h2 class="proj-name">Toyota Center</h2>
+        <p class="proj-role">UX Researcher</p>
+        <p class="proj-desc">This study <strong>evaluated the usability of the Houston Toyota Center website for users attending concerts and live events.</strong> The goal was to assess navigation, design clarity, and how easily users could complete key tasks like signing up, finding events, and buying tickets.</p>
+        <p class="proj-desc">Usability testing was conducted with three participants who matched the target audience. Each completed five tasks, including account creation, event search, ticket purchasing, seating chart lookup, and contacting support. Sessions were observed in person or via screen share, with task times recorded and user feedback collected to identify issues.</p>
+        <p class="proj-desc">Most tasks were completed quickly, especially finding events, buying tickets, and contact information. However, users were confused by the &ldquo;Login&rdquo; vs &ldquo;Insider Signup&rdquo; buttons and had difficulty locating seating charts. Overall, I found that the site was usable but needs <strong>clearer labeling and improved navigation.</strong></p>
+        <p class="methods-label">Research Methods</p>
+        <div class="methods-tags">
+          <span class="tag">Task-Based Usability Testing</span>
+          <span class="tag">Direct Observation</span>
+          <span class="tag">User Feedback Collection</span>
+        </div>
+        <a href="https://www.dropbox.com/scl/fi/oagxxqi3hhceth28y012n/Toyota-Case-Study.pdf?rlkey=arptpvpndehfuabcfyyf2dm5b&st=2jhe61y1&dl=0" class="case-link" target="_blank" rel="noopener">View Case Study</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <h2 class="footer-heading">thanks for stopping by, let's chat!</h2>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/kathlyn-le/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:kathlynle.design@gmail.com">kathlynle.design@gmail.com</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Kathlyn Le &#x2726; Made with 🍵</p>
+</footer>
+
+<!-- JOLO Lightbox -->
+<div id="jolo-lightbox" class="lb-overlay">
+  <button class="lb-close-btn" id="jolo-lb-close" aria-label="Close">&#x2715;</button>
+  <div class="lb-inner">
+    <img id="jolo-lb-img" src="" alt="" />
+    <div class="lb-thumbs-row" id="jolo-lb-thumbs"></div>
+  </div>
+</div>
+
+<div id="cdot"></div>
+<div id="cring"></div>
+
+<script>
+  /* ── Cursor ── */
+  const dot = document.getElementById('cdot');
+  const ring = document.getElementById('cring');
+  let rx = innerWidth * .5, ry = innerHeight * .5, rawX = rx, rawY = ry;
+  document.addEventListener('mousemove', e => {
+    dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+    rawX = e.clientX; rawY = e.clientY;
+  });
+  (function animRing() {
+    rx += (rawX - rx) * .10; ry += (rawY - ry) * .10;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  /* ── Prevent scroll restoration ── */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  /* ── JOLO Persona Carousel + Lightbox ── */
+  (function () {
+    const carousel = document.getElementById('jolo-carousel');
+    const imgs     = Array.from(carousel.querySelectorAll('.carousel-img'));
+    const dots     = Array.from(carousel.querySelectorAll('.cdot-btn'));
+    const lb       = document.getElementById('jolo-lightbox');
+    const lbImg    = document.getElementById('jolo-lb-img');
+    const lbThumbs = document.getElementById('jolo-lb-thumbs');
+    const lbClose  = document.getElementById('jolo-lb-close');
+    let current = 0;
+    let timer = null;
+
+    /* ── Carousel ── */
+    function goTo(i) {
+      imgs[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = i;
+      imgs[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    function startAuto() {
+      timer = setInterval(() => goTo((current + 1) % imgs.length), 5000);
+    }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        clearInterval(timer);
+        goTo(i);
+        setTimeout(startAuto, 5000);
+      });
+    });
+
+    startAuto();
+
+    /* ── Lightbox ── */
+    const srcs = imgs.map(img => img.dataset.src);
+
+    function restartAnim() {
+      lbImg.style.animation = 'none';
+      void lbImg.offsetWidth;
+      lbImg.style.animation = 'lbIn .34s cubic-bezier(0.34,1.40,0.64,1) forwards';
+    }
+
+    function openLb(idx) {
+      lbImg.src = srcs[idx];
+      lbThumbs.innerHTML = '';
+      const thumbEls = srcs.map((src, i) => {
+        const th = document.createElement('img');
+        th.src = src;
+        th.className = 'lb-thumb' + (i === idx ? ' lb-sel' : '');
+        th.addEventListener('click', () => {
+          lbImg.src = src;
+          restartAnim();
+          thumbEls.forEach((t, j) => t.classList.toggle('lb-sel', j === i));
+        });
+        lbThumbs.appendChild(th);
+        return th;
+      });
+      lb.classList.add('open');
+      restartAnim();
+    }
+
+    function closeLb() { lb.classList.remove('open'); }
+
+    imgs.forEach((img, i) => img.addEventListener('click', () => openLb(i)));
+    lbClose.addEventListener('click', closeLb);
+    lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+  })();
+
+  const hamburger = document.getElementById('nav-hamburger');
+  const navMobile = document.getElementById('nav-mobile');
+  if (hamburger && navMobile) {
+    hamburger.addEventListener('click', () => { navMobile.classList.toggle('open'); hamburger.classList.toggle('open'); });
+    navMobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { navMobile.classList.remove('open'); hamburger.classList.remove('open'); }));
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design Journal — k.le</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- WebGL Shaders (same as homepage) -->
+  <script id="vs-fluid" type="x-shader/x-vertex">
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  </script>
+  <script id="fs-fluid" type="x-shader/x-fragment">
+precision highp float;
+uniform float uSoftReset; uniform float iTime; uniform vec2 iResolution;
+uniform vec4 iMouse; uniform int iFrame; uniform sampler2D iPreviousFrame;
+uniform float uBrushSize; uniform float uBrushStrength; uniform float uFluidDecay;
+uniform float uTrailLength; uniform float uStopDecay; uniform float uFlowSpeed;
+varying vec2 vUv;
+vec2 ur, U;
+float ln(vec2 p, vec2 a, vec2 b) {
+  return length(p - a - (b - a) * clamp(dot(p - a, b - a) / dot(b - a, b - a), 0.0, 1.0));
+}
+vec4 t(vec2 v, int a, int b) { return texture2D(iPreviousFrame, fract((v + vec2(float(a), float(b))) / ur)); }
+vec4 t(vec2 v) { return texture2D(iPreviousFrame, fract(v / ur)); }
+float area(vec2 a, vec2 b, vec2 c) {
+  float A = length(b-c), B = length(c-a), C = length(a-b), s = 0.5*(A+B+C);
+  return sqrt(max(0.0, s*(s-A)*(s-B)*(s-C)));
+}
+void main() {
+  U = vUv * iResolution; ur = iResolution.xy;
+  if (iFrame < 1) {
+    float w = 0.5 + sin(0.2 * U.x) * 0.5;
+    float q = length(U - 0.5 * ur);
+    gl_FragColor = vec4(0.1 * exp(-0.001 * q * q), 0.0, 0.0, w);
+  } else {
+    vec2 v = U, A = v+vec2(1,1), B = v+vec2(1,-1), C = v+vec2(-1,1), D = v+vec2(-1,-1);
+    for (int i = 0; i < 8; i++) {
+      v -= uFlowSpeed * t(v).xy; A -= uFlowSpeed * t(A).xy;
+      B -= uFlowSpeed * t(B).xy; C -= uFlowSpeed * t(C).xy; D -= uFlowSpeed * t(D).xy;
+    }
+    vec4 me = t(v);
+    vec4 n = t(v,0,1), e = t(v,1,0), s = t(v,0,-1), wv = t(v,-1,0);
+    me = mix(t(v), 0.25*(n+e+s+wv), vec4(0.15,0.15,0.95,0.0));
+    me.z -= uFlowSpeed * 0.01 * ((area(A,B,C)+area(B,C,D)) - 4.0);
+    vec4 pr = vec4(e.z, wv.z, n.z, s.z);
+    me.xy = me.xy + (100.0*uFlowSpeed) * vec2(pr.x-pr.y, pr.z-pr.w) / ur;
+    me.xy *= pow(uFluidDecay, uFlowSpeed); me.z *= uTrailLength;
+    if (iMouse.z > 0.0) {
+      vec2 mousePos = iMouse.xy, mousePrev = iMouse.zw;
+      float q = ln(U, mousePos, mousePrev);
+      vec2 m = mousePos - mousePrev; float l = length(m);
+      if (l > 0.0) m = min(l, 10.0) * m / l;
+      float falloff = pow(exp(-1e-4 / uBrushSize * q*q*q), 0.5);
+      me.xyw += (0.03*uBrushStrength*uFlowSpeed) * falloff * vec3(m, 10.0);
+      if (length(mousePos-mousePrev) < 2.0) {
+        float d = length(U - mousePos);
+        me.xy *= mix(1.0, uStopDecay, exp(-d * 0.01));
+        me.z  *= mix(1.0, uStopDecay, exp(-d * 0.01));
+      }
+    }
+    me = mix(me, vec4(0.0), uSoftReset);
+    gl_FragColor = clamp(me, -0.4, 0.4);
+  }
+}
+  </script>
+  <script id="fs-display" type="x-shader/x-fragment">
+precision highp float; precision highp int;
+uniform float iTime; uniform vec2 iResolution; uniform sampler2D iFluid;
+uniform float uDistortionAmount; uniform vec3 uColor1; uniform vec3 uColor2;
+uniform vec3 uColor3; uniform vec3 uColor4; uniform float uColorIntensity;
+uniform float uSoftness; uniform float uIdleSpeed;
+varying vec2 vUv;
+void main() {
+  vec2 fragCoord = vUv * iResolution;
+  vec4 fluid = texture2D(iFluid, vUv);
+  float mr = min(iResolution.x, iResolution.y);
+  vec2 uv = (fragCoord * 2.0 - iResolution.xy) / mr;
+  uv += fluid.xy * (0.5 * uDistortionAmount);
+  float tt = iTime * uIdleSpeed, d = -tt * 0.5, a = 0.0;
+  for (float i = 0.0; i < 8.0; ++i) { a += cos(i - d - a * uv.x); d += sin(uv.y * i + a); }
+  d += tt * 0.5;
+  float m1 = cos(uv.x*d)*0.5+0.5, m2 = cos(uv.y*a)*0.5+0.5, m3 = sin(d+a)*0.5+0.5;
+  float sm = clamp(uSoftness*0.1, 0.0, 0.9);
+  m1 = mix(m1,0.5,sm); m2 = mix(m2,0.5,sm); m3 = mix(m3,0.5,sm);
+  vec3 col = mix(uColor1, uColor2, m1);
+  col = mix(col, uColor3, m2);
+  col = mix(col, uColor4, m3 * 0.4);
+  col *= uColorIntensity;
+  gl_FragColor = vec4(col, 1.0);
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+}
+  </script>
+
+  <style>
+    @font-face {
+      font-family: 'JayaGiri';
+      src: url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype');
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: #f2f4f8;
+      overflow-y: auto; overflow-x: hidden;
+      cursor: none;
+    }
+
+    #bg {
+      position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0;
+    }
+    #bg canvas { display: block; }
+
+    #grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    }
+    #grain::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 160px 160px; opacity: .10; mix-blend-mode: multiply;
+    }
+    #grain::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.90' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='70' height='70' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 70px 70px; opacity: .06; mix-blend-mode: multiply;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 35;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20%; height: 54px;
+      background: rgba(51,51,51,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    .logo {
+      font-family: 'JayaGiri', 'Quicksand', sans-serif;
+      font-size: 22px; font-weight: 600; color: #f2f4f8;
+      letter-spacing: -0.02em; text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.70);
+      text-decoration: none; letter-spacing: .02em; transition: color .18s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { color: #fff; }
+
+    /* PAGE CONTENT */
+    .journal-page {
+      position: relative; z-index: 2;
+      padding-top: 54px;
+    }
+
+    /* HEADER */
+    .journal-header {
+      padding: 60px 20% 44px;
+    }
+    .journal-eyebrow {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: #777; margin-bottom: 14px;
+    }
+    .journal-title {
+      font-family: 'JayaGiri', 'Quicksand', sans-serif;
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 700; color: #333;
+      letter-spacing: -0.05em; line-height: 1.0;
+    }
+
+    /* GRID */
+    .journal-grid {
+      columns: 4;
+      column-gap: 14px;
+      padding: 0 20% 80px;
+    }
+
+    .journal-item {
+      cursor: pointer;
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      break-inside: avoid;
+      margin-bottom: 14px;
+      transition: transform .36s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .journal-item:hover {
+      transform: translateY(-6px);
+    }
+    .journal-item img {
+      width: 100%; height: auto;
+      display: block;
+      border-radius: 10px;
+      box-shadow:
+        0 6px 24px rgba(0,0,0,0.16),
+        0 2px 8px rgba(0,0,0,0.10),
+        0 1px 3px rgba(0,0,0,0.08);
+      transition: box-shadow .36s ease;
+    }
+    .journal-item:hover img {
+      box-shadow:
+        0 16px 48px rgba(0,0,0,0.22),
+        0 6px 18px rgba(0,0,0,0.14),
+        0 2px 6px rgba(0,0,0,0.10);
+    }
+
+    /* LIGHTBOX */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0);
+      pointer-events: none; opacity: 0;
+      transition: background .28s ease, opacity .28s ease;
+    }
+    .lightbox.open {
+      background: rgba(0,0,0,0.88);
+      pointer-events: all; opacity: 1;
+    }
+
+    .lb-content {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 20px;
+      max-width: 82vw; max-height: 90vh;
+    }
+
+    .lb-main-wrap {
+      display: flex; align-items: center; justify-content: center;
+      max-height: 70vh; overflow: hidden;
+    }
+    #lb-img {
+      max-width: 78vw; max-height: 68vh;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.55);
+      animation: lbIn .34s cubic-bezier(0.34,1.40,0.64,1) forwards;
+    }
+    @keyframes lbIn {
+      from { opacity: 0; transform: scale(0.86); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* Thumbnail strip */
+    .lb-thumbs {
+      display: none; gap: 12px;
+      align-items: center; justify-content: center;
+    }
+    .lb-thumbs.visible { display: flex; }
+    .lb-thumb {
+      height: 72px; width: auto;
+      border-radius: 6px; cursor: pointer;
+      opacity: 0.50;
+      border: 2px solid transparent;
+      transition: opacity .2s ease, transform .2s ease, border-color .2s ease;
+    }
+    .lb-thumb:hover { opacity: 0.80; transform: translateY(-2px); }
+    .lb-thumb.selected {
+      opacity: 1;
+      border-color: rgba(255,255,255,0.70);
+    }
+
+    /* Close button */
+    .lb-close {
+      position: fixed; top: 22px; right: 28px;
+      background: none; border: none;
+      color: rgba(255,255,255,0.65);
+      font-size: 34px; line-height: 1;
+      cursor: pointer; padding: 6px 10px;
+      transition: color .2s ease, transform .2s ease;
+      z-index: 1001;
+    }
+    .lb-close:hover { color: #fff; transform: scale(1.12); }
+
+    /* FOOTER */
+    footer {
+      position: relative; z-index: 3;
+      background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.16) 100%);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      padding: 64px 40px 48px;
+      text-align: center;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 20px;
+    }
+    .footer-heading {
+      font-family: 'JayaGiri', 'Quicksand', sans-serif;
+      font-size: clamp(20px, 2.4vw, 30px);
+      font-weight: 700; color: #333; letter-spacing: -0.06em;
+    }
+    .footer-links { display: flex; gap: 32px; }
+    .footer-links a {
+      font-size: 14px; font-weight: 700; color: #333;
+      opacity: .85; text-decoration: none; transition: opacity .2s ease;
+    }
+    .footer-links a:hover { opacity: 1; }
+    .footer-copy { font-size: 13px; font-weight: 400; color: #666; }
+
+    /* CURSOR */
+    #cdot {
+      position: fixed; z-index: 9999;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(51,51,51,.55);
+      transform: translate(-50%,-50%); pointer-events: none;
+      transition: background .3s ease;
+    }
+    #cring {
+      position: fixed; z-index: 9998;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid rgba(51,51,51,.22);
+      transform: translate(-50%,-50%); pointer-events: none;
+      transition: border-color .3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="bg"
+    fc-fluid-gradient="component"
+    fc-fluid-gradient-color-1="#bdc2ca"
+    fc-fluid-gradient-color-2="#d5d9e0"
+    fc-fluid-gradient-color-3="#ebeef3"
+    fc-fluid-gradient-color-4="#f8f9fc"
+    fc-fluid-gradient-softness="2.0"
+    fc-fluid-gradient-color-intensity="1.3"
+    fc-fluid-gradient-idle-speed="0.65"
+    fc-fluid-gradient-distortion-amount="2.0"
+    fc-fluid-gradient-brush-size="28"
+    fc-fluid-gradient-brush-strength="0.48"
+    fc-fluid-gradient-fluid-decay="0.985"
+    fc-fluid-gradient-trail-length="0.82"
+    fc-fluid-gradient-stop-decay="0.85"
+    fc-fluid-gradient-flow-speed="1.0"
+  ></div>
+  <div id="grain"></div>
+
+  <nav>
+    <a href="index.html" class="logo">k.l&#234;</a>
+    <div class="nav-links">
+      <a href="index.html#projects">Work</a>
+      <a href="about.html">About</a>
+      <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+    </div>
+  </nav>
+
+  <div class="journal-page">
+
+    <div class="journal-header">
+      <p class="journal-eyebrow">graphic design &#x2726; visual art</p>
+      <h1 class="journal-title">my design journal</h1>
+    </div>
+
+    <div class="journal-grid" id="journal-grid"></div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <h2 class="footer-heading">thanks for stopping by, let's chat!</h2>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/kathlyn-le/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:kathlynle.design@gmail.com">kathlynle.design@gmail.com</a>
+      <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+    </div>
+    <p class="footer-copy">&copy; 2026 Kathlyn Le &#x2726; Made with 🍵</p>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="lightbox">
+    <button class="lb-close" id="lb-close" aria-label="Close">&#x2715;</button>
+    <div class="lb-content">
+      <div class="lb-main-wrap">
+        <img id="lb-img" src="" alt="" />
+      </div>
+      <div id="lb-thumbs" class="lb-thumbs"></div>
+    </div>
+  </div>
+
+  <div id="cdot"></div>
+  <div id="cring"></div>
+
+  <script>
+    /* ── IMAGE DATA ── */
+    const IMAGES = [
+      {
+        src: 'Yoasobi Album Cover.jpg',
+        carousel: [
+          'My Design Journal/Yoasobi 1.png',
+          'My Design Journal/Yoasobi 2.png',
+          'My Design Journal/Yoasobi 3.png'
+        ]
+      },
+      { src: 'My Design Journal/Hayao.jpg' },
+      { src: 'My Design Journal/Totoro.png' },
+      { src: 'My Design Journal/Spirited Away.png' },
+      { src: 'My Design Journal/Mononoko.png' },
+      { src: 'My Design Journal/Ponyo.png' },
+      { src: 'My Design Journal/Howl.png' },
+      {
+        src: 'My Design Journal/Digifest 1.png',
+        carousel: [
+          'My Design Journal/Digifest 2.png',
+          'My Design Journal/Digifest 3.png',
+          'My Design Journal/Digifest 4.png'
+        ]
+      },
+      { src: 'My Design Journal/Cows.jpg' },
+      { src: 'My Design Journal/Bunny.jpg' },
+      { src: 'My Design Journal/Wave To Earth.jpg' },
+      { src: 'My Design Journal/Portrait.jpg' },
+      { src: 'My Design Journal/Bike.jpg' },
+      { src: 'My Design Journal/Graphite.jpg' },
+      { src: 'My Design Journal/Cat.jpg' },
+      { src: 'My Design Journal/Leon.jpg' },
+      { src: 'My Design Journal/Teddy.jpg' },
+    ];
+
+    /* ── BUILD GRID ── */
+    const grid = document.getElementById('journal-grid');
+    IMAGES.forEach((data, idx) => {
+      const item = document.createElement('div');
+      item.className = 'journal-item';
+      const img = document.createElement('img');
+      img.src = data.src;
+      img.alt = '';
+      img.loading = 'lazy';
+      item.appendChild(img);
+      item.addEventListener('click', () => openLightbox(data));
+      grid.appendChild(item);
+    });
+
+    /* ── LIGHTBOX ── */
+    const lb        = document.getElementById('lightbox');
+    const lbImg     = document.getElementById('lb-img');
+    const lbThumbs  = document.getElementById('lb-thumbs');
+    const lbClose   = document.getElementById('lb-close');
+
+    function restartImgAnim() {
+      lbImg.style.animation = 'none';
+      void lbImg.offsetWidth;
+      lbImg.style.animation = 'lbIn .34s cubic-bezier(0.34,1.40,0.64,1) forwards';
+    }
+
+    function setThumbActive(thumbEls, idx) {
+      thumbEls.forEach((t, i) => t.classList.toggle('selected', i === idx));
+    }
+
+    function openLightbox(data) {
+      lbImg.src = data.src;
+      lbThumbs.innerHTML = '';
+      lbThumbs.classList.remove('visible');
+
+      if (data.carousel && data.carousel.length) {
+        lbThumbs.classList.add('visible');
+        const allSrcs = [data.src, ...data.carousel];
+        const thumbEls = [];
+
+        data.carousel.forEach((src, i) => {
+          const th = document.createElement('img');
+          th.src = src;
+          th.className = 'lb-thumb';
+          th.addEventListener('click', () => {
+            lbImg.src = src;
+            restartImgAnim();
+            setThumbActive(thumbEls, i);
+          });
+          lbThumbs.appendChild(th);
+          thumbEls.push(th);
+        });
+      }
+
+      lb.classList.add('open');
+      restartImgAnim();
+    }
+
+    function closeLightbox() {
+      lb.classList.remove('open');
+    }
+
+    lbClose.addEventListener('click', closeLightbox);
+    lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    /* ── CURSOR ── */
+    const dot  = document.getElementById('cdot');
+    const ring = document.getElementById('cring');
+    let rx = window.innerWidth * .5, ry = window.innerHeight * .5;
+    let rawX = rx, rawY = ry;
+    const lerp = (a, b, t) => a + (b - a) * t;
+
+    document.addEventListener('mousemove', e => {
+      dot.style.left = e.clientX + 'px';
+      dot.style.top  = e.clientY + 'px';
+      rawX = e.clientX; rawY = e.clientY;
+    });
+
+    window.addEventListener('scroll', () => {
+      const onDark = window.scrollY > window.innerHeight * 0.6;
+      dot.style.background   = onDark ? 'rgba(255,255,255,.65)' : 'rgba(51,51,51,.55)';
+      ring.style.borderColor = onDark ? 'rgba(255,255,255,.30)' : 'rgba(51,51,51,.22)';
+    }, { passive: true });
+
+    (function animRing() {
+      rx = lerp(rx, rawX, .10); ry = lerp(ry, rawY, .10);
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
+  </script>
+
+  <!-- WebGL Fluid (same as homepage) -->
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
+
+    const asNumber = (v, d) => { const n = parseFloat(v); return Number.isFinite(n) ? n : d; };
+    const asColorLinear = (hex, fallback = '#ffffff') => {
+      let c; try { c = new THREE.Color(hex || fallback); } catch { c = new THREE.Color(fallback); }
+      c.convertSRGBToLinear(); return [c.r, c.g, c.b];
+    };
+    const getShader = id => document.getElementById(id).textContent;
+
+    const el   = document.querySelector('[fc-fluid-gradient="component"]') || document.body;
+    const attr = name => el.getAttribute(name);
+
+    const cfg = {
+      brushSize:        asNumber(attr('fc-fluid-gradient-brush-size'),        28),
+      brushStrength:    asNumber(attr('fc-fluid-gradient-brush-strength'),    0.48),
+      distortionAmount: asNumber(attr('fc-fluid-gradient-distortion-amount'), 2.0),
+      fluidDecay:       asNumber(attr('fc-fluid-gradient-fluid-decay'),       0.985),
+      trailLength:      asNumber(attr('fc-fluid-gradient-trail-length'),      0.82),
+      stopDecay:        asNumber(attr('fc-fluid-gradient-stop-decay'),        0.85),
+      color1:           attr('fc-fluid-gradient-color-1') || '#acb0b8',
+      color2:           attr('fc-fluid-gradient-color-2') || '#c8ccd3',
+      color3:           attr('fc-fluid-gradient-color-3') || '#e2e5ea',
+      color4:           attr('fc-fluid-gradient-color-4') || '#f5f7fa',
+      colorIntensity:   asNumber(attr('fc-fluid-gradient-color-intensity'),   1.0),
+      softness:         asNumber(attr('fc-fluid-gradient-softness'),          2.0),
+      flowSpeed:        asNumber(attr('fc-fluid-gradient-flow-speed'),        1.0),
+      idleSpeed:        asNumber(attr('fc-fluid-gradient-idle-speed'),        0.65),
+      dprMax: 2.0,
+    };
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.NoToneMapping;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, cfg.dprMax));
+    el.appendChild(renderer.domElement);
+
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const rtOpts = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, type: THREE.HalfFloatType, depthBuffer: false, stencilBuffer: false };
+    const rt1 = new THREE.WebGLRenderTarget(1, 1, rtOpts);
+    const rt2 = rt1.clone();
+    let cur = rt1, prev = rt2;
+
+    const [c1r,c1g,c1b] = asColorLinear(cfg.color1);
+    const [c2r,c2g,c2b] = asColorLinear(cfg.color2);
+    const [c3r,c3g,c3b] = asColorLinear(cfg.color3);
+    const [c4r,c4g,c4b] = asColorLinear(cfg.color4);
+
+    const fMat = new THREE.ShaderMaterial({
+      uniforms: {
+        iTime: {value:0}, iResolution: {value: new THREE.Vector2(1,1)},
+        iMouse: {value: new THREE.Vector4(0,0,0,0)}, iFrame: {value:0},
+        iPreviousFrame: {value:null}, uBrushSize: {value:cfg.brushSize},
+        uBrushStrength: {value:cfg.brushStrength}, uFluidDecay: {value:cfg.fluidDecay},
+        uTrailLength: {value:cfg.trailLength}, uStopDecay: {value:cfg.stopDecay},
+        uSoftReset: {value:0.0}, uFlowSpeed: {value:cfg.flowSpeed},
+      },
+      vertexShader: getShader('vs-fluid'), fragmentShader: getShader('fs-fluid'),
+    });
+
+    const dMat = new THREE.ShaderMaterial({
+      uniforms: {
+        iTime: {value:0}, iResolution: {value: new THREE.Vector2(1,1)},
+        iFluid: {value:null}, uDistortionAmount: {value:cfg.distortionAmount},
+        uColor1: {value: new THREE.Vector3(c1r,c1g,c1b)},
+        uColor2: {value: new THREE.Vector3(c2r,c2g,c2b)},
+        uColor3: {value: new THREE.Vector3(c3r,c3g,c3b)},
+        uColor4: {value: new THREE.Vector3(c4r,c4g,c4b)},
+        uColorIntensity: {value:cfg.colorIntensity}, uSoftness: {value:cfg.softness},
+        uIdleSpeed: {value:cfg.idleSpeed},
+      },
+      vertexShader: getShader('vs-fluid'), fragmentShader: getShader('fs-display'), toneMapped: false,
+    });
+
+    function resize() {
+      const r = el.getBoundingClientRect();
+      const w = Math.max(1, r.width), h = Math.max(1, r.height);
+      renderer.setSize(w, h);
+      fMat.uniforms.iResolution.value.set(w, h);
+      dMat.uniforms.iResolution.value.set(w, h);
+      rt1.setSize(w, h); rt2.setSize(w, h);
+    }
+    resize();
+
+    const geo = new THREE.PlaneGeometry(2, 2);
+    const fPlane = new THREE.Mesh(geo, fMat);
+    const dPlane = new THREE.Mesh(geo, dMat);
+
+    const isFine = window.matchMedia('(pointer:fine)').matches;
+    let mx=0, my=0, pmx=0, pmy=0, lastMove=0;
+    if (isFine) {
+      window.addEventListener('pointermove', e => {
+        if (e.pointerType !== 'mouse') return;
+        const r = el.getBoundingClientRect();
+        const x = e.clientX - r.left, y = r.height - (e.clientY - r.top);
+        const spd = Math.hypot(x-mx, y-my);
+        fMat.uniforms.uBrushSize.value = cfg.brushSize * Math.min(1.2, Math.max(0.8, 0.8 + spd * 0.003));
+        pmx=mx; pmy=my; mx=x; my=y; lastMove=performance.now();
+        fMat.uniforms.iMouse.value.set(mx, my, pmx, pmy);
+      });
+    }
+
+    let frame = 0;
+    (function animate() {
+      requestAnimationFrame(animate);
+      const t = performance.now() * 0.001;
+      fMat.uniforms.iTime.value = t;
+      dMat.uniforms.iTime.value = t;
+      fMat.uniforms.iFrame.value = frame;
+      if (performance.now() - lastMove > 120) fMat.uniforms.iMouse.value.set(0,0,0,0);
+      fMat.uniforms.iPreviousFrame.value = prev.texture;
+      renderer.setRenderTarget(cur); renderer.render(fPlane, camera);
+      dMat.uniforms.iFluid.value = cur.texture;
+      renderer.setRenderTarget(null); renderer.render(dPlane, camera);
+      [cur, prev] = [prev, cur];
+      frame++;
+    })();
+
+    let raf = null;
+    window.addEventListener('resize', () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(resize);
+    });
+  </script>
+
+</body>
+</html>

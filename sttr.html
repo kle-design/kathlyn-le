@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>R41 STTR — k.le</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face { font-family:'JayaGiri'; src:url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype'); }
+    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Quicksand',sans-serif; background:#f2f4f8; color:#333; overflow-y:auto; overflow-x:hidden; cursor:none; }
+
+    /* Nav */
+    nav { position:fixed; top:0; left:0; right:0; z-index:35; display:flex; align-items:center; justify-content:space-between; padding:0 20%; height:54px; background:rgba(51,51,51,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .logo { font-family:'JayaGiri','Quicksand',sans-serif; font-size:22px; font-weight:600; color:#f2f4f8; letter-spacing:-0.02em; text-decoration:none; }
+    .nav-links { display:flex; gap:24px; }
+    .nav-links a { font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; color:rgba(255,255,255,.70); text-decoration:none; letter-spacing:.02em; transition:color .18s ease; }
+    .nav-links a:hover, .nav-links a.active { color:#fff; }
+
+    .page-wrap { padding-top:54px; }
+
+    /* Hero: desktop screenshot in dark container */
+    .hero-dashboard-wrap { padding:56px 20% 0; }
+    .dashboard-container { background:#1a1a1a; border-radius:24px; padding:28px 28px 0; overflow:hidden; box-shadow:0 32px 80px rgba(0,0,0,0.18),0 8px 24px rgba(0,0,0,0.1); }
+    .dashboard-container img { width:100%; display:block; border-radius:10px 10px 0 0; }
+
+    /* Tags + Title + Overview + Sidebar */
+    .cs-hero-info { padding:52px 20% 0; }
+    .cs-tags { font-size:11px; font-weight:600; color:#aaa; letter-spacing:0.14em; text-transform:uppercase; display:block; margin-bottom:20px; }
+    .cs-title { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:#333; letter-spacing:-0.04em; line-height:0.92; margin-bottom:40px; }
+    .hero-grid { display:grid; grid-template-columns:1fr 200px; gap:52px; align-items:start; padding-bottom:64px; }
+    .overview-text { font-size:15px; font-weight:400; color:#555; line-height:1.88; }
+    .overview-text + .overview-text { margin-top:14px; }
+    .hero-sidebar { display:flex; flex-direction:column; gap:22px; }
+    .sidebar-label { font-size:9px; font-weight:700; color:#bbb; letter-spacing:0.16em; text-transform:uppercase; display:block; margin-bottom:4px; }
+    .sidebar-value { font-size:13px; font-weight:600; color:#333; line-height:1.5; }
+
+    /* Sections */
+    .cs-section { padding:64px 20%; }
+    .cs-divider { border:none; border-top:1px solid rgba(51,51,51,0.1); margin:0 20%; }
+    .sec-label { font-size:9px; font-weight:700; color:#aaa; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:14px; display:block; }
+    .sec-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(24px,2.8vw,40px); font-weight:700; color:#333; letter-spacing:-0.03em; line-height:1.1; margin-bottom:20px; }
+    .sec-body { font-size:15px; font-weight:400; color:#555; line-height:1.88; }
+    .sec-body + .sec-body { margin-top:14px; }
+    .sec-body strong { font-weight:600; color:#333; }
+
+    /* Section images */
+    .section-img { width:100%; display:block; border-radius:16px; margin-top:36px; box-shadow:0 8px 32px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.04); }
+
+    /* Two-col image grid */
+    .two-img-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:32px; }
+    .two-img-grid img { width:100%; display:block; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+
+    /* Design bullets */
+    .design-bullets { margin-top:20px; display:flex; flex-direction:column; gap:14px; list-style:none; padding-left:0; }
+    .design-bullets li { font-size:14px; font-weight:400; color:#555; line-height:1.84; padding-left:22px; position:relative; }
+    .design-bullets li::before { content:'✦'; position:absolute; left:0; color:#ccc; font-size:9px; top:5px; }
+    .design-bullets strong { font-weight:600; color:#333; }
+
+    /* End users two-col */
+    .end-users-grid { display:grid; grid-template-columns:168px 1fr; gap:56px; margin-top:44px; padding-top:44px; border-top:1px solid rgba(51,51,51,0.1); align-items:start; }
+    .end-users-label { font-family:'JayaGiri','Quicksand',sans-serif; font-size:16px; font-weight:700; color:#333; letter-spacing:-0.01em; line-height:1.35; padding-top:4px; }
+    .user-bullets { display:flex; flex-direction:column; gap:20px; }
+    .user-bullet h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:6px; }
+    .user-bullet p { font-size:14px; font-weight:400; color:#555; line-height:1.84; }
+
+    /* Design considerations */
+    .considerations-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:32px; }
+    .consideration-card { background:#fff; border-radius:14px; padding:24px; box-shadow:0 4px 16px rgba(0,0,0,0.05); }
+    .consideration-title { font-size:9px; font-weight:700; color:#aaa; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:10px; display:block; }
+    .consideration-items { list-style:none; padding:0; display:flex; flex-direction:column; gap:6px; }
+    .consideration-items li { font-size:13px; font-weight:400; color:#555; line-height:1.6; padding-left:12px; position:relative; }
+    .consideration-items li::before { content:'·'; position:absolute; left:0; color:#bbb; font-weight:700; }
+
+    /* Carousel */
+    .ft-carousel { position:relative; border-radius:16px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.12),0 4px 16px rgba(0,0,0,0.06); margin-top:32px; margin-bottom:28px; background:#1a1a1a; }
+    .ft-slide { width:100%; }
+    .ft-slide:not(.active) { position:absolute; top:0; left:0; opacity:0; pointer-events:none; transition:opacity 0.4s ease; }
+    .ft-slide.active { opacity:1; position:relative; transition:opacity 0.4s ease; }
+    .ft-slide img { width:100%; display:block; }
+    .ft-arrow { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.92); border:none; border-radius:50%; width:44px; height:44px; font-size:28px; cursor:pointer; z-index:10; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(0,0,0,0.25),0 1px 4px rgba(0,0,0,0.12); transition:background .18s ease,transform .18s ease; color:#1a1a1a; line-height:1; padding-bottom:2px; }
+    .ft-arrow:hover { background:#fff; transform:translateY(-50%) scale(1.08); }
+    .ft-prev { left:16px; }
+    .ft-next { right:16px; }
+    .ft-dots-bar { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:7px; z-index:10; }
+    .ft-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.45); cursor:pointer; border:none; padding:0; transition:background .2s; }
+    .ft-dot.active { background:#fff; }
+
+    /* Takeaways */
+    .takeaway-list { list-style:none; padding:0; counter-reset:tk; display:flex; flex-direction:column; gap:20px; margin-top:28px; }
+    .takeaway-list li { font-size:14px; font-weight:400; color:#555; line-height:1.84; padding-left:36px; position:relative; }
+    .takeaway-list li::before { counter-increment:tk; content:counter(tk); position:absolute; left:0; width:20px; height:20px; background:#333; color:#f2f4f8; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; top:2px; }
+    .takeaway-list li strong { font-weight:600; color:#333; }
+
+    /* Dark strip */
+    .dark-strip { background:#333; border-radius:40px; padding:52px 20% 64px; margin:40px 0; }
+    .dark-strip .consideration-card { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); }
+    .dark-strip .consideration-title { color:rgba(242,244,248,0.45); }
+    .dark-strip .consideration-items li { color:rgba(242,244,248,0.78); }
+    .dark-strip .consideration-items li::before { color:rgba(242,244,248,0.25); }
+    .dark-strip .sec-label { color:rgba(242,244,248,0.45); }
+    .dark-strip .sec-heading { color:#f2f4f8; }
+    .dark-strip .sec-body { color:rgba(242,244,248,0.82); }
+    .dark-strip .sec-body strong { color:#f2f4f8; }
+    .reflect-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(22px,2.8vw,36px); font-weight:700; color:#f2f4f8; letter-spacing:-0.03em; line-height:1.15; margin-bottom:24px; max-width:680px; }
+
+    /* Footer */
+    footer { text-align:center; padding:64px 40px 48px; display:flex; flex-direction:column; align-items:center; gap:20px; background:#f2f4f8; border-top:1px solid rgba(51,51,51,0.08); }
+    .footer-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(20px,2.4vw,30px); font-weight:700; color:#333; letter-spacing:-0.06em; }
+    .footer-links { display:flex; gap:32px; }
+    .footer-links a { font-size:14px; font-weight:700; color:#333; opacity:.75; text-decoration:none; transition:opacity .2s; }
+    .footer-links a:hover { opacity:1; }
+    .footer-copy { font-size:13px; font-weight:400; color:#999; }
+
+    /* Cursor */
+    #cdot { position:fixed; z-index:9999; width:6px; height:6px; border-radius:50%; background:rgba(51,51,51,.55); transform:translate(-50%,-50%); pointer-events:none; }
+    #cring { position:fixed; z-index:9998; width:32px; height:32px; border-radius:50%; border:1px solid rgba(51,51,51,.22); transform:translate(-50%,-50%); pointer-events:none; }
+
+    /* ── Mobile Nav ── */
+    .nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; padding:6px; z-index:36; cursor:none; }
+    .nav-hamburger span { display:block; width:22px; height:2px; background:#f2f4f8; border-radius:1px; transition:transform .25s ease, opacity .2s ease; }
+    .nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity:0; }
+    .nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+    .nav-mobile { display:none; position:fixed; top:54px; left:0; right:0; background:rgba(30,30,30,0.98); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); z-index:34; flex-direction:column; padding:8px 24px 16px; border-top:1px solid rgba(255,255,255,0.08); }
+    .nav-mobile.open { display:flex; }
+    .nav-mobile a { font-family:'Quicksand',sans-serif; font-size:15px; font-weight:500; color:rgba(255,255,255,0.75); text-decoration:none; padding:13px 0; border-bottom:1px solid rgba(255,255,255,0.07); display:block; transition:color .18s ease; letter-spacing:.02em; }
+    .nav-mobile a:last-child { border-bottom:none; }
+    .nav-mobile a:hover, .nav-mobile a.active { color:#fff; }
+
+    /* ── Responsive ── */
+    @media (max-width:768px) {
+      nav { padding:0 20px; }
+      .nav-links { display:none; }
+      .nav-hamburger { display:flex; }
+
+      .hero-dashboard-wrap { padding:20px 16px 0; }
+      .dashboard-container { border-radius:14px; padding:14px 14px 0; }
+      .dashboard-container img { width:80%; margin:0 auto; }
+
+      .cs-hero-info { padding:28px 20px 0; }
+      .cs-title { margin-bottom:24px; }
+      .hero-grid { grid-template-columns:1fr; gap:24px; padding-bottom:36px; }
+      .hero-sidebar { flex-direction:row; flex-wrap:wrap; gap:12px 24px; padding-top:16px; border-top:1px solid rgba(51,51,51,0.1); }
+
+      .cs-section { padding:32px 20px; }
+      .cs-divider { margin:0 20px; }
+      .dark-strip { padding:32px 20px 40px; border-radius:20px; margin:20px 0; }
+
+      .considerations-grid { grid-template-columns:1fr; gap:12px; }
+      .two-img-grid { grid-template-columns:1fr; gap:14px; }
+      .end-users-grid { grid-template-columns:1fr; gap:12px; margin-top:20px; }
+
+      footer { padding:40px 20px 32px; }
+      .footer-links { gap:16px; flex-wrap:wrap; justify-content:center; }
+    }
+
+    @media (min-width:769px) and (max-width:1024px) {
+      nav { padding:0 5%; }
+      .hero-dashboard-wrap { padding:36px 5% 0; }
+      .cs-hero-info { padding:40px 5% 0; }
+      .cs-section { padding:52px 5%; }
+      .cs-divider { margin:0 5%; }
+      .dark-strip { padding:44px 5% 52px; }
+      .considerations-grid { grid-template-columns:repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">k.l&#234;</a>
+  <div class="nav-links">
+    <a href="index.html#projects" class="active">Work</a>
+    <a href="about.html">About</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="index.html#projects" class="active">Work</a>
+  <a href="about.html">About</a>
+  <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+</div>
+
+<div class="page-wrap">
+
+  <!-- HERO: Hi-fi desktop in dark container -->
+  <div class="hero-dashboard-wrap">
+    <div class="dashboard-container">
+      <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643347/portfolio/images/sttr/desktop-4-2.png" alt="R41 STTR Breast Reconstruction Program" style="width:58%; margin:0 auto; display:block; border-radius:10px 10px 0 0;" />
+    </div>
+  </div>
+
+  <!-- Tags + Title + Overview + Sidebar -->
+  <div class="cs-hero-info">
+    <span class="cs-tags">UX DESIGN &#x2726; HEALTHCARE &#x2726; ENTERPRISE SOFTWARE</span>
+    <h1 class="cs-title">R41 STTR</h1>
+    <div class="hero-grid">
+      <div>
+        <p class="overview-text">The R41 STTR Breast Reconstruction Program is a surgical planning and patient consultation tool developed for UT MD Anderson. The University of Houston UX Lab was tasked with redesigning the existing software to make it more functional and usable for the clinical teams that rely on it. My goal was to modernize the visual design while keeping the interface efficient and accessible for everyone from reconstructive surgeons to physician assistants.</p>
+        <p class="overview-text">I contributed to the icon design and color palette, created three lo-fi screens, and developed a high-fidelity redesign focused on making the interface feel familiar, clean, and professional without getting in the way of the clinical work it supports.</p>
+      </div>
+      <div class="hero-sidebar">
+        <div>
+          <span class="sidebar-label">Role</span>
+          <span class="sidebar-value">UX Designer</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Timeline</span>
+          <span class="sidebar-value">Spring 2025</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Tools</span>
+          <span class="sidebar-value">Figma</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Team</span>
+          <span class="sidebar-value">8 Designers from the UH UX Lab</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- CONTEXT -->
+  <div class="cs-section">
+    <span class="sec-label">Context</span>
+    <h2 class="sec-heading">redesigning software that surgeons use every day</h2>
+    <p class="sec-body">The STTR Breast Reconstruction Program was built to support surgical planning and patient consultations at MD Anderson. It works, but it wasn't built with modern UI standards in mind. MD Anderson came to the University of Houston Lab with a clear ask: redesign the interface so the program could better support visualization, measurements, and simulations, without getting in the way of the people using it.</p>
+    <p class="sec-body">The end users aren't casual app users but actual reconstructive surgeons, clinicians, physician assistants, and nurses who need to make precise decisions quickly in high-stakes environments. The redesign had to feel intuitive to someone already comfortable with professional software while reducing friction and improving clarity throughout.</p>
+
+    <div class="end-users-grid">
+      <div class="end-users-label">END USERS</div>
+      <div class="user-bullets">
+        <div class="user-bullet">
+          <h4>Reconstructive Surgeons</h4>
+          <p>Primary users of the surgical planning and simulation tools. Need fast, accurate visualization of 3D models and measurements without the interface competing for their attention.</p>
+        </div>
+        <div class="user-bullet">
+          <h4>Clinicians</h4>
+          <p>Use the program for patient consultations and reviewing imaging data. Need an interface that communicates clearly without requiring deep technical knowledge of the tool itself.</p>
+        </div>
+        <div class="user-bullet">
+          <h4>Physician Assistants and Nurses</h4>
+          <p>Support roles that interact with the program during patient prep and follow-up. Keyboard navigation and quick-access controls are especially important for this group.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN CONSIDERATIONS -->
+  <div class="dark-strip">
+    <span class="sec-label">Process</span>
+    <h2 class="sec-heading">what we aligned on before touching the interface</h2>
+    <p class="sec-body">As a team of 8 designers, we broke the redesign into core areas of focus before anyone started putting pixels down. These became the shared constraints that kept all our designs pulling in the same direction, even when our individual approaches looked different.</p>
+
+    <div class="considerations-grid">
+      <div class="consideration-card">
+        <span class="consideration-title">User Interface</span>
+        <ul class="consideration-items">
+          <li>Color scheme appropriate for a clinical environment</li>
+          <li>Typography that scales well across dense data views</li>
+          <li>Layout familiar enough to reduce onboarding time</li>
+        </ul>
+      </div>
+      <div class="consideration-card">
+        <span class="consideration-title">Accessibility</span>
+        <ul class="consideration-items">
+          <li>Sufficient contrast ratios throughout</li>
+          <li>Full keyboard navigation for all core functions</li>
+          <li>Clear visual feedback for every interactive state</li>
+        </ul>
+      </div>
+      <div class="consideration-card">
+        <span class="consideration-title">Interaction Design</span>
+        <ul class="consideration-items">
+          <li>Feedback states for every interactive element</li>
+          <li>Self-containing widgets to reduce context switching</li>
+          <li>Icons that are recognizable over clever</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- ICONS & COLORS -->
+  <div class="cs-section">
+    <span class="sec-label">Process</span>
+    <h2 class="sec-heading">icons and color palette: collaborative decisions that shaped everything</h2>
+    <p class="sec-body">Across the team, we worked together on the icon set and color palette before splitting into individual screen designs. I contributed to both, which meant a lot of back-and-forth to make sure things stayed consistent as each of us worked through our own flows.</p>
+
+    <div class="two-img-grid">
+      <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643349/portfolio/images/sttr/icon1.png" alt="STTR icon set part 1" />
+      <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643350/portfolio/images/sttr/icons-2.png" alt="STTR icon set part 2" />
+    </div>
+
+    <p class="sec-body" style="margin-top:28px;">For the icons, we kept everything consistent with a rounded, line-based style. Each one needed to be immediately recognizable to someone already familiar with professional desktop tools. We leaned on familiar metaphors: a folder icon for loading files, an eye for visibility, a trash bin for delete, rather than inventing new conventions. In a clinical environment, any hesitation over an unfamiliar icon is a real problem. We also condensed related actions into grouped expandable buttons, like the House icon containing both home position options, to reduce toolbar clutter without hiding features behind deep menus.</p>
+
+    <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643349/portfolio/images/sttr/colorsster.png" alt="STTR color palette" class="section-img" />
+
+    <p class="sec-body" style="margin-top:28px;">For the palette, we went dark. A near-black base (#2C2C2C, #25305E) with structured grays and a light blue accent (#D8EFF5) was a deliberate call. The whole point of the program is to let the 3D mesh model be the visual focal point of every screen. A bright or busy interface would compete with the model for attention, which is the last thing a surgeon needs during a planning session. The dark background pulls the model forward and keeps the UI firmly in its supporting role. The light blue accent adds just enough life to feel modern without pulling focus away from the work.</p>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- LO-FI -->
+  <div class="cs-section">
+    <span class="sec-label">Process</span>
+    <h2 class="sec-heading">lo-fidelity: getting the layout right before going visual</h2>
+    <p class="sec-body">I created three lo-fi screens covering the main views users would need access to. The layout was directly inspired by tools like Google Docs and Photoshop, applications that clinicians and design-adjacent professionals are already familiar with. A left-side toolbar, a central viewport for the 3D model, and a right-side panel for controls and file management. That structure doesn't ask users to learn a new mental model, which matters a lot when the people using this software are focused on patients rather than on figuring out an interface.</p>
+
+    <div class="ft-carousel" id="lofi-carousel">
+      <div class="ft-slide active"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643345/portfolio/images/sttr/desktop-1.png" alt="STTR lo-fi screen 1" /></div>
+      <div class="ft-slide"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643346/portfolio/images/sttr/desktop-2.png" alt="STTR lo-fi screen 2" /></div>
+      <div class="ft-slide"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643346/portfolio/images/sttr/desktop-3.png" alt="STTR lo-fi screen 3" /></div>
+      <button class="ft-arrow ft-prev" aria-label="Previous">&#8249;</button>
+      <button class="ft-arrow ft-next" aria-label="Next">&#8250;</button>
+      <div class="ft-dots-bar">
+        <button class="ft-dot active" data-i="0" aria-label="Slide 1"></button>
+        <button class="ft-dot" data-i="1" aria-label="Slide 2"></button>
+        <button class="ft-dot" data-i="2" aria-label="Slide 3"></button>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- HI-FI -->
+  <div class="cs-section">
+    <span class="sec-label">Design</span>
+    <h2 class="sec-heading">high-fidelity: making the interface actually feel clinical</h2>
+    <p class="sec-body">The high-fidelity redesign brought everything together. The dark background lets the 3D model breathe. The side panels keep controls organized without cluttering the main workspace. The bottom toolbar condenses multiple actions into a clean, labeled icon bar. Everything was designed to stay out of the way when it isn't needed and be immediately accessible when it is.</p>
+
+    <div class="ft-carousel" id="hifi-carousel">
+      <div class="ft-slide active"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643347/portfolio/images/sttr/desktop-4-2.png" alt="STTR hi-fi screen 1" /></div>
+      <div class="ft-slide"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643347/portfolio/images/sttr/desktop-5.png" alt="STTR hi-fi screen 2" /></div>
+      <div class="ft-slide"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643348/portfolio/images/sttr/desktop-6.png" alt="STTR hi-fi screen 3" /></div>
+      <button class="ft-arrow ft-prev" aria-label="Previous">&#8249;</button>
+      <button class="ft-arrow ft-next" aria-label="Next">&#8250;</button>
+      <div class="ft-dots-bar">
+        <button class="ft-dot active" data-i="0" aria-label="Slide 1"></button>
+        <button class="ft-dot" data-i="1" aria-label="Slide 2"></button>
+        <button class="ft-dot" data-i="2" aria-label="Slide 3"></button>
+      </div>
+    </div>
+
+    <div class="two-img-grid" style="margin-top:0;">
+      <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643347/portfolio/images/sttr/desktop-5.png" alt="STTR hi-fi screen 2" />
+      <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643348/portfolio/images/sttr/desktop-6.png" alt="STTR hi-fi screen 3" />
+    </div>
+
+    <ul class="design-bullets">
+      <li><strong>Dark primary background</strong> makes the 3D mesh model the visual focal point of every screen, keeping the UI in a supporting role rather than competing with the clinical content</li>
+      <li><strong>Grouped expandable buttons</strong> reduce toolbar clutter while keeping every feature accessible. The House icon contains both home-position options; the Cube icon holds all different view states. Related features stay together without adding navigation steps</li>
+      <li><strong>Active state highlighting</strong> on selected tools makes it immediately clear what mode the user is in, reducing the chance of errors in a high-stakes environment where mode confusion matters</li>
+      <li><strong>Checkboxed file list</strong> in the Images Loaded panel lets surgeons manage multiple mesh files and toggle visibility without losing their current view or context</li>
+      <li><strong>Collapsible right-side panels</strong> for Visualizations, Annotation, and Curvatures keep the workspace clean while keeping advanced features within one click for users who need them</li>
+    </ul>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- TAKEAWAYS -->
+  <div class="cs-section">
+    <span class="sec-label">Takeaways</span>
+    <h2 class="sec-heading">what it means to design for real healthcare professionals</h2>
+    <p class="sec-body">This was a completely different experience from any class project I had worked on before. Here's what stayed with me:</p>
+    <ol class="takeaway-list">
+      <li><strong>Every design decision has real downstream consequences.</strong> When the software is used to plan breast reconstruction surgery, there's no "good enough." Icon placement, contrast ratios, and interaction patterns aren't just aesthetic choices here. They're functional ones that directly affect clinical workflows and, by extension, real patients.</li>
+      <li><strong>Team alignment is a design skill.</strong> Working in a lab with 8 designers, all approaching the same problem differently, meant learning how to communicate design decisions clearly enough that someone else could understand and build on them. It also meant being open to your ideas being used in part rather than in full.</li>
+      <li><strong>The client picking features from multiple mockups showed me what real design collaboration looks like.</strong> MD Anderson didn't have to choose one designer's work wholesale. They mixed and matched the best parts from everyone's designs. That only works when the whole team is working from the same shared constraints and vocabulary from the start.</li>
+      <li><strong>Accessibility isn't optional in healthcare software.</strong> Keyboard navigation and contrast ratios aren't nice-to-haves when users are clinicians in fast-moving environments. That reframing stuck with me and changed how I think about accessibility requirements across any project I work on.</li>
+      <li><strong>Familiar layouts lower onboarding cost in professional tools.</strong> Borrowing from Photoshop and Google Docs wasn't a lazy shortcut. It was a deliberate decision to reduce the time users spend learning an interface so they can spend more time on actual patient care.</li>
+    </ol>
+  </div>
+
+  <!-- REFLECTION: dark strip -->
+  <div class="dark-strip">
+    <span class="sec-label">Reflection</span>
+    <h2 class="reflect-heading">designing for something that actually matters</h2>
+    <p class="sec-body">STTR was the most meaningful project I worked on in terms of real-world impact. Knowing that the tool we were redesigning helps surgeons plan breast reconstruction procedures for cancer patients made every design decision feel more weighted. That wasn't a bad thing. It sharpened my focus and made me more deliberate about every call I made.</p>
+    <p class="sec-body" style="margin-top:14px;">Working inside a real lab with a real client also showed me the gap between designing something that looks good and designing something that actually serves its users under high-stakes conditions. Those aren't always the same thing. Closing that gap, even partially, is what I want to keep building toward. This project is the clearest example I have of why design done well can contribute to something genuinely important.</p>
+  </div>
+
+</div>
+
+<footer>
+  <h2 class="footer-heading">thanks for stopping by, let's chat!</h2>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/kathlyn-le/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:kathlynle.design@gmail.com">kathlynle.design@gmail.com</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Kathlyn Le &#x2726; Made with 🍵</p>
+</footer>
+
+<div id="cdot"></div>
+<div id="cring"></div>
+
+<script>
+  history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  const dot = document.getElementById('cdot');
+  const ring = document.getElementById('cring');
+  let rx = innerWidth * .5, ry = innerHeight * .5, rawX = rx, rawY = ry;
+  document.addEventListener('mousemove', e => {
+    dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+    rawX = e.clientX; rawY = e.clientY;
+  });
+  (function animRing() {
+    rx += (rawX - rx) * .10; ry += (rawY - ry) * .10;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  function initCarousel(id) {
+    const wrap = document.getElementById(id);
+    if (!wrap) return;
+    const slides = wrap.querySelectorAll('.ft-slide');
+    const dots = wrap.querySelectorAll('.ft-dot');
+    const prev = wrap.querySelector('.ft-prev');
+    const next = wrap.querySelector('.ft-next');
+    let cur = 0;
+    function goTo(i) {
+      slides[cur].classList.remove('active');
+      dots[cur].classList.remove('active');
+      cur = (i + slides.length) % slides.length;
+      slides[cur].classList.add('active');
+      dots[cur].classList.add('active');
+    }
+    prev.addEventListener('click', () => goTo(cur - 1));
+    next.addEventListener('click', () => goTo(cur + 1));
+    dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+  }
+
+  initCarousel('lofi-carousel');
+  initCarousel('hifi-carousel');
+
+  const hamburger = document.getElementById('nav-hamburger');
+  const navMobile = document.getElementById('nav-mobile');
+  if (hamburger && navMobile) {
+    hamburger.addEventListener('click', () => { navMobile.classList.toggle('open'); hamburger.classList.toggle('open'); });
+    navMobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { navMobile.classList.remove('open'); hamburger.classList.remove('open'); }));
+  }
+</script>
+</body>
+</html>

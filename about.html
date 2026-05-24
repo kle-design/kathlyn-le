@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — k.le</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @font-face {
+      font-family: 'JayaGiri';
+      src: url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype');
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: #f2f4f8;
+      color: #333;
+      overflow-y: auto; overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 35;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20%; height: 54px;
+      background: rgba(51,51,51,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    .logo {
+      font-family: 'JayaGiri', 'Quicksand', sans-serif;
+      font-size: 22px; font-weight: 600; color: #f2f4f8;
+      letter-spacing: -0.02em; text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.70);
+      text-decoration: none; letter-spacing: .02em;
+      transition: color .18s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { color: #fff; }
+
+    /* PAGE */
+    .about-page { padding-top: 54px; }
+
+    /* Inner container — 20% margins each side */
+    .ac {
+      padding-left: 20%;
+      padding-right: 20%;
+    }
+
+    /* ── TOP SECTION ── */
+    .top-section {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 56px;
+      align-items: start;
+      padding: 72px 0 68px;
+    }
+
+    .about-eyebrow {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: #777; margin-bottom: 14px;
+    }
+    .pronunciation {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px; font-weight: 400; color: #999;
+      letter-spacing: .04em;
+      margin-top: -20px; margin-bottom: 28px;
+    }
+
+    .top-heading {
+      font-family: 'JayaGiri', 'Quicksand', sans-serif;
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 700; color: #333;
+      letter-spacing: -0.05em; line-height: 1.0;
+      margin-bottom: 32px;
+    }
+
+    .top-body p {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 15px; font-weight: 400; color: #444;
+      line-height: 1.82; margin-bottom: 16px;
+    }
+
+    .top-photo {
+      width: 290px; height: 370px;
+      object-fit: cover; object-position: center top;
+      border-radius: 18px;
+      display: block; flex-shrink: 0;
+    }
+
+    /* ── POLAROID CAROUSEL ── */
+    .carousel-outer {
+      overflow: hidden;
+      padding: 40px 0;
+      background: #333;
+      border-radius: 0;
+      margin: 24px 0;
+    }
+    .carousel-track {
+      display: flex; gap: 18px;
+      animation: marqueeLeft 45s linear infinite;
+      width: max-content;
+    }
+    .carousel-outer:hover .carousel-track { animation-play-state: paused; }
+    .carousel-track img {
+      height: 210px; width: auto;
+      flex-shrink: 0;
+      display: block;
+      border-radius: 0;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
+      transition: transform .35s cubic-bezier(0.34,1.56,0.64,1), filter .25s ease, box-shadow .25s ease;
+      cursor: pointer;
+    }
+    .carousel-track img:hover {
+      transform: scale(1.09) translateY(-7px);
+      filter: brightness(1.06);
+      position: relative; z-index: 2;
+    }
+    @keyframes marqueeLeft {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── BOTTOM SECTION ── */
+    .bottom-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      padding: 72px 0 48px;
+    }
+
+    .sub-label {
+      font-family: 'JayaGiri', 'Quicksand', sans-serif;
+      font-size: clamp(24px, 2.8vw, 38px);
+      font-weight: 700; color: #333;
+      letter-spacing: -0.04em; line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .bottom-section p:not(.sub-label) {
+      font-size: 15px; font-weight: 400; color: #444;
+      line-height: 1.80; margin-bottom: 16px;
+    }
+
+    /* ── SKILL CATEGORY TAGS ── */
+    .stag {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px; font-weight: 700;
+      letter-spacing: .01em; text-transform: lowercase;
+      color: #333;
+      border: 1px solid rgba(51,51,51,0.28);
+      border-radius: 50px; padding: 5px 16px;
+      white-space: nowrap; display: inline-block;
+    }
+    .skill-categories {
+      margin-top: 26px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .skill-cat {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+    }
+    .skill-cat-tools {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 15px; font-weight: 400; color: #444;
+      line-height: 1.80; padding-left: 4px;
+    }
+
+    /* ── SKILLS INVENTORY BULLETS ── */
+    .skill-item { margin-bottom: 24px; }
+    .bottom-section p.skill-heading {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 15px; font-weight: 600; color: #333;
+      letter-spacing: .04em;
+      margin-bottom: 2px; line-height: 1.3;
+    }
+    .skill-item p:not(.skill-heading) {
+      font-size: 15px; font-weight: 400; color: #444;
+      line-height: 1.80;
+    }
+
+    /* ── EXPERIENCE ── */
+    .section-title {
+      font-family: 'JayaGiri', 'Quicksand', sans-serif;
+      font-size: clamp(24px, 2.8vw, 38px);
+      font-weight: 700; color: #333;
+      letter-spacing: -0.04em; line-height: 1.1;
+      margin-bottom: 40px;
+    }
+
+    .xp-block { margin-bottom: 64px; }
+
+    .xp-entry {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 28px;
+      border-top: 1px solid rgba(51,51,51,0.10);
+      padding: 22px 0;
+    }
+    .xp-entry:last-child { border-bottom: 1px solid rgba(51,51,51,0.10); }
+    .xp-role {
+      font-size: 15px; font-weight: 700; color: #333;
+      line-height: 1.4; margin-bottom: 3px;
+    }
+    .xp-org {
+      font-size: 14px; font-weight: 500; color: #888;
+      margin-bottom: 2px;
+    }
+    .xp-date {
+      font-size: 13px; font-weight: 500; color: #333;
+    }
+    .xp-summary {
+      font-size: 15px; font-weight: 400; color: #555;
+      line-height: 1.74; align-self: center;
+    }
+
+    /* ── EDU + ACTIVITIES ── */
+    .edu-entry {
+      border-top: 1px solid rgba(51,51,51,0.10);
+      border-bottom: 1px solid rgba(51,51,51,0.10);
+      padding: 22px 0;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 28px;
+      margin-bottom: 72px;
+    }
+    .edu-school {
+      font-size: 15px; font-weight: 700; color: #333; margin-bottom: 3px;
+    }
+    .edu-deg {
+      font-size: 14px; font-weight: 500; color: #888; margin-bottom: 2px;
+    }
+    .edu-detail { font-size: 13px; font-weight: 500; color: #333; }
+    .edu-desc {
+      font-size: 15px; font-weight: 400; color: #555;
+      line-height: 1.74; align-self: center;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 64px 40px 48px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 20px;
+      background: #f2f4f8;
+      border-top: 1px solid rgba(51,51,51,0.08);
+    }
+    .footer-heading {
+      font-family: 'JayaGiri', 'Quicksand', sans-serif;
+      font-size: clamp(20px, 2.4vw, 30px);
+      font-weight: 700; color: #333;
+      letter-spacing: -0.06em;
+    }
+    .footer-links { display: flex; gap: 32px; }
+    .footer-links a {
+      font-size: 14px; font-weight: 700; color: #333;
+      opacity: .75; text-decoration: none;
+      transition: opacity .2s ease;
+    }
+    .footer-links a:hover { opacity: 1; }
+    .footer-copy { font-size: 13px; font-weight: 400; color: #999; }
+
+    /* ── CURSOR ── */
+    #cdot {
+      position: fixed; z-index: 9999;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(51,51,51,.55);
+      transform: translate(-50%,-50%); pointer-events: none;
+    }
+    #cring {
+      position: fixed; z-index: 9998;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid rgba(51,51,51,.22);
+      transform: translate(-50%,-50%); pointer-events: none;
+    }
+
+    /* ── Mobile Nav ── */
+    .nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; padding:6px; z-index:36; cursor:none; }
+    .nav-hamburger span { display:block; width:22px; height:2px; background:#f2f4f8; border-radius:1px; transition:transform .25s ease, opacity .2s ease; }
+    .nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity:0; }
+    .nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+    .nav-mobile { display:none; position:fixed; top:54px; left:0; right:0; background:rgba(30,30,30,0.98); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); z-index:34; flex-direction:column; padding:8px 24px 16px; border-top:1px solid rgba(255,255,255,0.08); }
+    .nav-mobile.open { display:flex; }
+    .nav-mobile a { font-family:'Quicksand',sans-serif; font-size:15px; font-weight:500; color:rgba(255,255,255,0.75); text-decoration:none; padding:13px 0; border-bottom:1px solid rgba(255,255,255,0.07); display:block; transition:color .18s ease; letter-spacing:.02em; }
+    .nav-mobile a:last-child { border-bottom:none; }
+    .nav-mobile a:hover, .nav-mobile a.active { color:#fff; }
+
+    /* ── Responsive ── */
+    @media (max-width:768px) {
+      nav { padding:0 20px; }
+      .nav-links { display:none; }
+      .nav-hamburger { display:flex; }
+
+      .ac { padding-left:20px; padding-right:20px; }
+      .top-section { grid-template-columns:1fr; gap:24px; padding:36px 0 32px; }
+      .top-photo { width:100%; height:260px; }
+      .bottom-section { grid-template-columns:1fr; gap:36px; padding:36px 0 32px; }
+      .xp-entry, .edu-entry { grid-template-columns:1fr; gap:4px; padding:18px 0; }
+      .edu-entry { margin-bottom:48px; }
+      .carousel-track img { height:150px; }
+
+      footer { padding:40px 20px 32px; }
+      .footer-links { gap:16px; flex-wrap:wrap; justify-content:center; }
+    }
+
+    @media (min-width:769px) and (max-width:1024px) {
+      nav { padding:0 5%; }
+      .ac { padding-left:5%; padding-right:5%; }
+      .top-section { gap:32px; }
+      .bottom-section { gap:36px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">k.l&#234;</a>
+    <div class="nav-links">
+      <a href="index.html#projects">Work</a>
+      <a href="about.html" class="active">About</a>
+      <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+    </div>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="index.html#projects">Work</a>
+    <a href="about.html" class="active">About</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+
+  <div class="about-page">
+
+    <!-- ── TOP SECTION ── -->
+    <div class="ac">
+      <section class="top-section">
+        <div class="top-body">
+          <p class="about-eyebrow">A Little About Me</p>
+          <h1 class="top-heading">hey again! i'm kathlyn</h1>
+          <p class="pronunciation">/cath &#x2022; leen/</p>
+          <p>I'm currently a senior at the University of Houston, studying in the Cullen College of Engineering. I'm majoring in Digital Media with a focus on UX Design, aiming to build a career where creativity meets problem-solving!</p>
+          <p>Over the past few years, I've had the chance to intern at FinThrive, TA and manage at the UH UX Lab, and represent students at UXPA Houston and UX Coogs. I learned that what I care about most is figuring out why users do what they do, and designing experiences that actually make sense for them. Good design starts with listening, and I try to bring that into everything I create.</p>
+          <p>I believe design is less about making things look good and more about making things feel right. Whether I'm running a usability test, building out a prototype, or presenting to stakeholders, I try to keep the person using the product at the center of every decision.</p>
+        </div>
+        <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643345/portfolio/images/root/me-portfolio-2.jpg" alt="Kathlyn" class="top-photo" />
+      </section>
+    </div>
+
+    <!-- ── POLAROID CAROUSEL ── -->
+    <div class="carousel-outer">
+      <div class="carousel-track" id="carousel-track"></div>
+    </div>
+
+    <!-- ── BOTTOM SECTION ── -->
+    <div class="ac">
+      <section class="bottom-section">
+
+        <div>
+          <p class="sub-label">outside of work</p>
+          <p>Being a student can be pretty hectic, especially working part-time! But when I do find the time to spend on myself, I love traveling, reading, playing with video games, creating art, and hanging out with friends and family. Some of my other interests are anime, makeup, fashion, perfumes, and being a huge foodie!</p>
+          <p>I like to try my hardest in becoming a &lsquo;Jack of All Trades, Master of All,&rsquo; so my latest learning endeavors include: archery, electric guitar, and getting my chef on in the kitchen. 👩‍🍳</p>
+          <p>If you&rsquo;re curious for more, I&rsquo;m just a message away!</p>
+          <div class="skill-categories">
+            <div class="skill-cat">
+              <span class="stag">design</span>
+              <span class="skill-cat-tools">Figma, Framer, Sketch, Adobe XD, Adobe Illustrator, Adobe Photoshop, Adobe InDesign, Adobe Premiere Pro, Blender, Canva</span>
+            </div>
+            <div class="skill-cat">
+              <span class="stag">research</span>
+              <span class="skill-cat-tools">Miro, Mural, Jira, Tableau</span>
+            </div>
+            <div class="skill-cat">
+              <span class="stag">tools</span>
+              <span class="skill-cat-tools">Google Workspace, Microsoft Office</span>
+            </div>
+            <div class="skill-cat">
+              <span class="stag">code</span>
+              <span class="skill-cat-tools">HTML &amp; CSS, Visual Studio Code</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="sub-label">skills in my inventory</p>
+          <div class="skill-item">
+            <p class="skill-heading">&#x2726; I love what I do, even the challenges.</p>
+            <p>It is easy to stay motivated when things go right, but true passion is found in the setbacks. I have learned to enjoy every facet of what I do, including the wins and the hurdles alike. And because I love the full spectrum of my work, it is why I give it my all and adapt to the challenge at hand.</p>
+          </div>
+          <div class="skill-item">
+            <p class="skill-heading">&#x2726; I&rsquo;m a learning sponge.</p>
+            <p>I recognize that I still have a lot to learn in the tech industry, but I am a rapid learner. I make it a point to absorb every lesson and experience so that I can use that knowledge to output something even better than before.</p>
+          </div>
+          <div class="skill-item">
+            <p class="skill-heading">&#x2726; I always put the user first.</p>
+            <p>I believe that exceptional design begins and ends with the person using it, which is why I maintain a firm commitment to putting the user at the center of every decision. Because I prioritize user feedback, I can refine my designs and create products that feel natural and accessible to everyone.</p>
+          </div>
+          <div class="skill-item">
+            <p class="skill-heading">&#x2726; I&rsquo;m a Storyteller.</p>
+            <p>To me, the most effective communication is rooted in a compelling narrative. I prioritize storytelling as a means of providing context and clarity to my work. By absorbing the nuances of each unique project, I am able to refine my storytelling techniques and deliver a more resonant final product than before.</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- EXPERIENCE -->
+      <div class="xp-block">
+        <h2 class="section-title">experience</h2>
+
+        <div class="xp-entry">
+          <div>
+            <p class="xp-role">UX/UI Design Intern</p>
+            <p class="xp-org">FinThrive</p>
+            <p class="xp-date">June &ndash; December 2025</p>
+          </div>
+          <p class="xp-summary">Designed high-fidelity prototypes for FinThrive's healthcare finance SaaS platform, collaborated across cross-functional teams to improve usability by up to <strong>15%</strong>, and owned feature design from concept to iteration.</p>
+        </div>
+
+        <div class="xp-entry">
+          <div>
+            <p class="xp-role">Teaching Assistant &amp; Lab Manager</p>
+            <p class="xp-org">UH UX Lab</p>
+            <p class="xp-date">January &ndash; May 2025</p>
+          </div>
+          <p class="xp-summary">Mentored <strong>50+</strong> students in UX Principles, conducted heuristic analysis for Ethnote, and produced a high-fidelity prototype for an STTR Breast Reconstruction Program client.</p>
+        </div>
+
+        <div class="xp-entry">
+          <div>
+            <p class="xp-role">Social Media Intern &amp; UX Student Rep</p>
+            <p class="xp-org">UXPA Houston</p>
+            <p class="xp-date">March 2024 &ndash; May 2025</p>
+          </div>
+          <p class="xp-summary">Facilitated industry speakers and prototyping workshops while growing LinkedIn engagement by <strong>20%</strong> through thoughtful, design-forward content.</p>
+        </div>
+
+        <div class="xp-entry">
+          <div>
+            <p class="xp-role">Freelance Digital Content Producer</p>
+            <p class="xp-org">The Nuu Moon, The Million, Tiffany G'lam Pro</p>
+            <p class="xp-date">March 2025 &ndash; Present</p>
+          </div>
+          <p class="xp-summary">Managed content strategy for three brands • grew each following by at least <strong>20%</strong> • planned a three-day public event for The Million that drew over <strong>200</strong> vendors and <strong>1,000+</strong> attendees.</p>
+        </div>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="xp-block">
+        <h2 class="section-title">education</h2>
+        <div class="edu-entry">
+          <div>
+            <p class="edu-school">University of Houston</p>
+            <p class="edu-deg">Cullen College of Engineering</p>
+            <p class="edu-detail">Expected May 2026 - GPA 3.7</p>
+          </div>
+          <p class="edu-desc">B.S. in Digital Media with a focus on User Experience.</p>
+        </div>
+      </div>
+
+      <!-- ACTIVITIES -->
+      <div class="xp-block">
+        <h2 class="section-title">activities</h2>
+        <div class="xp-entry">
+          <div>
+            <p class="xp-role">Vice President &amp; Co-Founder</p>
+            <p class="xp-org">UX Coogs</p>
+            <p class="xp-date">September 2023 &ndash; May 2025</p>
+          </div>
+          <p class="xp-summary">Hosted workshops, guest lectures, and networking events while connecting members with industry professionals and job opportunities in UX/UI design.</p>
+        </div>
+        <div class="xp-entry">
+          <div>
+            <p class="xp-role">Volunteer &amp; Coordinator</p>
+            <p class="xp-org">UH Kesem</p>
+            <p class="xp-date">August 2024 &ndash; Present</p>
+          </div>
+          <p class="xp-summary">Facilitated educational events, interviewed counselor candidates, and partnered with other organizations to host collaborative fundraising initiatives for children's cancer programs.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <h2 class="footer-heading">thanks for stopping by, let's chat!</h2>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/kathlyn-le/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:kathlynle.design@gmail.com">kathlynle.design@gmail.com</a>
+      <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+    </div>
+    <p class="footer-copy">&copy; 2026 Kathlyn Le &#x2726; Made with 🍵</p>
+  </footer>
+
+  <div id="cdot"></div>
+  <div id="cring"></div>
+
+  <script>
+    /* POLAROID CAROUSEL — infinite marquee, 15 images in shuffled order */
+    const polaroids = [
+      'Polaroids/1.png','Polaroids/2.png','Polaroids/13.png',
+      'Polaroids/3.png','Polaroids/4.png','Polaroids/5.png',
+      'Polaroids/14.png','Polaroids/6.png','Polaroids/7.png',
+      'Polaroids/8.png','Polaroids/9.png','Polaroids/15.png',
+      'Polaroids/10.png','Polaroids/11.png','Polaroids/12.png'
+    ];
+    const track = document.getElementById('carousel-track');
+    [...polaroids, ...polaroids].forEach(src => {
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = '';
+      track.appendChild(img);
+    });
+
+    /* CUSTOM CURSOR */
+    const dot  = document.getElementById('cdot');
+    const ring = document.getElementById('cring');
+    let rx = window.innerWidth * .5, ry = window.innerHeight * .5;
+    let rawX = rx, rawY = ry;
+    const lerp = (a, b, t) => a + (b - a) * t;
+
+    document.addEventListener('mousemove', e => {
+      dot.style.left = e.clientX + 'px';
+      dot.style.top  = e.clientY + 'px';
+      rawX = e.clientX; rawY = e.clientY;
+    });
+
+    (function animRing() {
+      rx = lerp(rx, rawX, .10); ry = lerp(ry, rawY, .10);
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
+
+    const hamburger = document.getElementById('nav-hamburger');
+    const navMobile = document.getElementById('nav-mobile');
+    if (hamburger && navMobile) {
+      hamburger.addEventListener('click', () => { navMobile.classList.toggle('open'); hamburger.classList.toggle('open'); });
+      navMobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { navMobile.classList.remove('open'); hamburger.classList.remove('open'); }));
+    }
+  </script>
+
+</body>
+</html>

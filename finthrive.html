@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinThrive — k.le</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face { font-family:'JayaGiri'; src:url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype'); }
+    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Quicksand',sans-serif; background:#f2f4f8; color:#333; overflow-y:auto; overflow-x:hidden; cursor:none; }
+
+    /* ── Password Gate ── */
+    #pw-gate { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; background:#f2f4f8; animation:pwFadeIn .45s ease forwards; }
+    @keyframes pwFadeIn  { from { opacity:0; } to { opacity:1; } }
+    @keyframes pwFadeOut { from { opacity:1; } to { opacity:0; } }
+    #pw-gate.unlocked { animation:pwFadeOut .38s ease forwards; pointer-events:none; }
+    #pw-card { background:#fff; border-radius:20px; padding:52px 48px 44px; max-width:420px; width:90%; box-shadow:0 12px 48px rgba(51,51,51,0.09),0 2px 8px rgba(51,51,51,0.05); text-align:center; }
+    #pw-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(22px,3vw,30px); color:#333; letter-spacing:-0.02em; word-spacing:-0.12em; margin-bottom:10px; }
+    #pw-sub { font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; color:#999; margin-bottom:28px; line-height:1.6; }
+    #pw-input-wrap { display:flex; gap:10px; }
+    #pw-input { flex:1; font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; background:#f2f4f8; border:1.5px solid rgba(51,51,51,.12); border-radius:10px; padding:12px 16px; color:#333; outline:none; cursor:none; transition:border-color .18s ease; }
+    #pw-input:focus { border-color:rgba(51,51,51,.32); }
+    #pw-btn { font-family:'Quicksand',sans-serif; font-size:14px; font-weight:600; background:#333; color:#f2f4f8; border:none; border-radius:10px; padding:12px 22px; cursor:none; transition:background .18s ease, transform .12s ease; }
+    #pw-btn:hover { background:#1a1a1a; transform:translateY(-1px); }
+    #pw-btn:active { transform:translateY(0); }
+    #pw-error { font-family:'Quicksand',sans-serif; font-size:13px; color:#b94040; margin-top:14px; min-height:18px; opacity:0; transition:opacity .22s ease; }
+    #pw-error.visible { opacity:1; }
+
+    /* ── Nav ── */
+    nav { position:fixed; top:0; left:0; right:0; z-index:35; display:flex; align-items:center; justify-content:space-between; padding:0 20%; height:54px; background:rgba(51,51,51,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .logo { font-family:'JayaGiri','Quicksand',sans-serif; font-size:22px; font-weight:600; color:#f2f4f8; letter-spacing:-0.02em; text-decoration:none; }
+    .nav-links { display:flex; gap:24px; }
+    .nav-links a { font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; color:rgba(255,255,255,.70); text-decoration:none; letter-spacing:.02em; transition:color .18s ease; }
+    .nav-links a:hover, .nav-links a.active { color:#fff; }
+
+    .page-wrap { padding-top:54px; }
+
+    /* ── Hero: dashboard in dark container ── */
+    .hero-dashboard-wrap { padding:56px 20% 0; }
+    .dashboard-container { background:#1a1a1a; border-radius:24px; padding:28px 28px 0; overflow:hidden; box-shadow:0 32px 80px rgba(0,0,0,0.18),0 8px 24px rgba(0,0,0,0.1); }
+    .dashboard-container img { width:100%; display:block; border-radius:10px 10px 0 0; }
+
+    /* ── Tags + Title + Overview + Sidebar ── */
+    .cs-hero-info { padding:52px 20% 0; }
+    .cs-tags { font-size:11px; font-weight:600; color:#aaa; letter-spacing:0.14em; text-transform:uppercase; display:block; margin-bottom:20px; }
+    .cs-title { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:#333; letter-spacing:-0.04em; line-height:0.92; margin-bottom:40px; }
+    .hero-grid { display:grid; grid-template-columns:1fr 200px; gap:52px; align-items:start; padding-bottom:64px; }
+    .overview-text { font-size:15px; font-weight:400; color:#555; line-height:1.88; }
+    .overview-text + .overview-text { margin-top:14px; }
+    .hero-sidebar { display:flex; flex-direction:column; gap:22px; }
+    .sidebar-label { font-size:9px; font-weight:700; color:#bbb; letter-spacing:0.16em; text-transform:uppercase; display:block; margin-bottom:4px; }
+    .sidebar-value { font-size:13px; font-weight:600; color:#333; line-height:1.5; }
+
+    /* ── FT Me photo ── */
+    .ft-photo-wrap { padding:0 20% 56px; }
+    .ft-photo-wrap img { width:100%; display:block; border-radius:20px; object-fit:cover; max-height:520px; object-position:center 18%; box-shadow:0 24px 64px rgba(0,0,0,0.1),0 4px 16px rgba(0,0,0,0.06); }
+
+    /* ── Section layout ── */
+    .cs-section { padding:64px 20%; }
+    .cs-divider { border:none; border-top:1px solid rgba(51,51,51,0.1); margin:0 20%; }
+    .sec-label { font-size:9px; font-weight:700; color:#aaa; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:14px; display:block; }
+    .sec-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(24px,2.8vw,40px); font-weight:700; color:#333; letter-spacing:-0.03em; line-height:1.1; margin-bottom:20px; }
+    .sec-body { font-size:15px; font-weight:400; color:#555; line-height:1.88; }
+    .sec-body + .sec-body { margin-top:14px; }
+    .sec-body strong { font-weight:600; color:#333; }
+
+    /* ── Intern role two-column ── */
+    .intern-role-grid { display:grid; grid-template-columns:168px 1fr; gap:56px; margin-top:44px; padding-top:44px; border-top:1px solid rgba(51,51,51,0.1); align-items:start; }
+    .intern-role-label { font-family:'JayaGiri','Quicksand',sans-serif; font-size:16px; font-weight:700; color:#333; letter-spacing:-0.01em; line-height:1.35; padding-top:4px; }
+    .intern-bullets { display:flex; flex-direction:column; gap:24px; }
+    .intern-bullet h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:6px; }
+    .intern-bullet p { font-size:14px; font-weight:400; color:#555; line-height:1.84; }
+
+    /* ── Process steps ── */
+    .process-steps { display:flex; flex-direction:column; gap:32px; margin-top:36px; }
+    .step { display:flex; gap:24px; align-items:flex-start; }
+    .step-num { font-size:10px; font-weight:700; color:#aaa; letter-spacing:0.1em; white-space:nowrap; padding-top:3px; flex-shrink:0; min-width:28px; }
+    .step-body h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:7px; }
+    .step-body p { font-size:15px; font-weight:400; color:#666; line-height:1.84; }
+
+    /* ── Design blocks ── */
+    .design-sections { margin-top:48px; }
+    .design-block { padding-top:56px; margin-top:56px; border-top:1px solid rgba(51,51,51,0.1); }
+    .design-block:first-child { border-top:none; padding-top:0; margin-top:32px; }
+    .design-label { font-size:9px; font-weight:700; color:#aaa; letter-spacing:0.18em; text-transform:uppercase; display:block; margin-bottom:20px; }
+    .design-img { width:100%; display:block; margin-bottom:28px; border-radius:16px; }
+    .design-bullets { margin-top:20px; display:flex; flex-direction:column; gap:14px; list-style:none; padding-left:0; }
+    .design-bullets li { font-size:14px; font-weight:400; color:#555; line-height:1.84; padding-left:22px; position:relative; }
+    .design-bullets li::before { content:'✦'; position:absolute; left:0; color:#ccc; font-size:9px; top:5px; }
+    .design-bullets strong { font-weight:600; color:#333; }
+
+    /* ── Carousel (with arrows) ── */
+    .ft-carousel { position:relative; border-radius:16px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.12),0 4px 16px rgba(0,0,0,0.06); margin-bottom:28px; background:#1a1a1a; }
+    .ft-slide { width:100%; }
+    .ft-slide:not(.active) { position:absolute; top:0; left:0; opacity:0; pointer-events:none; transition:opacity 0.4s ease; }
+    .ft-slide.active { opacity:1; position:relative; transition:opacity 0.4s ease; }
+    .ft-slide img { width:100%; display:block; }
+    .ft-arrow { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.92); border:none; border-radius:50%; width:44px; height:44px; font-size:28px; cursor:pointer; z-index:10; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(0,0,0,0.25),0 1px 4px rgba(0,0,0,0.12); transition:background .18s ease,transform .18s ease; color:#1a1a1a; line-height:1; padding-bottom:2px; }
+    .ft-arrow:hover { background:#fff; transform:translateY(-50%) scale(1.08); }
+    .ft-prev { left:16px; }
+    .ft-next { right:16px; }
+    .ft-dots-bar { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:7px; z-index:10; }
+    .ft-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.45); cursor:pointer; border:none; padding:0; transition:background .2s; }
+    .ft-dot.active { background:#fff; }
+
+    /* ── FigJam brainstorm placeholder ── */
+    .figjam-placeholder { background:#fffdf5; }
+    .fj-header { background:#fff; padding:10px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(0,0,0,0.08); }
+    .fj-dots { display:flex; gap:6px; }
+    .fj-dots span { width:10px; height:10px; border-radius:50%; display:block; }
+    .fj-dots .rd { background:#ff5f57; }
+    .fj-dots .yl { background:#ffbd2e; }
+    .fj-dots .gn { background:#28c840; }
+    .fj-title { font-size:12px; font-weight:600; color:#444; font-family:'Quicksand',sans-serif; }
+    .fj-board { padding:24px; display:grid; grid-template-columns:repeat(4,1fr); gap:16px; min-height:320px; }
+    .fj-col { display:flex; flex-direction:column; gap:10px; }
+    .fj-col-head { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#888; margin-bottom:4px; font-family:'Quicksand',sans-serif; }
+    .sticky { padding:11px 13px; border-radius:6px; font-size:11px; font-weight:600; color:#333; line-height:1.5; box-shadow:0 2px 8px rgba(0,0,0,0.08); font-family:'Quicksand',sans-serif; }
+    .sticky.pink { background:#ffd6d6; }
+    .sticky.yellow { background:#fff3b0; }
+    .sticky.green { background:#d4f5d4; }
+    .sticky.blue { background:#d4e8ff; }
+
+    /* ── Figma lo-fi placeholder ── */
+    .figma-lofi { background:#fff; }
+    .figma-header { background:#2c2c2c; padding:10px 16px; display:flex; align-items:center; gap:10px; }
+    .figma-header-dots { display:flex; gap:6px; }
+    .figma-header-dots span { width:10px; height:10px; border-radius:50%; display:block; }
+    .figma-header-dots .rd { background:#ff5f57; }
+    .figma-header-dots .yl { background:#ffbd2e; }
+    .figma-header-dots .gn { background:#28c840; }
+    .figma-header-title { font-size:12px; font-weight:500; color:rgba(255,255,255,0.65); font-family:'Quicksand',sans-serif; }
+    .figma-body { display:flex; min-height:340px; }
+    .figma-sidebar { width:148px; background:#f4f4f4; border-right:1px solid #e0e0e0; padding:16px; flex-shrink:0; }
+    .figma-logo-bar { height:22px; background:#d0d0d0; border-radius:4px; margin-bottom:18px; }
+    .figma-nav { height:12px; background:#d8d8d8; border-radius:3px; margin-bottom:10px; }
+    .figma-main { flex:1; padding:20px; background:#fafafa; display:flex; flex-direction:column; gap:14px; }
+    .figma-topbar { display:flex; align-items:center; justify-content:space-between; }
+    .figma-h { height:16px; background:#d0d0d0; border-radius:3px; width:160px; }
+    .figma-btns { display:flex; gap:8px; }
+    .figma-btn { height:26px; border-radius:5px; background:#c8c8c8; }
+    .figma-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .figma-card { background:#e8e8e8; border-radius:7px; padding:12px; }
+    .figma-card-n { height:20px; background:#c0c0c0; border-radius:3px; width:55%; margin-bottom:8px; }
+    .figma-card-l { height:10px; background:#d0d0d0; border-radius:2px; width:78%; }
+    .figma-charts { display:grid; grid-template-columns:1fr 0.75fr 0.9fr; gap:10px; }
+    .figma-chart { background:#e8e8e8; border-radius:7px; padding:12px; }
+    .figma-chart-h { height:10px; background:#c0c0c0; border-radius:2px; width:65%; margin-bottom:10px; }
+    .figma-bars { display:flex; align-items:flex-end; gap:4px; height:52px; }
+    .figma-bar { flex:1; background:#c0c0c0; border-radius:2px 2px 0 0; }
+    .figma-donut { width:52px; height:52px; border-radius:50%; border:11px solid #c0c0c0; margin:0 auto; }
+    .figma-table { background:#e8e8e8; border-radius:7px; overflow:hidden; }
+    .figma-thead { background:#d0d0d0; padding:7px 12px; display:flex; gap:8px; }
+    .figma-tc { height:9px; background:#bbb; border-radius:2px; }
+    .figma-trow { padding:7px 12px; display:flex; gap:8px; border-top:1px solid #ddd; align-items:center; }
+    .figma-td { height:9px; background:#d4d4d4; border-radius:2px; }
+    .figma-badge { height:16px; border-radius:8px; flex-shrink:0; width:56px; }
+    .figma-badge.g { background:#b8e8b8; }
+    .figma-badge.r { background:#f0b8b8; }
+    .figma-badge.b { background:#b8d4f0; }
+
+    /* ── Dark strip ── */
+    .dark-strip { background:#333; border-radius:40px; padding:52px 20% 64px; margin:40px 0; }
+    .dark-strip .sec-label { color:rgba(242,244,248,0.45); }
+    .dark-strip .sec-heading { color:#f2f4f8; }
+    .dark-strip .sec-body { color:rgba(242,244,248,0.82); }
+    .dark-strip .sec-body strong { color:#f2f4f8; }
+    .reflect-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(22px,2.8vw,36px); font-weight:700; color:#f2f4f8; letter-spacing:-0.03em; line-height:1.15; margin-bottom:24px; max-width:680px; }
+
+    /* ── Impact dark strip stat cards ── */
+    .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:36px; }
+    .stat-card { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:16px; padding:32px 24px; }
+    .stat-num { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:#f2f4f8; letter-spacing:-0.04em; line-height:1; margin-bottom:8px; }
+    .stat-label { font-size:13px; font-weight:500; color:rgba(242,244,248,0.65); line-height:1.55; }
+    .manager-quote { font-size:14px; font-style:italic; color:rgba(242,244,248,0.82); line-height:1.8; margin-bottom:12px; }
+    .manager-attr { font-size:11px; font-weight:700; color:rgba(242,244,248,0.45); letter-spacing:0.1em; text-transform:uppercase; }
+
+    /* ── Footer ── */
+    footer { text-align:center; padding:64px 40px 48px; display:flex; flex-direction:column; align-items:center; gap:20px; background:#f2f4f8; border-top:1px solid rgba(51,51,51,0.08); }
+    .footer-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(20px,2.4vw,30px); font-weight:700; color:#333; letter-spacing:-0.06em; }
+    .footer-links { display:flex; gap:32px; }
+    .footer-links a { font-size:14px; font-weight:700; color:#333; opacity:.75; text-decoration:none; transition:opacity .2s; }
+    .footer-links a:hover { opacity:1; }
+    .footer-copy { font-size:13px; font-weight:400; color:#999; }
+
+    /* ── Cursor ── */
+    #cdot { position:fixed; z-index:9999; width:6px; height:6px; border-radius:50%; background:rgba(51,51,51,.55); transform:translate(-50%,-50%); pointer-events:none; }
+    #cring { position:fixed; z-index:9998; width:32px; height:32px; border-radius:50%; border:1px solid rgba(51,51,51,.22); transform:translate(-50%,-50%); pointer-events:none; }
+
+    /* ── Mobile Nav ── */
+    .nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; padding:6px; z-index:36; cursor:none; }
+    .nav-hamburger span { display:block; width:22px; height:2px; background:#f2f4f8; border-radius:1px; transition:transform .25s ease, opacity .2s ease; }
+    .nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity:0; }
+    .nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+    .nav-mobile { display:none; position:fixed; top:54px; left:0; right:0; background:rgba(30,30,30,0.98); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); z-index:34; flex-direction:column; padding:8px 24px 16px; border-top:1px solid rgba(255,255,255,0.08); }
+    .nav-mobile.open { display:flex; }
+    .nav-mobile a { font-family:'Quicksand',sans-serif; font-size:15px; font-weight:500; color:rgba(255,255,255,0.75); text-decoration:none; padding:13px 0; border-bottom:1px solid rgba(255,255,255,0.07); display:block; transition:color .18s ease; letter-spacing:.02em; }
+    .nav-mobile a:last-child { border-bottom:none; }
+    .nav-mobile a:hover, .nav-mobile a.active { color:#fff; }
+
+    /* ── Responsive ── */
+    @media (max-width:768px) {
+      nav { padding:0 20px; }
+      .nav-links { display:none; }
+      .nav-hamburger { display:flex; }
+
+      .hero-dashboard-wrap { padding:20px 16px 0; }
+      .dashboard-container { border-radius:14px; padding:14px 14px 0; }
+      .ft-photo-wrap { padding:0 16px 32px; }
+
+      .cs-hero-info { padding:28px 20px 0; }
+      .cs-title { margin-bottom:24px; }
+      .hero-grid { grid-template-columns:1fr; gap:24px; padding-bottom:36px; }
+      .hero-sidebar { flex-direction:row; flex-wrap:wrap; gap:12px 24px; padding-top:16px; border-top:1px solid rgba(51,51,51,0.1); }
+
+      .cs-section { padding:32px 20px; }
+      .cs-divider { margin:0 20px; }
+      .dark-strip { padding:32px 20px 40px; border-radius:20px; margin:20px 0; }
+
+      .stats-row { grid-template-columns:1fr; gap:12px; }
+      .intern-role-grid { grid-template-columns:1fr; gap:12px; margin-top:20px; }
+      .fj-board { grid-template-columns:repeat(2,1fr); min-height:auto; }
+
+      footer { padding:40px 20px 32px; }
+      .footer-links { gap:16px; flex-wrap:wrap; justify-content:center; }
+    }
+
+    @media (min-width:769px) and (max-width:1024px) {
+      nav { padding:0 5%; }
+      .hero-dashboard-wrap { padding:36px 5% 0; }
+      .cs-hero-info { padding:40px 5% 0; }
+      .cs-section { padding:52px 5%; }
+      .cs-divider { margin:0 5%; }
+      .dark-strip { padding:44px 5% 52px; }
+      .ft-photo-wrap { padding:0 5% 40px; }
+      .stats-row { grid-template-columns:repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">k.l&#234;</a>
+  <div class="nav-links">
+    <a href="index.html#projects" class="active">Work</a>
+    <a href="about.html">About</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="index.html#projects" class="active">Work</a>
+  <a href="about.html">About</a>
+  <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+</div>
+
+<div class="page-wrap">
+
+  <!-- ── HERO: Dashboard in dark container ── -->
+  <div class="hero-dashboard-wrap">
+    <div class="dashboard-container">
+      <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643331/portfolio/images/finthrive/ft-claims-dashboard.png" alt="FinThrive Claims Dashboard" />
+    </div>
+  </div>
+
+  <!-- ── Tags + Title + Overview + Sidebar ── -->
+  <div class="cs-hero-info">
+    <span class="cs-tags">PRODUCT DESIGN &#x2726; UX RESEARCH &#x2726; STAKEHOLDER COLLABORATION</span>
+    <h1 class="cs-title">FinThrive</h1>
+    <div class="hero-grid">
+      <div>
+        <p class="overview-text">FinThrive is a healthcare revenue management platform serving hospitals, health systems, and physician practices across the United States. During my six-month internship, I joined the product design team and contributed high-fidelity designs to a portfolio of over 50 products that help healthcare organizations manage revenue, billing, and financial operations.</p>
+        <p class="overview-text">The work spanned multiple product teams and required navigating complex, data-dense workflows for non-technical healthcare finance users.</p>
+      </div>
+      <div class="hero-sidebar">
+        <div>
+          <span class="sidebar-label">Role</span>
+          <span class="sidebar-value">UX/UI Design Intern</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Timeline</span>
+          <span class="sidebar-value">June - December 2025</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Tools</span>
+          <span class="sidebar-value">Figma, Jira</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Team</span>
+          <span class="sidebar-value">Product Design Team<br>(4 Designers, 1 Researcher)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FT Me photo (between overview and problem) ── -->
+  <div class="ft-photo-wrap">
+    <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643343/portfolio/images/finthrive/ft-me.jpg" alt="Kathlyn at FinThrive Dallas HQ" />
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- ── PROBLEM ── -->
+  <div class="cs-section">
+    <span class="sec-label">Problem</span>
+    <h2 class="sec-heading">how can i help simplify complex healthcare finance software?</h2>
+    <p class="sec-body">FinThrive's platform supports revenue cycle teams like billing specialists, coders, and account managers as they work through complex workflows involving large amounts of data, strict compliance rules, and very little room for error. The challenge is not just making something visually clean, but designing tools that actually help people stay accurate and efficient under pressure while dealing with dense information and tight deadlines.</p>
+
+    <div class="intern-role-grid">
+      <div class="intern-role-label">IN MY INTERN ROLE, I:</div>
+      <div class="intern-bullets">
+        <div class="intern-bullet">
+          <h4>Supported Design Requests Across Teams</h4>
+          <p>I worked through design tickets and requests from different teams, which meant I supported multiple products at once and had to quickly switch contexts while making sure each request fit its specific goals and constraints.</p>
+        </div>
+        <div class="intern-bullet">
+          <h4>Worked Within and Improving the Design System</h4>
+          <p>I learned how the existing design system worked and built on top of it instead of starting from scratch, while making sure everything stayed aligned and usable. I also kept a fresh perspective by identifying gaps and suggesting practical improvements to make complex workflows easier to understand.</p>
+        </div>
+        <div class="intern-bullet">
+          <h4>Did the "Boring but Important" Work</h4>
+          <p>I handled the foundational work like moving, updating, and connecting components in Figma that had not been fully maintained since the company was acquired in 2021. I also worked on tasks like creating dark mode mockups and helping keep components consistent and up to date across different parts of the products.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- ── PROCESS ── -->
+  <div class="cs-section">
+    <span class="sec-label">Process</span>
+    <h2 class="sec-heading">how i approached the work as an intern</h2>
+    <p class="sec-body">Working across multiple product teams simultaneously meant I had to be intentional about how I ramped up, prioritized, and communicated. A few patterns shaped how I worked throughout the internship:</p>
+
+    <div class="process-steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <div class="step-body">
+          <h4>Learn the domain before touching the design.</h4>
+          <p>Healthcare finance has its own vocabulary: revenue cycle, denial management, remittance, payer contracts. I spent the first few weeks making sure I understood what the users actually did before I formed any opinions about the design. That investment paid off every time I had to explain a decision in a stakeholder review.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <div class="step-body">
+          <h4>Incorporate feedback at every stage, not just at review.</h4>
+          <p>FinThrive's process was structured around regular stakeholder checkpoints, but I found the most useful feedback came from informal conversations with engineers and PMs in between. Adjusting constantly meant my work was less likely to require major changes at the end of a cycle.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <div class="step-body">
+          <h4>Own the feature, not just the screen.</h4>
+          <p>The expectation was to own a feature from concept to iteration, not just deliver screens. That meant thinking through edge cases, flagging gaps, and staying involved after handoff. It changed how I thought about what "done" actually means in a design context.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <div class="step-body">
+          <h4>Research and design as one continuous loop.</h4>
+          <p>I produced insights in parallel with design work, not as a separate phase before it. That made the designs more grounded and made the research more actionable: each informed the other in real time rather than in sequence.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- ── DESIGN ── -->
+  <div class="cs-section">
+    <span class="sec-label">Design</span>
+    <h2 class="sec-heading">key designs that actually made a change</h2>
+    <p class="sec-body">I contributed to several key features by starting with low-fidelity wireframes and gradually refining them into higher-fidelity designs based on feedback from teammates and stakeholders. This iterative process helped ensure that ideas were tested early, aligned with product goals, and improved through multiple rounds of critique before moving into more polished solutions.</p>
+
+    <div class="design-sections">
+
+      <!-- Chatbot -->
+      <div class="design-block">
+        <span class="design-label">Improve AI Chatbot Experience</span>
+        <div class="ft-carousel" id="chatbot-carousel">
+          <div class="ft-slide active">
+            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643341/portfolio/images/finthrive/ft-low-fi.png" alt="Chatbot low-fidelity wireframe" />
+          </div>
+          <div class="ft-slide">
+            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643464/portfolio/images/finthrive/ft-chatbot-final.jpg" alt="Chatbot final design" />
+          </div>
+          <button class="ft-arrow ft-prev" aria-label="Previous">&#8249;</button>
+          <button class="ft-arrow ft-next" aria-label="Next">&#8250;</button>
+          <div class="ft-dots-bar">
+            <button class="ft-dot active" data-i="0" aria-label="Slide 1"></button>
+            <button class="ft-dot" data-i="1" aria-label="Slide 2"></button>
+          </div>
+        </div>
+        <p class="sec-body">Designing a chatbot AI for FinThrive started with low-fidelity wireframes focused on structure rather than visuals. I iterated on conversation layouts and refined how users initiate interactions, aligning the final interface with established industry-standard chatbot patterns to reduce cognitive load.</p>
+        <ul class="design-bullets">
+          <li><strong>Quick-start buttons</strong> for the most frequent user needs, reducing friction for first-time and returning users in high-pressure operational environments where speed matters</li>
+          <li><strong>Thread-centric layout with clear input field placement and visible conversation history,</strong> ensuring users never need to learn a new interaction model just to get help</li>
+          <li><strong>Dynamic chat expansion</strong> where the window grows vertically as messages accumulate, improving readability during longer sessions and reducing excessive scrolling in a constrained viewport</li>
+        </ul>
+        <p style="margin-top:20px;"><a href="https://finthrive.com/" target="_blank" rel="noopener" style="font-size:13px; font-weight:600; color:#333; text-decoration:underline; text-underline-offset:3px; opacity:0.75; transition:opacity .18s ease;">Try the FinThrive chatbot yourself &#x2192;</a></p>
+      </div>
+
+      <!-- Dark Mode -->
+      <div class="design-block">
+        <span class="design-label">Mobile Dark Mode Prototype</span>
+        <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643467/portfolio/images/finthrive/ft-dark-mode.jpg" alt="FinThrive dark mode prototype" class="design-img" />
+        <p class="sec-body">I created a full dark mode prototype for the mobile experience aimed at improving accessibility and reducing eye strain for users who often work long hours in the platform. The goal was not to simply invert colors, but to thoughtfully redesign the interface for low-light usability while preserving existing brand and interaction patterns.</p>
+        <ul class="design-bullets">
+          <li><strong>Mapped design system tokens</strong> (colors, typography, elevation, and states) to identify what needed adaptation rather than replacement, ensuring dark mode felt like a natural product extension rather than a separate experience</li>
+          <li><strong>Adjusted contrast ratios to accessibility standards</strong> using deeper neutral backgrounds and calibrated surface elevations to preserve visual separation without harsh blacks or heavy shadows</li>
+          <li>Softened border and divider contrasts, increased text contrast, and carefully handled disabled and secondary states <strong>to ensure sustained readability in prolonged low-light use</strong></li>
+        </ul>
+      </div>
+
+      <!-- Claims Dashboard -->
+      <div class="design-block">
+        <span class="design-label">Claims Dashboard Collaboration</span>
+        <div class="ft-carousel" id="claims-carousel">
+          <div class="ft-slide active">
+            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643331/portfolio/images/finthrive/ft-claims-dashboard.png" alt="Claims Dashboard final design" />
+          </div>
+          <div class="ft-slide">
+            <div class="figjam-placeholder">
+              <div class="fj-header">
+                <div class="fj-dots"><span class="rd"></span><span class="yl"></span><span class="gn"></span></div>
+                <span class="fj-title">FigJam: Claims Dashboard Brainstorm</span>
+              </div>
+              <div class="fj-board">
+                <div class="fj-col">
+                  <div class="fj-col-head">User Pain Points</div>
+                  <div class="sticky pink">Hard to find specific claim status</div>
+                  <div class="sticky pink">Too many filter options</div>
+                  <div class="sticky pink">Confusing data hierarchy</div>
+                  <div class="sticky pink">Can't compare payer data easily</div>
+                </div>
+                <div class="fj-col">
+                  <div class="fj-col-head">User Goals</div>
+                  <div class="sticky yellow">Quick claim status checks</div>
+                  <div class="sticky yellow">Track denial trends over time</div>
+                  <div class="sticky yellow">Drill into specific claims</div>
+                  <div class="sticky yellow">Export and share filtered data</div>
+                </div>
+                <div class="fj-col">
+                  <div class="fj-col-head">Design Decisions</div>
+                  <div class="sticky green">Clear visual hierarchy</div>
+                  <div class="sticky green">Summary cards at top</div>
+                  <div class="sticky green">Smart persistent filters</div>
+                  <div class="sticky green">Color-coded status badges</div>
+                </div>
+                <div class="fj-col">
+                  <div class="fj-col-head">Constraints</div>
+                  <div class="sticky blue">Power BI limitations</div>
+                  <div class="sticky blue">Existing data models</div>
+                  <div class="sticky blue">Custom interaction limits</div>
+                  <div class="sticky blue">Dynamic layout constraints</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ft-slide">
+            <div class="figma-lofi">
+              <div class="figma-header">
+                <div class="figma-header-dots"><span class="rd"></span><span class="yl"></span><span class="gn"></span></div>
+                <span class="figma-header-title">Figma: Claims Dashboard Lo-fi Wireframe</span>
+              </div>
+              <div class="figma-body">
+                <div class="figma-sidebar">
+                  <div class="figma-logo-bar"></div>
+                  <div class="figma-nav" style="width:88%;"></div>
+                  <div class="figma-nav" style="width:72%;background:#c0c0c0;"></div>
+                  <div class="figma-nav" style="width:80%;"></div>
+                  <div class="figma-nav" style="width:66%;"></div>
+                  <div class="figma-nav" style="width:76%;"></div>
+                  <div class="figma-nav" style="width:58%;"></div>
+                </div>
+                <div class="figma-main">
+                  <div class="figma-topbar">
+                    <div class="figma-h"></div>
+                    <div class="figma-btns">
+                      <div class="figma-btn" style="width:76px;"></div>
+                      <div class="figma-btn" style="width:108px;"></div>
+                    </div>
+                  </div>
+                  <div class="figma-cards">
+                    <div class="figma-card"><div class="figma-card-n"></div><div class="figma-card-l"></div></div>
+                    <div class="figma-card"><div class="figma-card-n"></div><div class="figma-card-l"></div></div>
+                    <div class="figma-card"><div class="figma-card-n"></div><div class="figma-card-l"></div></div>
+                  </div>
+                  <div class="figma-charts">
+                    <div class="figma-chart">
+                      <div class="figma-chart-h"></div>
+                      <div class="figma-bars">
+                        <div class="figma-bar" style="height:38%;"></div>
+                        <div class="figma-bar" style="height:62%;"></div>
+                        <div class="figma-bar" style="height:80%;"></div>
+                        <div class="figma-bar" style="height:54%;"></div>
+                        <div class="figma-bar" style="height:90%;"></div>
+                        <div class="figma-bar" style="height:46%;"></div>
+                      </div>
+                    </div>
+                    <div class="figma-chart" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+                      <div class="figma-chart-h" style="align-self:flex-start;"></div>
+                      <div class="figma-donut"></div>
+                    </div>
+                    <div class="figma-chart">
+                      <div class="figma-chart-h"></div>
+                      <div class="figma-bars">
+                        <div class="figma-bar" style="height:50%;"></div>
+                        <div class="figma-bar" style="height:72%;"></div>
+                        <div class="figma-bar" style="height:40%;"></div>
+                        <div class="figma-bar" style="height:84%;"></div>
+                        <div class="figma-bar" style="height:60%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="figma-table">
+                    <div class="figma-thead">
+                      <div class="figma-tc" style="flex:0 0 56px;"></div>
+                      <div class="figma-tc" style="flex:0 0 78px;"></div>
+                      <div class="figma-tc" style="flex:0 0 78px;"></div>
+                      <div class="figma-tc" style="flex:0 0 56px;"></div>
+                      <div class="figma-tc" style="flex:1;"></div>
+                    </div>
+                    <div class="figma-trow"><div class="figma-td" style="flex:0 0 56px;"></div><div class="figma-td" style="flex:0 0 78px;"></div><div class="figma-td" style="flex:0 0 78px;"></div><div class="figma-badge g"></div><div class="figma-td" style="flex:1;"></div></div>
+                    <div class="figma-trow"><div class="figma-td" style="flex:0 0 56px;"></div><div class="figma-td" style="flex:0 0 78px;"></div><div class="figma-td" style="flex:0 0 78px;"></div><div class="figma-badge r"></div><div class="figma-td" style="flex:1;"></div></div>
+                    <div class="figma-trow"><div class="figma-td" style="flex:0 0 56px;"></div><div class="figma-td" style="flex:0 0 78px;"></div><div class="figma-td" style="flex:0 0 78px;"></div><div class="figma-badge b"></div><div class="figma-td" style="flex:1;"></div></div>
+                    <div class="figma-trow"><div class="figma-td" style="flex:0 0 56px;"></div><div class="figma-td" style="flex:0 0 78px;"></div><div class="figma-td" style="flex:0 0 78px;"></div><div class="figma-badge g"></div><div class="figma-td" style="flex:1;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="ft-arrow ft-prev" aria-label="Previous">&#8249;</button>
+          <button class="ft-arrow ft-next" aria-label="Next">&#8250;</button>
+          <div class="ft-dots-bar">
+            <button class="ft-dot active" data-i="0" aria-label="Slide 1"></button>
+            <button class="ft-dot" data-i="1" aria-label="Slide 2"></button>
+            <button class="ft-dot" data-i="2" aria-label="Slide 3"></button>
+          </div>
+        </div>
+        <p class="sec-body">I collaborated closely with another designer from early ideation through to a fully built prototype for the claims dashboard. We started in a shared FigJam board, mapping user needs, pain points, and key workflows before translating them into a structured layout focused on scannability, clear hierarchy, and fast access to high-value information.</p>
+        <ul class="design-bullets">
+          <li><strong>Defined core user flows and refined how users navigate filters,</strong> drill into claims, and compare data points in a way that felt intuitive and efficient, grounded in real user behavior from the start</li>
+          <li><strong>Iterated through multiple feedback cycles with design and software engineering teams,</strong> surfacing Power BI constraints that required adjusting interaction patterns and rethinking filter and drill-down states</li>
+          <li><strong>Balanced ideal user experience with technical feasibility across each feedback round,</strong> producing a final prototype that was both practical to build and aligned with real user needs identified at the beginning</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── IMPACT (dark strip) ── -->
+  <div class="dark-strip">
+    <span class="sec-label">Impact</span>
+    <h2 class="sec-heading">six months of shipping real work</h2>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">15%</div>
+        <div class="stat-label">usability improvement measured through pre/post usability testing sessions conducted across multiple product areas</div>
+      </div>
+      <div class="stat-card">
+        <p class="manager-quote">"Kathlyn brought a level of initiative and design quality that stood out immediately. She consistently delivered thoughtful, well-considered work and was a real contributor to the team."</p>
+        <span class="manager-attr">Matt Rife, Product Design Manager</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">6 mo.</div>
+        <div class="stat-label">internship extended beyond the original term based on contribution and impact across multiple product teams</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- ── TAKEAWAYS ── -->
+  <div class="cs-section">
+    <span class="sec-label">Takeaways</span>
+    <h2 class="sec-heading">what working in enterprise saas actually taught me</h2>
+    <p class="sec-body">Working in a large SaaS organization with established design systems, multiple product teams, and real users in high-stakes jobs was a fundamentally different experience than academic or personal projects. A few things stood out:</p>
+    <p class="sec-body"><strong>Constraints are the design.</strong> In enterprise software, the constraints (technical, compliance, workflow-based) are not obstacles to the design. They are the design. The best solutions I came up with came from deeply understanding a constraint, not from working around it.</p>
+    <p class="sec-body"><strong>Stakeholder communication is a design skill.</strong> Getting feedback incorporated and getting buy-in on a design direction are two different things. Learning how to present work in a way that moves a conversation forward, not just displays it, was as important as any visual decision I made.</p>
+    <p class="sec-body"><strong>Six months is enough to see the whole cycle.</strong> I was able to follow features from initial concept through iteration and into handoff. That end-to-end view of the process, including all the places where real projects diverge from the ideal, is something you only get from extended time at a real company.</p>
+  </div>
+
+  <!-- ── REFLECTION: dark strip ── -->
+  <div class="dark-strip">
+    <span class="sec-label">Reflection</span>
+    <h2 class="reflect-heading">the best design work happens inside systems you didn't build</h2>
+    <p class="sec-body">FinThrive showed me what it means to do design work inside a system that already exists, with legacy patterns, established component libraries, existing users, and teams who have been shipping this product for years. That is most of what design work actually is. Learning to improve something without breaking what already works is a harder and more valuable skill than starting from scratch.</p>
+    <p class="sec-body" style="margin-top:14px;">One of the most meaningful parts of the experience was visiting the Dallas headquarters for a week. Being on-site gave me the chance to sit with the team, attend real meetings, and understand how decisions are actually made inside a company. I got to learn directly from experienced designers and product leaders, which shaped how I think about the work in ways a remote internship simply could not. I came to understand FinThrive's company values and mission in healthcare fintech not just from documents, but from conversations with the people living it every day.</p>
+    <p class="sec-body" style="margin-top:14px;">That week also gave me the opportunity to network across departments and build relationships I would not have made remotely. The internship was extended because the work was useful. That is the best signal I could ask for, and it is what I will carry into every project going forward.</p>
+  </div>
+
+</div>
+
+<footer>
+  <h2 class="footer-heading">thanks for stopping by, let's chat!</h2>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/kathlyn-le/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:kathlynle.design@gmail.com">kathlynle.design@gmail.com</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Kathlyn Le &#x2726; Made with 🍵</p>
+</footer>
+
+<div id="pw-gate">
+  <div id="pw-card">
+    <h1 id="pw-heading">this content is protected.</h1>
+    <p id="pw-sub">To view, please enter the password.</p>
+    <div id="pw-input-wrap">
+      <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password" />
+      <button id="pw-btn">Enter</button>
+    </div>
+    <p id="pw-error"></p>
+  </div>
+</div>
+
+<div id="cdot"></div>
+<div id="cring"></div>
+
+<script>
+  // Password gate
+  (function() {
+    if (sessionStorage.getItem('ft-unlocked') === '1') {
+      document.getElementById('pw-gate').remove();
+      return;
+    }
+    const gate  = document.getElementById('pw-gate');
+    const input = document.getElementById('pw-input');
+    const btn   = document.getElementById('pw-btn');
+    const err   = document.getElementById('pw-error');
+    function tryUnlock() {
+      if (input.value === '0ne3o3cyXyy@') {
+        sessionStorage.setItem('ft-unlocked', '1');
+        gate.classList.add('unlocked');
+        setTimeout(() => gate.remove(), 420);
+      } else {
+        err.textContent = 'Incorrect password. Please try again.';
+        err.classList.add('visible');
+        input.value = '';
+        input.focus();
+      }
+    }
+    btn.addEventListener('click', tryUnlock);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+  })();
+
+  history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  const dot = document.getElementById('cdot');
+  const ring = document.getElementById('cring');
+  let rx = innerWidth * .5, ry = innerHeight * .5, rawX = rx, rawY = ry;
+  document.addEventListener('mousemove', e => {
+    dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+    rawX = e.clientX; rawY = e.clientY;
+  });
+  (function animRing() {
+    rx += (rawX - rx) * .10; ry += (rawY - ry) * .10;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  function initCarousel(id) {
+    const wrap = document.getElementById(id);
+    if (!wrap) return;
+    const slides = wrap.querySelectorAll('.ft-slide');
+    const dots = wrap.querySelectorAll('.ft-dot');
+    const prev = wrap.querySelector('.ft-prev');
+    const next = wrap.querySelector('.ft-next');
+    let cur = 0;
+    function goTo(i) {
+      slides[cur].classList.remove('active');
+      dots[cur].classList.remove('active');
+      cur = (i + slides.length) % slides.length;
+      slides[cur].classList.add('active');
+      dots[cur].classList.add('active');
+    }
+    prev.addEventListener('click', () => goTo(cur - 1));
+    next.addEventListener('click', () => goTo(cur + 1));
+    dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+  }
+
+  initCarousel('chatbot-carousel');
+  initCarousel('claims-carousel');
+
+  const hamburger = document.getElementById('nav-hamburger');
+  const navMobile = document.getElementById('nav-mobile');
+  if (hamburger && navMobile) {
+    hamburger.addEventListener('click', () => { navMobile.classList.toggle('open'); hamburger.classList.toggle('open'); });
+    navMobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { navMobile.classList.remove('open'); hamburger.classList.remove('open'); }));
+  }
+</script>
+</body>
+</html>

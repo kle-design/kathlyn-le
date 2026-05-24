@@ -1,0 +1,40 @@
+# All media now on Cloudinary — keep originals locally as backups
+*.mp4
+*.mov
+*.webm
+*.jpg
+*.jpeg
+*.png
+*.PNG
+*.JPG
+*.JPEG
+*.gif
+*.webp
+*.pdf
+
+# Keep brand assets that aren't on Cloudinary yet (font, logo, brand guide)
+!brand_assets/**
+
+# Node tooling — only used locally for the Cloudinary upload pipeline
+node_modules/
+package.json
+package-lock.json
+
+# Upload tooling — contains Cloudinary API secret, must not be pushed
+upload-videos.mjs
+upload-images.mjs
+upload-oversized.mjs
+replace-refs.mjs
+replace-image-refs.mjs
+scan-assets.mjs
+cloudinary-map.json
+cloudinary-images-map.json
+referenced-assets.json
+
+# Local dev artifacts
+temporary screenshots/
+.claude/
+
+# OS / editor
+.DS_Store
+Thumbs.db

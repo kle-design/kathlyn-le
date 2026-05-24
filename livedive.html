@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LiveDive — k.le</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face { font-family:'JayaGiri'; src:url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype'); }
+    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Quicksand',sans-serif; background:#f2f4f8; color:#333; overflow-y:auto; overflow-x:hidden; cursor:none; }
+
+    /* Nav */
+    nav { position:fixed; top:0; left:0; right:0; z-index:35; display:flex; align-items:center; justify-content:space-between; padding:0 20%; height:54px; background:rgba(51,51,51,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .logo { font-family:'JayaGiri','Quicksand',sans-serif; font-size:22px; font-weight:600; color:#f2f4f8; letter-spacing:-0.02em; text-decoration:none; }
+    .nav-links { display:flex; gap:24px; }
+    .nav-links a { font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; color:rgba(255,255,255,.70); text-decoration:none; letter-spacing:.02em; transition:color .18s ease; }
+    .nav-links a:hover, .nav-links a.active { color:#fff; }
+
+    .page-wrap { padding-top:54px; }
+
+    /* Phone mockup (no camera island) */
+    .ld-phone { position:relative; width:240px; height:520px; border-radius:44px; background:#fff; border:7px solid #111; overflow:hidden; flex-shrink:0; }
+    .ld-phone::after { content:''; position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:76px; height:4px; background:#333; border-radius:2px; z-index:20; opacity:0.32; }
+    .ld-screen { position:absolute; inset:0; border-radius:37px; overflow:hidden; background:#fff; }
+    .ld-screen video { position:absolute; bottom:0; left:0; width:100%; height:100%; object-fit:cover; object-position:bottom; display:block; }
+
+    /* Hero: two phones */
+    .hero-phones { display:flex; align-items:center; justify-content:center; gap:32px; padding:56px 20% 0; }
+
+    /* Tags + Title + Overview + Sidebar */
+    .cs-hero-info { padding:52px 20% 0; }
+    .cs-tags { font-size:11px; font-weight:600; color:#aaa; letter-spacing:0.14em; text-transform:uppercase; display:block; margin-bottom:20px; }
+    .cs-title { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:#333; letter-spacing:-0.04em; line-height:0.92; margin-bottom:40px; }
+    .hero-grid { display:grid; grid-template-columns:1fr 200px; gap:52px; align-items:start; padding-bottom:64px; }
+    .overview-text { font-size:15px; font-weight:400; color:#555; line-height:1.88; }
+    .overview-text + .overview-text { margin-top:14px; }
+    .hero-sidebar { display:flex; flex-direction:column; gap:22px; }
+    .sidebar-label { font-size:9px; font-weight:700; color:#bbb; letter-spacing:0.16em; text-transform:uppercase; display:block; margin-bottom:4px; }
+    .sidebar-value { font-size:13px; font-weight:600; color:#333; line-height:1.5; }
+
+    /* Sections */
+    .cs-section { padding:64px 20%; }
+    .cs-divider { border:none; border-top:1px solid rgba(51,51,51,0.1); margin:0 20%; }
+    .sec-label { font-size:9px; font-weight:700; color:#aaa; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:14px; display:block; }
+    .sec-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(24px,2.8vw,40px); font-weight:700; color:#333; letter-spacing:-0.03em; line-height:1.1; margin-bottom:20px; }
+    .sec-body { font-size:15px; font-weight:400; color:#555; line-height:1.88; }
+    .sec-body + .sec-body { margin-top:14px; }
+    .sec-body strong { font-weight:600; color:#333; }
+
+    /* Section images */
+    .section-img { width:100%; display:block; border-radius:16px; margin-top:36px; box-shadow:0 8px 32px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.04); }
+
+    /* Design bullets */
+    .design-bullets { margin-top:20px; display:flex; flex-direction:column; gap:14px; list-style:none; padding-left:0; }
+    .design-bullets li { font-size:14px; font-weight:400; color:#555; line-height:1.84; padding-left:22px; position:relative; }
+    .design-bullets li::before { content:'✦'; position:absolute; left:0; color:#ccc; font-size:9px; top:5px; }
+    .design-bullets strong { font-weight:600; color:#333; }
+
+    /* Two phones in design section */
+    .two-phones-row { display:flex; align-items:center; justify-content:center; gap:32px; padding:48px 20% 0; }
+
+    /* Competitive analysis grid */
+    .comp-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:28px; }
+    .comp-card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 4px 16px rgba(0,0,0,0.05); }
+    .comp-name { font-size:13px; font-weight:700; color:#333; margin-bottom:6px; }
+    .comp-gap { font-size:12px; font-weight:400; color:#888; line-height:1.6; }
+    .comp-card.highlight { background:#333; }
+    .comp-card.highlight .comp-name { color:#f2f4f8; }
+    .comp-card.highlight .comp-gap { color:rgba(242,244,248,0.65); }
+
+    /* Persona card */
+    .persona-card { margin-top:40px; background:#fff; border-radius:20px; padding:36px 40px; box-shadow:0 8px 32px rgba(0,0,0,0.07),0 2px 8px rgba(0,0,0,0.04); display:grid; grid-template-columns:220px 1fr; gap:40px; }
+    .persona-avatar { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#f5c849,#e85d8a,#a351d6); margin-bottom:14px; }
+    .persona-name { font-family:'JayaGiri','Quicksand',sans-serif; font-size:20px; font-weight:700; color:#333; letter-spacing:-0.02em; margin-bottom:2px; }
+    .persona-age { font-size:11px; font-weight:600; color:#aaa; letter-spacing:0.1em; text-transform:uppercase; }
+    .persona-detail { font-size:13px; font-weight:400; color:#666; line-height:1.7; margin-top:8px; }
+    .persona-location { font-size:12px; font-weight:600; color:#888; margin-top:6px; }
+    .persona-content { display:flex; flex-direction:column; gap:18px; }
+    .persona-section-title { font-size:9px; font-weight:700; color:#aaa; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:6px; display:block; }
+    .persona-list { list-style:none; padding:0; display:flex; flex-direction:column; gap:4px; }
+    .persona-list li { font-size:13px; font-weight:400; color:#555; line-height:1.65; padding-left:14px; position:relative; }
+    .persona-list li::before { content:'·'; position:absolute; left:0; color:#bbb; font-weight:700; }
+    .persona-pain li { color:#b94040; }
+    .persona-pain li::before { color:#e0a0a0; }
+
+    /* Brand image */
+    .brand-img { max-width:480px; display:block; border-radius:12px; margin:28px 0; box-shadow:0 4px 20px rgba(0,0,0,0.06); }
+
+    /* Takeaways */
+    .takeaway-list { list-style:none; padding:0; counter-reset:tk; display:flex; flex-direction:column; gap:20px; margin-top:28px; }
+    .takeaway-list li { font-size:14px; font-weight:400; color:#555; line-height:1.84; padding-left:36px; position:relative; }
+    .takeaway-list li::before { counter-increment:tk; content:counter(tk); position:absolute; left:0; width:20px; height:20px; background:#333; color:#f2f4f8; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; top:2px; }
+    .takeaway-list li strong { font-weight:600; color:#333; }
+
+    /* Dark strip */
+    .dark-strip { background:#333; border-radius:40px; padding:52px 20% 64px; margin:40px 0; }
+    .dark-strip .design-bullets li { color:rgba(242,244,248,0.75); }
+    .dark-strip .design-bullets li::before { color:rgba(242,244,248,0.25); }
+    .dark-strip .design-bullets strong { color:#f2f4f8; }
+    .dark-strip .sec-label { color:rgba(242,244,248,0.45); }
+    .dark-strip .sec-heading { color:#f2f4f8; }
+    .dark-strip .sec-body { color:rgba(242,244,248,0.82); }
+    .dark-strip .sec-body strong { color:#f2f4f8; }
+    .reflect-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(22px,2.8vw,36px); font-weight:700; color:#f2f4f8; letter-spacing:-0.03em; line-height:1.15; margin-bottom:24px; max-width:680px; }
+
+    /* Footer */
+    footer { text-align:center; padding:64px 40px 48px; display:flex; flex-direction:column; align-items:center; gap:20px; background:#f2f4f8; border-top:1px solid rgba(51,51,51,0.08); }
+    .footer-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(20px,2.4vw,30px); font-weight:700; color:#333; letter-spacing:-0.06em; }
+    .footer-links { display:flex; gap:32px; }
+    .footer-links a { font-size:14px; font-weight:700; color:#333; opacity:.75; text-decoration:none; transition:opacity .2s; }
+    .footer-links a:hover { opacity:1; }
+    .footer-copy { font-size:13px; font-weight:400; color:#999; }
+
+    /* Cursor */
+    #cdot { position:fixed; z-index:9999; width:6px; height:6px; border-radius:50%; background:rgba(51,51,51,.55); transform:translate(-50%,-50%); pointer-events:none; }
+    #cring { position:fixed; z-index:9998; width:32px; height:32px; border-radius:50%; border:1px solid rgba(51,51,51,.22); transform:translate(-50%,-50%); pointer-events:none; }
+
+    /* ── Mobile Nav ── */
+    .nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; padding:6px; z-index:36; cursor:none; }
+    .nav-hamburger span { display:block; width:22px; height:2px; background:#f2f4f8; border-radius:1px; transition:transform .25s ease, opacity .2s ease; }
+    .nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity:0; }
+    .nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+    .nav-mobile { display:none; position:fixed; top:54px; left:0; right:0; background:rgba(30,30,30,0.98); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); z-index:34; flex-direction:column; padding:8px 24px 16px; border-top:1px solid rgba(255,255,255,0.08); }
+    .nav-mobile.open { display:flex; }
+    .nav-mobile a { font-family:'Quicksand',sans-serif; font-size:15px; font-weight:500; color:rgba(255,255,255,0.75); text-decoration:none; padding:13px 0; border-bottom:1px solid rgba(255,255,255,0.07); display:block; transition:color .18s ease; letter-spacing:.02em; }
+    .nav-mobile a:last-child { border-bottom:none; }
+    .nav-mobile a:hover, .nav-mobile a.active { color:#fff; }
+
+    /* ── Responsive ── */
+    @media (max-width:768px) {
+      nav { padding:0 20px; }
+      .nav-links { display:none; }
+      .nav-hamburger { display:flex; }
+
+      .hero-phones, .two-phones-row { flex-wrap:wrap; gap:16px; padding:20px 16px 0; justify-content:center; }
+      .ld-phone { width:160px; height:346px; border-radius:30px; border-width:5px; }
+      .ld-phone::after { width:52px; height:3px; }
+      .ld-screen { border-radius:25px; }
+
+      .cs-hero-info { padding:28px 20px 0; }
+      .cs-title { margin-bottom:24px; }
+      .hero-grid { grid-template-columns:1fr; gap:24px; padding-bottom:36px; }
+      .hero-sidebar { flex-direction:row; flex-wrap:wrap; gap:12px 24px; padding-top:16px; border-top:1px solid rgba(51,51,51,0.1); }
+
+      .cs-section { padding:32px 20px; }
+      .cs-divider { margin:0 20px; }
+      .dark-strip { padding:32px 20px 40px; border-radius:20px; margin:20px 0; }
+
+      .comp-grid { grid-template-columns:1fr 1fr; gap:10px; }
+      .persona-card { grid-template-columns:1fr; gap:16px; padding:24px 20px; }
+
+      footer { padding:40px 20px 32px; }
+      .footer-links { gap:16px; flex-wrap:wrap; justify-content:center; }
+    }
+
+    @media (min-width:769px) and (max-width:1024px) {
+      nav { padding:0 5%; }
+      .hero-phones, .two-phones-row { padding:36px 5% 0; }
+      .cs-hero-info { padding:40px 5% 0; }
+      .cs-section { padding:52px 5%; }
+      .cs-divider { margin:0 5%; }
+      .dark-strip { padding:44px 5% 52px; }
+      .comp-grid { grid-template-columns:repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">k.l&#234;</a>
+  <div class="nav-links">
+    <a href="index.html#projects" class="active">Work</a>
+    <a href="about.html">About</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="index.html#projects" class="active">Work</a>
+  <a href="about.html">About</a>
+  <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+</div>
+
+<div class="page-wrap">
+
+  <!-- HERO: Two phone videos -->
+  <div class="hero-phones">
+    <div class="ld-phone">
+      <div class="ld-screen">
+        <video src="https://res.cloudinary.com/dzuzsoi1i/video/upload/v1779642522/portfolio/livedive/mst-video-3.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+    <div class="ld-phone">
+      <div class="ld-screen">
+        <video src="https://res.cloudinary.com/dzuzsoi1i/video/upload/v1779642523/portfolio/livedive/mst-video-4.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tags + Title + Overview + Sidebar -->
+  <div class="cs-hero-info">
+    <span class="cs-tags">APP PROTOTYPE &#x2726; UX DESIGN</span>
+    <h1 class="cs-title">LiveDive</h1>
+    <div class="hero-grid">
+      <div>
+        <p class="overview-text">LiveDive is a centralized hub for live music fans to stay connected and informed. The app gives real-time concert updates, lets users explore reviews and experiences shared by others, and creates a space where fans can stream and share moments from live shows. Designed to capture the energy of concerts while keeping information accessible, LiveDive brings the excitement of live music directly to your phone in one seamless platform.</p>
+      </div>
+      <div class="hero-sidebar">
+        <div>
+          <span class="sidebar-label">Role</span>
+          <span class="sidebar-value">UX Designer</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Timeline</span>
+          <span class="sidebar-value">Spring 2025</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Tools</span>
+          <span class="sidebar-value">Figma</span>
+        </div>
+        <div>
+          <span class="sidebar-label">Team</span>
+          <span class="sidebar-value">Solo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- PROBLEM -->
+  <div class="cs-section">
+    <span class="sec-label">Problem</span>
+    <h2 class="sec-heading">everything i want from a concert is scattered across five different apps</h2>
+    <p class="sec-body">As someone who goes to concerts pretty often, I kept running into the same frustration. To find everything I wanted to know about a show, I was bouncing between Twitter for last-minute changes, Google for venue info, Setlist.fm for what songs might be played, and whatever else just to piece it all together. It was tedious, and half the time the info was outdated anyway.</p>
+    <p class="sec-body">On top of that, I had this habit of rating every concert I attended in my notes app. Score out of five, what I liked, what fell flat, setlist, energy, crowd... basically all of it. Doing that for a while made me realize how useful it would be to combine both things into one place: a centralized info hub and a place to rate and review shows, with a real community built around it.</p>
+    <p class="sec-body">That's where LiveDive came from, as I was inspired by how Letterboxd handles film reviews and community sharing, I wanted to build something similar for live music. I also added a live streaming feature so people could get real-time updates during a show, whether they're in the crowd or watching from home. Let people see when an artist is performing now, or if something unexpected just happened on stage.</p>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- RESEARCH -->
+  <div class="cs-section">
+    <span class="sec-label">Research</span>
+    <h2 class="sec-heading">looking at what already exists and who's using it</h2>
+    <p class="sec-body">Before jumping into wireframes, I spent time looking at the existing tools people use for concerts. Ticketmaster, Bandsintown, and Setlist.fm all do pieces of what I needed, but none had everything in one place. I also looked at Letterboxd and Yelp to pull inspiration for how community-driven reviews work. The pattern I kept seeing was that every app solved one part of the problem really well, and users were expected to patch together the rest themselves.</p>
+
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-name">Ticketmaster</div>
+        <div class="comp-gap">Great for purchasing. No reviews, no community features, no set information.</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-name">Bandsintown</div>
+        <div class="comp-gap">Good for artist tracking and discovery. Limited social features, no reviews.</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-name">Setlist.fm</div>
+        <div class="comp-gap">Strong for setlist data. Not built for discovery, streaming, or community reviews.</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-name">Letterboxd</div>
+        <div class="comp-gap">Inspiration for the review and community model. Genre-specific to film only.</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-name">Yelp</div>
+        <div class="comp-gap">Review system works well for venues. Too broad, not built for live events.</div>
+      </div>
+      <div class="comp-card highlight">
+        <div class="comp-name">LiveDive (goal)</div>
+        <div class="comp-gap">Discovery, real-time info, reviews, and live streaming together in one place.</div>
+      </div>
+    </div>
+
+    <h2 class="sec-heading" style="margin-top:56px; margin-bottom:10px;">user persona</h2>
+    <p class="sec-body">I built out a persona to keep the design grounded in a real person's needs rather than an abstract audience.</p>
+
+    <div class="persona-card">
+      <div>
+        <div class="persona-avatar"></div>
+        <div class="persona-name">Rowan Cooper</div>
+        <div class="persona-age">22 &#x2726; She/Her</div>
+        <div class="persona-detail">University student<br>Part-time barista &mdash; $15/hr<br>Los Angeles, CA</div>
+        <div class="persona-detail" style="margin-top:14px;">Rowan is an avid music-goer who goes to shows with friends often and likes being prepared. She's tired of searching across multiple platforms for accurate, up-to-date concert info and wants one place to do it all.</div>
+      </div>
+      <div class="persona-content">
+        <div>
+          <span class="persona-section-title">Wants</span>
+          <ul class="persona-list">
+            <li>Easy access to setlists, runtimes, and ticket prices</li>
+            <li>A way to share concert details with friends</li>
+            <li>Honest takes on whether a show is actually worth it</li>
+          </ul>
+        </div>
+        <div>
+          <span class="persona-section-title">Needs</span>
+          <ul class="persona-list">
+            <li>All concert info in one place, not scattered across apps</li>
+            <li>Quick, accurate updates for last-minute changes</li>
+            <li>Authentic feedback from real music lovers, not sponsored content</li>
+          </ul>
+        </div>
+        <div>
+          <span class="persona-section-title">Pain Points</span>
+          <ul class="persona-list persona-pain">
+            <li>No car and needs time to plan transportation</li>
+            <li>Tight budget, can't splurge without knowing it's worth it</li>
+            <li>Reviews feel scattered or unreliable</li>
+            <li>Often misses bag rules, setlist changes, or venue updates</li>
+          </ul>
+        </div>
+        <div>
+          <span class="persona-section-title">Influences</span>
+          <ul class="persona-list">
+            <li>Social media, peer reviews, nearby artists performing, affordable shows</li>
+          </ul>
+        </div>
+        <div>
+          <span class="persona-section-title">Blind Spots</span>
+          <ul class="persona-list">
+            <li>Merch prices, venue food costs, bag regulations, crowd behavior, general dress code</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- PROCESS: Lo-fi -->
+  <div class="cs-section">
+    <span class="sec-label">Process</span>
+    <h2 class="sec-heading">lo-fi wireframes: getting the structure right first</h2>
+    <p class="sec-body">I started with lo-fi wireframes to map out the core flows: onboarding, concert discovery, event detail pages, the review system, and the live streaming feed. At this stage I wasn't thinking about how things looked. I just needed to know whether the structure made sense. I went through two rounds of lo-fi before feeling ready to move into branding and high-fidelity.</p>
+    <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643344/portfolio/images/livedive/lofi-1.png" alt="LiveDive lo-fi wireframes page 1" class="section-img" style="max-width:65%; display:block; margin:36px auto 0;" />
+    <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643345/portfolio/images/livedive/lofi-2.png" alt="LiveDive lo-fi wireframes page 2" class="section-img" style="max-width:65%; display:block; margin:20px auto 0;" />
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- PROCESS: Colors & Branding -->
+  <div class="cs-section">
+    <span class="sec-label">Process</span>
+    <h2 class="sec-heading">colors and typography: making it feel like a live show</h2>
+    <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643343/portfolio/images/livedive/colors.png" alt="LiveDive brand colors and logo" class="brand-img" style="display:block; margin:28px auto;" />
+    <p class="sec-body">When picking colors, I wanted the palette to feel as alive as a live show but still credible enough that users would actually trust its reviews. A boring, corporate-looking app for something as energetic as concerts felt completely wrong to me. But I also didn't want it to look unreliable. That tension is what landed me on yellow, orange, pink, purple, and dark purple.</p>
+    <p class="sec-body">Yellow and orange bring the explosive energy of a show opener. Pink softens it and makes things feel more approachable and inclusive. Purple carries that artistic, venue-at-night feeling. Dark purple is where the serious stuff lives: ratings, in-depth reviews, anything that needs to feel grounded and trustworthy. The gradient from light to dark also mirrors the arc of a concert night. Start buzzing with excitement, wind down into the dark after a great performance.</p>
+    <p class="sec-body">For typography, I went with <strong>Bebas Neue Cyrillic</strong> as the display font. It's bold and modern without feeling corporate, which was exactly the balance I was going for. <strong>Montserrat Bold and Regular</strong> round it out as secondary fonts, keeping things legible and contemporary. The logo ties it together: "LIVE" in solid weight, "DIVE" outlined to evoke stage lighting, set inside a diamond that nods to a play button. The slogan, "Dive Into Every Stage, Every Show," plays on the app name while telling users exactly what it delivers.</p>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- DESIGN: High-fi -->
+  <div class="cs-section">
+    <span class="sec-label">Design</span>
+    <h2 class="sec-heading">high-fidelity prototype: the full experience</h2>
+    <p class="sec-body">With the wireframes validated and the brand locked in, I moved into high-fidelity in Figma. The final prototype covers onboarding, the main discovery feed, event detail pages, the review system, and the live streaming experience. Every screen was designed with Rowan in mind: fast to navigate, honest in its content, and clear about what's happening where.</p>
+  </div>
+
+  <div class="two-phones-row">
+    <div class="ld-phone">
+      <div class="ld-screen">
+        <video src="https://res.cloudinary.com/dzuzsoi1i/video/upload/v1779642521/portfolio/livedive/mst-video-2.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+    <div class="ld-phone">
+      <div class="ld-screen">
+        <video src="https://res.cloudinary.com/dzuzsoi1i/video/upload/v1779642520/portfolio/livedive/mst-video-1.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+  </div>
+
+  <div class="dark-strip" style="padding-top:40px; padding-bottom:52px;">
+    <span class="sec-label">Notable Features</span>
+    <ul class="design-bullets">
+      <li><strong>Friend system</strong> where users can follow others and like each other's reviews, making it feel like a real community rather than just a database</li>
+      <li><strong>Live streaming</strong> so fans can share real-time moments from a show and others can tune in remotely or catch live updates during a performance</li>
+      <li><strong>Favorites list</strong> for concerts you've attended or want to track, making it easy to return to shows you care about</li>
+      <li><strong>Beli-style comparison ranking</strong> where users build a personal ranked list of concerts they've been to, sortable by genre, making concert opinions actually useful and comparable</li>
+      <li><strong>Venue and nearby recommendations</strong> for parking, food, and merch spots around the concert, so users aren't scrambling the day of the show</li>
+      <li><strong>User-based verification</strong> to keep reviews authentic and legitimate, building trust in the feedback system from the ground up</li>
+    </ul>
+  </div>
+
+  <hr class="cs-divider" />
+
+  <!-- TAKEAWAYS -->
+  <div class="cs-section">
+    <span class="sec-label">Takeaways</span>
+    <h2 class="sec-heading">what this project actually taught me</h2>
+    <p class="sec-body">Designing something I personally needed changed how I approached the whole process. Here's what I took away:</p>
+    <ol class="takeaway-list">
+      <li><strong>Being your own first user is useful, but it's not enough.</strong> I knew my problem really well, which made the research phase feel natural. But building Rowan's persona helped me zoom out from my own experience and design for someone with different constraints, like no car and a tighter budget, which pushed me to surface information more upfront and make features more accessible.</li>
+      <li><strong>Competitive analysis isn't just checking boxes.</strong> Looking at Ticketmaster, Bandsintown, Letterboxd, and others showed me exactly where the gap was. Seeing what each app did well and where users had to patch things together themselves validated the concept way more than anything I could have come up with on my own.</li>
+      <li><strong>Branding communicates before a user reads a single word.</strong> Picking the color palette and typography for LiveDive made me realize how much the visual identity does upfront. The gradient, the font choice, the logo shape: all of it tells a story before the app even loads.</li>
+      <li><strong>Scope management is a real skill.</strong> A concert app could go in a hundred directions. Deciding what made it into the prototype and what got cut required real prioritization. Not because the features weren't worth including, but because trying to do everything would have made nothing work well.</li>
+      <li><strong>Solo projects are a different kind of discipline.</strong> Working alone meant every decision was mine to make and mine to justify. There was no collaborator to check assumptions with, which forced me to be more deliberate and more honest with myself about whether something was actually serving the user or just something I liked.</li>
+    </ol>
+  </div>
+
+  <!-- REFLECTION: dark strip -->
+  <div class="dark-strip">
+    <span class="sec-label">Reflection</span>
+    <h2 class="reflect-heading">designing from a problem i actually lived</h2>
+    <p class="sec-body">LiveDive started as a personal frustration turned into a design prompt. Going through the full process solo, from research to branding to a high-fidelity prototype, gave me a much clearer sense of what I can actually build when I genuinely care about the problem. It's a different kind of investment than working from a brief.</p>
+    <p class="sec-body" style="margin-top:14px;">The hardest part wasn't the design itself. It was deciding what not to include. Constraining the scope while keeping the core experience tight was a real exercise in prioritization, and I think the final prototype is better because of those calls. If I were to keep going with this, the next step would be usability testing with real concert-goers to see where the experience holds up and where I was too close to the problem to see the gaps.</p>
+  </div>
+
+</div>
+
+<footer>
+  <h2 class="footer-heading">thanks for stopping by, let's chat!</h2>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/kathlyn-le/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:kathlynle.design@gmail.com">kathlynle.design@gmail.com</a>
+    <a href="https://www.dropbox.com/scl/fi/94kgf42tctglywzkl0roe/LeKathlyn_Resume.pdf?rlkey=wc9u3sqt5rsd1oabixwhsrzmk&st=f62uxhyj&dl=0" target="_blank" rel="noopener">Resume</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Kathlyn Le &#x2726; Made with 🍵</p>
+</footer>
+
+<div id="cdot"></div>
+<div id="cring"></div>
+
+<script>
+  history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  const dot = document.getElementById('cdot');
+  const ring = document.getElementById('cring');
+  let rx = innerWidth * .5, ry = innerHeight * .5, rawX = rx, rawY = ry;
+  document.addEventListener('mousemove', e => {
+    dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+    rawX = e.clientX; rawY = e.clientY;
+  });
+  (function animRing() {
+    rx += (rawX - rx) * .10; ry += (rawY - ry) * .10;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  const hamburger = document.getElementById('nav-hamburger');
+  const navMobile = document.getElementById('nav-mobile');
+  if (hamburger && navMobile) {
+    hamburger.addEventListener('click', () => { navMobile.classList.toggle('open'); hamburger.classList.toggle('open'); });
+    navMobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { navMobile.classList.remove('open'); hamburger.classList.remove('open'); }));
+  }
+</script>
+</body>
+</html>
