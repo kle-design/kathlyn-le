@@ -27,7 +27,12 @@ upload-oversized.mjs
 replace-refs.mjs
 replace-image-refs.mjs
 replace-resume-url.mjs
+rewrite-missed-refs.mjs
 scan-assets.mjs
+upload-polaroids.mjs
+upload-missed-images.mjs
+cloudinary-polaroids-map.json
+cloudinary-missed-map.json
 cloudinary-map.json
 cloudinary-images-map.json
 referenced-assets.json
