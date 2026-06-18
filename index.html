@@ -680,11 +680,11 @@ void main() {
         factIdx = (factIdx + 1) % facts.length;
         factEl.textContent = facts[factIdx];
         applyAnim(factEl, 'factBounceIn 0.38s cubic-bezier(0.34,1.56,0.64,1) forwards');
-        setTimeout(cycleFact, 2600);
+        setTimeout(cycleFact, 1900);
       }, 220);
     }
     applyAnim(factEl, 'factBounceIn 0.38s cubic-bezier(0.34,1.56,0.64,1) forwards');
-    setTimeout(cycleFact, 2800);
+    setTimeout(cycleFact, 2100);
 
     /* HIDE HOME (hero + carousel) WHEN FOOTER IS IN VIEW */
     const homeEl = document.getElementById('home');

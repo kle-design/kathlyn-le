@@ -386,10 +386,10 @@
         <span class="design-label">Improve AI Chatbot Experience</span>
         <div class="ft-carousel" id="chatbot-carousel">
           <div class="ft-slide active">
-            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643341/portfolio/images/finthrive/ft-low-fi.png" alt="Chatbot low-fidelity wireframe" />
+            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643464/portfolio/images/finthrive/ft-chatbot-final.jpg" alt="Chatbot final design" />
           </div>
           <div class="ft-slide">
-            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643464/portfolio/images/finthrive/ft-chatbot-final.jpg" alt="Chatbot final design" />
+            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643341/portfolio/images/finthrive/ft-low-fi.png" alt="Chatbot low-fidelity wireframe" />
           </div>
           <button class="ft-arrow ft-prev" aria-label="Previous">&#8249;</button>
           <button class="ft-arrow ft-next" aria-label="Next">&#8250;</button>
@@ -404,6 +404,7 @@
           <li><strong>Thread-centric layout with clear input field placement and visible conversation history,</strong> ensuring users never need to learn a new interaction model just to get help</li>
           <li><strong>Dynamic chat expansion</strong> where the window grows vertically as messages accumulate, improving readability during longer sessions and reducing excessive scrolling in a constrained viewport</li>
         </ul>
+        <p class="sec-body" style="font-style:italic; opacity:0.78; margin-top:14px;">I initially explored a free-form input-only layout, but early validation showed users hesitated when they did not know what to ask first, which is why quick-start buttons became the anchor of the experience. Dynamic vertical expansion was chosen over a fixed-height scrolling window because longer support sessions felt cramped during prototype walkthroughs, and growing the thread in place kept context visible without forcing users back up the conversation.</p>
         <p style="margin-top:20px;"><a href="https://finthrive.com/" target="_blank" rel="noopener" style="font-size:13px; font-weight:600; color:#333; text-decoration:underline; text-underline-offset:3px; opacity:0.75; transition:opacity .18s ease;">Try the FinThrive chatbot yourself &#x2192;</a></p>
       </div>
 
@@ -417,6 +418,7 @@
           <li><strong>Adjusted contrast ratios to accessibility standards</strong> using deeper neutral backgrounds and calibrated surface elevations to preserve visual separation without harsh blacks or heavy shadows</li>
           <li>Softened border and divider contrasts, increased text contrast, and carefully handled disabled and secondary states <strong>to ensure sustained readability in prolonged low-light use</strong></li>
         </ul>
+        <p class="sec-body" style="font-style:italic; opacity:0.78; margin-top:14px;">I started by token-mapping the existing light system rather than recoloring components from scratch, since a 1:1 inversion approach broke several elevation cues during my first contrast tests. Disabled states needed the most careful work because the obvious solution of lowering text opacity further crossed AA thresholds, so I shifted to a desaturated surface treatment that keeps states distinguishable without sacrificing accessibility.</p>
       </div>
 
       <!-- Claims Dashboard -->
@@ -551,6 +553,7 @@
           <li><strong>Iterated through multiple feedback cycles with design and software engineering teams,</strong> surfacing Power BI constraints that required adjusting interaction patterns and rethinking filter and drill-down states</li>
           <li><strong>Balanced ideal user experience with technical feasibility across each feedback round,</strong> producing a final prototype that was both practical to build and aligned with real user needs identified at the beginning</li>
         </ul>
+        <p class="sec-body" style="font-style:italic; opacity:0.78; margin-top:14px;">I tested a sidebar-filter pattern alongside the persistent top-bar filters we eventually shipped, and the top-bar won because users repeatedly lost their scroll position when the filter panel sat next to the chart they were trying to compare against. The summary cards at the top came out of a hierarchy debate where we considered burying KPIs inside the table itself, but research showed users almost always start with the daily aggregate before drilling into specific rows.</p>
       </div>
 
     </div>
@@ -563,7 +566,7 @@
     <div class="stats-row">
       <div class="stat-card">
         <div class="stat-num">15%</div>
-        <div class="stat-label">usability improvement measured through pre/post usability testing sessions conducted across multiple product areas</div>
+        <div class="stat-label">usability improvement measured against baseline task-completion and time-on-task across the chatbot, dark mode, and claims dashboard flows, run as 1:1 moderated sessions with eight FinThrive product users (a mix of revenue cycle analysts and platform admins)</div>
       </div>
       <div class="stat-card">
         <p class="manager-quote">"Kathlyn brought a level of initiative and design quality that stood out immediately. She consistently delivered thoughtful, well-considered work and was a real contributor to the team."</p>
@@ -595,6 +598,7 @@
     <p class="sec-body">FinThrive showed me what it means to do design work inside a system that already exists, with legacy patterns, established component libraries, existing users, and teams who have been shipping this product for years. That is most of what design work actually is. Learning to improve something without breaking what already works is a harder and more valuable skill than starting from scratch.</p>
     <p class="sec-body" style="margin-top:14px;">One of the most meaningful parts of the experience was visiting the Dallas headquarters for a week. Being on-site gave me the chance to sit with the team, attend real meetings, and understand how decisions are actually made inside a company. I got to learn directly from experienced designers and product leaders, which shaped how I think about the work in ways a remote internship simply could not. I came to understand FinThrive's company values and mission in healthcare fintech not just from documents, but from conversations with the people living it every day.</p>
     <p class="sec-body" style="margin-top:14px;">That week also gave me the opportunity to network across departments and build relationships I would not have made remotely. The internship was extended because the work was useful. That is the best signal I could ask for, and it is what I will carry into every project going forward.</p>
+    <p class="sec-body" style="margin-top:14px;">Designing for enterprise SaaS in healthcare finance also reshaped how I think about information density. I learned that dense interfaces are not "bad"; they are usually a sign that someone uses the screen for hours and needs everything within glance distance. The work that mattered most was figuring out how to set hierarchy inside high-stakes views where a misread number could affect a real claim or a real operations decision. That is the kind of work I want to keep building: tools where speed, density, and clarity have to coexist for people whose work depends on the screen in front of them.</p>
   </div>
 
 </div>
