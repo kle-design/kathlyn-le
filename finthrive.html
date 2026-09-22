@@ -271,12 +271,12 @@
 
   <!-- ── Tags + Title + Overview + Sidebar ── -->
   <div class="cs-hero-info">
-    <span class="cs-tags">PRODUCT DESIGN &#x2726; UX RESEARCH &#x2726; STAKEHOLDER COLLABORATION</span>
+    <span class="cs-tags">B2B SAAS &#x2726; ENTERPRISE DASHBOARD &#x2726; DATA-DENSE UX</span>
     <h1 class="cs-title">FinThrive</h1>
     <div class="hero-grid">
       <div>
-        <p class="overview-text">FinThrive is a healthcare revenue management platform serving hospitals, health systems, and physician practices across the United States. During my six-month internship, I joined the product design team and contributed high-fidelity designs to a portfolio of over 50 products that help healthcare organizations manage revenue, billing, and financial operations.</p>
-        <p class="overview-text">The work spanned multiple product teams and required navigating complex, data-dense workflows for non-technical healthcare finance users.</p>
+        <p class="overview-text">FinThrive is a healthcare revenue management platform serving hospitals, health systems, and physician practices across the United States. During my six-month internship on the product design team, my anchor project was redesigning the <strong>Claims Dashboard</strong> — the screen revenue cycle analysts spend most of their day inside, tracking denied claims, monitoring payer performance, and deciding where to spend their time.</p>
+        <p class="overview-text">This case study walks through that redesign in depth, then covers two shorter pieces of additional work (an AI chatbot and a mobile dark mode) that shaped the rest of my internship.</p>
       </div>
       <div class="hero-sidebar">
         <div>
@@ -309,26 +309,9 @@
   <!-- ── PROBLEM ── -->
   <div class="cs-section">
     <span class="sec-label">Problem</span>
-    <h2 class="sec-heading">how can i help simplify complex healthcare finance software?</h2>
-    <p class="sec-body">FinThrive's platform supports revenue cycle teams like billing specialists, coders, and account managers as they work through complex workflows involving large amounts of data, strict compliance rules, and very little room for error. The challenge is not just making something visually clean, but designing tools that actually help people stay accurate and efficient under pressure while dealing with dense information and tight deadlines.</p>
-
-    <div class="intern-role-grid">
-      <div class="intern-role-label">IN MY INTERN ROLE, I:</div>
-      <div class="intern-bullets">
-        <div class="intern-bullet">
-          <h4>Supported Design Requests Across Teams</h4>
-          <p>I worked through design tickets and requests from different teams, which meant I supported multiple products at once and had to quickly switch contexts while making sure each request fit its specific goals and constraints.</p>
-        </div>
-        <div class="intern-bullet">
-          <h4>Worked Within and Improving the Design System</h4>
-          <p>I learned how the existing design system worked and built on top of it instead of starting from scratch, while making sure everything stayed aligned and usable. I also kept a fresh perspective by identifying gaps and suggesting practical improvements to make complex workflows easier to understand.</p>
-        </div>
-        <div class="intern-bullet">
-          <h4>Did the "Boring but Important" Work</h4>
-          <p>I handled the foundational work like moving, updating, and connecting components in Figma that had not been fully maintained since the company was acquired in 2021. I also worked on tasks like creating dark mode mockups and helping keep components consistent and up to date across different parts of the products.</p>
-        </div>
-      </div>
-    </div>
+    <h2 class="sec-heading">revenue cycle analysts were losing time inside their most-used screen</h2>
+    <p class="sec-body">Revenue cycle analysts and platform admins spend most of their day inside FinThrive's Claims Dashboard: checking whether a specific claim was accepted or denied, tracking denial trends across payers, drilling into a single claim to figure out why it got rejected, and exporting filtered views for their teams. Every second of friction on this screen has a cost: denied claims that sit unworked lose the hospital real money, and analysts are graded on how fast they can move through their queue.</p>
+    <p class="sec-body" style="margin-top:14px;">The incumbent dashboard did the basics but got in the way. Filters were long and hard to remember, the data hierarchy was inconsistent, finding a specific claim's status took more clicks than it should have, and comparing across payers required visual gymnastics. My job, alongside another product designer, was to redesign this screen from the FigJam kickoff through a fully built prototype the engineering team could hand off. Alongside it, I also worked cross-team design tickets, maintained the design system components that had drifted since FinThrive's 2021 acquisition, and shipped the two additional pieces of work you'll see later.</p>
   </div>
 
   <hr class="cs-divider" />
@@ -336,39 +319,13 @@
   <!-- ── PROCESS ── -->
   <div class="cs-section">
     <span class="sec-label">Process</span>
-    <h2 class="sec-heading">how i approached the work as an intern</h2>
-    <p class="sec-body">Working across multiple product teams simultaneously meant I had to be intentional about how I ramped up, prioritized, and communicated. A few patterns shaped how I worked throughout the internship:</p>
-
-    <div class="process-steps">
-      <div class="step">
-        <span class="step-num">01</span>
-        <div class="step-body">
-          <h4>Learn the domain before touching the design.</h4>
-          <p>Healthcare finance has its own vocabulary: revenue cycle, denial management, remittance, payer contracts. I spent the first few weeks making sure I understood what the users actually did before I formed any opinions about the design. That investment paid off every time I had to explain a decision in a stakeholder review.</p>
-        </div>
-      </div>
-      <div class="step">
-        <span class="step-num">02</span>
-        <div class="step-body">
-          <h4>Incorporate feedback at every stage, not just at review.</h4>
-          <p>FinThrive's process was structured around regular stakeholder checkpoints, but I found the most useful feedback came from informal conversations with engineers and PMs in between. Adjusting constantly meant my work was less likely to require major changes at the end of a cycle.</p>
-        </div>
-      </div>
-      <div class="step">
-        <span class="step-num">03</span>
-        <div class="step-body">
-          <h4>Own the feature, not just the screen.</h4>
-          <p>The expectation was to own a feature from concept to iteration, not just deliver screens. That meant thinking through edge cases, flagging gaps, and staying involved after handoff. It changed how I thought about what "done" actually means in a design context.</p>
-        </div>
-      </div>
-      <div class="step">
-        <span class="step-num">04</span>
-        <div class="step-body">
-          <h4>Research and design as one continuous loop.</h4>
-          <p>I produced insights in parallel with design work, not as a separate phase before it. That made the designs more grounded and made the research more actionable: each informed the other in real time rather than in sequence.</p>
-        </div>
-      </div>
-    </div>
+    <h2 class="sec-heading">how i approached the work</h2>
+    <p class="sec-body">Working across multiple product teams inside an established design system shaped a few habits that carried through every project I touched, the Claims Dashboard included:</p>
+    <ul class="design-bullets" style="margin-top:18px;">
+      <li><strong>Learn the domain before touching the design.</strong> Healthcare finance has its own vocabulary — revenue cycle, denial management, remittance, payer contracts. I spent the first few weeks understanding what users actually did before forming opinions about the design, which paid off every time I had to defend a decision in stakeholder review.</li>
+      <li><strong>Absorb feedback continuously, not just at checkpoints.</strong> FinThrive's process ran on regular stakeholder reviews, but the most useful feedback came from informal conversations with engineers and PMs in between. Adjusting as I went meant fewer surprise rewrites at the end of a cycle.</li>
+      <li><strong>Own the feature, not just the screen.</strong> I was expected to think through edge cases, flag gaps, and stay involved after handoff — not hand over a Figma file and walk away. That reframed what "done" meant on every project.</li>
+    </ul>
   </div>
 
   <hr class="cs-divider" />
@@ -381,49 +338,9 @@
 
     <div class="design-sections">
 
-      <!-- Chatbot -->
+      <!-- Claims Dashboard (anchor project) -->
       <div class="design-block">
-        <span class="design-label">Improve AI Chatbot Experience</span>
-        <div class="ft-carousel" id="chatbot-carousel">
-          <div class="ft-slide active">
-            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643464/portfolio/images/finthrive/ft-chatbot-final.jpg" alt="Chatbot final design" />
-          </div>
-          <div class="ft-slide">
-            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643341/portfolio/images/finthrive/ft-low-fi.png" alt="Chatbot low-fidelity wireframe" />
-          </div>
-          <button class="ft-arrow ft-prev" aria-label="Previous">&#8249;</button>
-          <button class="ft-arrow ft-next" aria-label="Next">&#8250;</button>
-          <div class="ft-dots-bar">
-            <button class="ft-dot active" data-i="0" aria-label="Slide 1"></button>
-            <button class="ft-dot" data-i="1" aria-label="Slide 2"></button>
-          </div>
-        </div>
-        <p class="sec-body">Designing a chatbot AI for FinThrive started with low-fidelity wireframes focused on structure rather than visuals. I iterated on conversation layouts and refined how users initiate interactions, aligning the final interface with established industry-standard chatbot patterns to reduce cognitive load.</p>
-        <ul class="design-bullets">
-          <li><strong>Quick-start buttons</strong> for the most frequent user needs, reducing friction for first-time and returning users in high-pressure operational environments where speed matters</li>
-          <li><strong>Thread-centric layout with clear input field placement and visible conversation history,</strong> ensuring users never need to learn a new interaction model just to get help</li>
-          <li><strong>Dynamic chat expansion</strong> where the window grows vertically as messages accumulate, improving readability during longer sessions and reducing excessive scrolling in a constrained viewport</li>
-        </ul>
-        <p class="sec-body" style="font-style:italic; opacity:0.78; margin-top:14px;">I initially explored a free-form input-only layout, but early validation showed users hesitated when they did not know what to ask first, which is why quick-start buttons became the anchor of the experience. Dynamic vertical expansion was chosen over a fixed-height scrolling window because longer support sessions felt cramped during prototype walkthroughs, and growing the thread in place kept context visible without forcing users back up the conversation.</p>
-        <p style="margin-top:20px;"><a href="https://finthrive.com/" target="_blank" rel="noopener" style="font-size:13px; font-weight:600; color:#333; text-decoration:underline; text-underline-offset:3px; opacity:0.75; transition:opacity .18s ease;">Try the FinThrive chatbot yourself &#x2192;</a></p>
-      </div>
-
-      <!-- Dark Mode -->
-      <div class="design-block">
-        <span class="design-label">Mobile Dark Mode Prototype</span>
-        <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643467/portfolio/images/finthrive/ft-dark-mode.jpg" alt="FinThrive dark mode prototype" class="design-img" />
-        <p class="sec-body">I created a full dark mode prototype for the mobile experience aimed at improving accessibility and reducing eye strain for users who often work long hours in the platform. The goal was not to simply invert colors, but to thoughtfully redesign the interface for low-light usability while preserving existing brand and interaction patterns.</p>
-        <ul class="design-bullets">
-          <li><strong>Mapped design system tokens</strong> (colors, typography, elevation, and states) to identify what needed adaptation rather than replacement, ensuring dark mode felt like a natural product extension rather than a separate experience</li>
-          <li><strong>Adjusted contrast ratios to accessibility standards</strong> using deeper neutral backgrounds and calibrated surface elevations to preserve visual separation without harsh blacks or heavy shadows</li>
-          <li>Softened border and divider contrasts, increased text contrast, and carefully handled disabled and secondary states <strong>to ensure sustained readability in prolonged low-light use</strong></li>
-        </ul>
-        <p class="sec-body" style="font-style:italic; opacity:0.78; margin-top:14px;">I started by token-mapping the existing light system rather than recoloring components from scratch, since a 1:1 inversion approach broke several elevation cues during my first contrast tests. Disabled states needed the most careful work because the obvious solution of lowering text opacity further crossed AA thresholds, so I shifted to a desaturated surface treatment that keeps states distinguishable without sacrificing accessibility.</p>
-      </div>
-
-      <!-- Claims Dashboard -->
-      <div class="design-block">
-        <span class="design-label">Claims Dashboard Collaboration</span>
+        <span class="design-label">Anchor Project: Claims Dashboard</span>
         <div class="ft-carousel" id="claims-carousel">
           <div class="ft-slide active">
             <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643331/portfolio/images/finthrive/ft-claims-dashboard.png" alt="Claims Dashboard final design" />
@@ -547,13 +464,59 @@
             <button class="ft-dot" data-i="2" aria-label="Slide 3"></button>
           </div>
         </div>
-        <p class="sec-body">I collaborated closely with another designer from early ideation through to a fully built prototype for the claims dashboard. We started in a shared FigJam board, mapping user needs, pain points, and key workflows before translating them into a structured layout focused on scannability, clear hierarchy, and fast access to high-value information.</p>
+        <h3 style="font-size:16px;font-weight:700;color:#333;margin:32px 0 10px;letter-spacing:-0.01em;">Who was struggling, and why</h3>
+        <p class="sec-body">Revenue cycle analysts and platform admins used this screen every day to check claim statuses, track denial trends across payers, drill into individual claims, and export filtered views for their teams. In the incumbent dashboard, filters were long and hard to remember, the hierarchy was inconsistent, comparing payers required visual gymnastics, and drilling into a claim broke context. Every second of friction added up: unworked denied claims are lost revenue for the hospital, and analysts are measured on how fast they can move through their queue.</p>
+
+        <h3 style="font-size:16px;font-weight:700;color:#333;margin:28px 0 10px;letter-spacing:-0.01em;">My role and where I collaborated</h3>
+        <p class="sec-body">I paired with another product designer on this project from the FigJam kickoff through the fully built prototype. I owned the interaction design for the filter system and the drill-through pattern, ran the sessions where we mapped user pain points and goals against the Power BI constraints, and drove the tradeoff calls documented below. Engineering owned technical implementation; the two of us co-owned everything upstream of it.</p>
+
+        <h3 style="font-size:16px;font-weight:700;color:#333;margin:28px 0 10px;letter-spacing:-0.01em;">How I approached it</h3>
         <ul class="design-bullets">
-          <li><strong>Defined core user flows and refined how users navigate filters,</strong> drill into claims, and compare data points in a way that felt intuitive and efficient, grounded in real user behavior from the start</li>
-          <li><strong>Iterated through multiple feedback cycles with design and software engineering teams,</strong> surfacing Power BI constraints that required adjusting interaction patterns and rethinking filter and drill-down states</li>
-          <li><strong>Balanced ideal user experience with technical feasibility across each feedback round,</strong> producing a final prototype that was both practical to build and aligned with real user needs identified at the beginning</li>
+          <li><strong>Defined core user flows</strong> for how analysts navigate filters, drill into claims, and compare payer data — grounded in real behavior surfaced in the FigJam sessions rather than what looked clean on paper.</li>
+          <li><strong>Iterated through multiple feedback cycles</strong> with design and engineering, surfacing Power BI constraints that forced us to rethink filter and drill-down interaction patterns midway through.</li>
+          <li><strong>Balanced ideal UX against technical feasibility</strong> at every round, so the final prototype was both practical for engineering to build and aligned with the user needs we mapped at the start.</li>
         </ul>
-        <p class="sec-body" style="font-style:italic; opacity:0.78; margin-top:14px;">I tested a sidebar-filter pattern alongside the persistent top-bar filters we eventually shipped, and the top-bar won because users repeatedly lost their scroll position when the filter panel sat next to the chart they were trying to compare against. The summary cards at the top came out of a hierarchy debate where we considered burying KPIs inside the table itself, but research showed users almost always start with the daily aggregate before drilling into specific rows.</p>
+
+        <h3 style="font-size:16px;font-weight:700;color:#333;margin:28px 0 10px;letter-spacing:-0.01em;">Two decisions I'd defend the loudest</h3>
+        <p class="sec-body"><strong>Persistent top-bar filters over a sidebar filter panel.</strong> I tested both. The sidebar lost because users repeatedly lost their scroll position when the filter panel sat next to the chart they were trying to compare against — every filter change dragged their eye off the data. The top-bar keeps the analyst's eye anchored to the chart and turns the active filters into a visible query state via chips.</p>
+        <p class="sec-body" style="margin-top:12px;"><strong>Summary cards at the top of the view, not KPIs buried inside the table.</strong> We debated whether the KPIs belonged inline with table rows to keep everything in one place. Research showed analysts almost always start their session by scanning the daily aggregate, then drill into specific rows — the cards let them do that at a glance, then jump into the table without losing context.</p>
+
+        <h3 style="font-size:16px;font-weight:700;color:#333;margin:28px 0 10px;letter-spacing:-0.01em;">What changed as a result</h3>
+        <p class="sec-body">The prototype was handed off to engineering with the interaction patterns and filter behaviors validated across our own team and stakeholder reviews. Pre/post usability testing across this and the two additional projects showed a <strong>15% improvement</strong> in task-completion and time-on-task (see Impact below). The internship was extended past its original term partly on the strength of this project.</p>
+      </div>
+
+      <!-- Additional Design Work -->
+      <div style="grid-column: 1 / -1; margin-top: 8px;">
+        <span class="sec-label" style="display:block; margin-bottom:6px;">Additional Design Work</span>
+        <h2 class="sec-heading" style="margin-bottom: 12px;">two shorter pieces that shaped the rest of my internship</h2>
+      </div>
+
+      <!-- Chatbot (compressed) -->
+      <div class="design-block">
+        <span class="design-label">AI Chatbot Experience</span>
+        <div class="ft-carousel" id="chatbot-carousel">
+          <div class="ft-slide active">
+            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643464/portfolio/images/finthrive/ft-chatbot-final.jpg" alt="Chatbot final design" />
+          </div>
+          <div class="ft-slide">
+            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643341/portfolio/images/finthrive/ft-low-fi.png" alt="Chatbot low-fidelity wireframe" />
+          </div>
+          <button class="ft-arrow ft-prev" aria-label="Previous">&#8249;</button>
+          <button class="ft-arrow ft-next" aria-label="Next">&#8250;</button>
+          <div class="ft-dots-bar">
+            <button class="ft-dot active" data-i="0" aria-label="Slide 1"></button>
+            <button class="ft-dot" data-i="1" aria-label="Slide 2"></button>
+          </div>
+        </div>
+        <p class="sec-body">I designed the AI chatbot pattern for FinThrive's support surface, working from low-fi wireframes through a final interface aligned with industry-standard chatbot conventions. Two decisions shaped it: <strong>quick-start buttons</strong> became the anchor after early validation showed users hesitated when they did not know what to ask first, and <strong>dynamic vertical expansion</strong> kept the thread visible during longer support sessions instead of forcing users to scroll back for context.</p>
+        <p style="margin-top:16px;"><a href="https://finthrive.com/" target="_blank" rel="noopener" style="font-size:13px; font-weight:600; color:#333; text-decoration:underline; text-underline-offset:3px; opacity:0.75; transition:opacity .18s ease;">Try the FinThrive chatbot yourself &#x2192;</a></p>
+      </div>
+
+      <!-- Dark Mode (compressed) -->
+      <div class="design-block">
+        <span class="design-label">Mobile Dark Mode Prototype</span>
+        <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643467/portfolio/images/finthrive/ft-dark-mode.jpg" alt="FinThrive dark mode prototype" class="design-img" />
+        <p class="sec-body">A full dark-mode prototype for the mobile experience, built by <strong>token-mapping the existing light system</strong> rather than recoloring components from scratch — a 1:1 inversion broke several elevation cues in my first contrast tests. Disabled states required the most careful work: lowering text opacity crossed AA thresholds, so I shifted to a <strong>desaturated surface treatment</strong> that keeps states distinguishable without sacrificing accessibility.</p>
       </div>
 
     </div>
@@ -585,20 +548,23 @@
   <div class="cs-section">
     <span class="sec-label">Takeaways</span>
     <h2 class="sec-heading">what working in enterprise saas actually taught me</h2>
-    <p class="sec-body">Working in a large SaaS organization with established design systems, multiple product teams, and real users in high-stakes jobs was a fundamentally different experience than academic or personal projects. A few things stood out:</p>
-    <p class="sec-body"><strong>Constraints are the design.</strong> In enterprise software, the constraints (technical, compliance, workflow-based) are not obstacles to the design. They are the design. The best solutions I came up with came from deeply understanding a constraint, not from working around it.</p>
-    <p class="sec-body"><strong>Stakeholder communication is a design skill.</strong> Getting feedback incorporated and getting buy-in on a design direction are two different things. Learning how to present work in a way that moves a conversation forward, not just displays it, was as important as any visual decision I made.</p>
-    <p class="sec-body"><strong>Six months is enough to see the whole cycle.</strong> I was able to follow features from initial concept through iteration and into handoff. That end-to-end view of the process, including all the places where real projects diverge from the ideal, is something you only get from extended time at a real company.</p>
+    <ul class="design-bullets" style="margin-top:18px;">
+      <li><strong>Constraints are the design.</strong> In enterprise software the technical, compliance, and workflow constraints are not obstacles to design around — they are the design. My best decisions came from understanding a constraint deeply, not working around it.</li>
+      <li><strong>Stakeholder communication is a design skill.</strong> Getting feedback incorporated and getting buy-in are two different things. Learning to present work so it moves a conversation forward, not just displays it, was as important as any visual decision I made.</li>
+      <li><strong>Six months is enough to see the whole cycle.</strong> I followed features from concept through iteration into handoff — the end-to-end view, including all the places where real projects diverge from the ideal, is something you only get from extended time at a real company.</li>
+    </ul>
   </div>
 
   <!-- ── REFLECTION: dark strip ── -->
   <div class="dark-strip">
     <span class="sec-label">Reflection</span>
     <h2 class="reflect-heading">the best design work happens inside systems you didn't build</h2>
-    <p class="sec-body">FinThrive showed me what it means to do design work inside a system that already exists, with legacy patterns, established component libraries, existing users, and teams who have been shipping this product for years. That is most of what design work actually is. Learning to improve something without breaking what already works is a harder and more valuable skill than starting from scratch.</p>
-    <p class="sec-body" style="margin-top:14px;">One of the most meaningful parts of the experience was visiting the Dallas headquarters for a week. Being on-site gave me the chance to sit with the team, attend real meetings, and understand how decisions are actually made inside a company. I got to learn directly from experienced designers and product leaders, which shaped how I think about the work in ways a remote internship simply could not. I came to understand FinThrive's company values and mission in healthcare fintech not just from documents, but from conversations with the people living it every day.</p>
-    <p class="sec-body" style="margin-top:14px;">That week also gave me the opportunity to network across departments and build relationships I would not have made remotely. The internship was extended because the work was useful. That is the best signal I could ask for, and it is what I will carry into every project going forward.</p>
-    <p class="sec-body" style="margin-top:14px;">Designing for enterprise SaaS in healthcare finance also reshaped how I think about information density. I learned that dense interfaces are not "bad"; they are usually a sign that someone uses the screen for hours and needs everything within glance distance. The work that mattered most was figuring out how to set hierarchy inside high-stakes views where a misread number could affect a real claim or a real operations decision. That is the kind of work I want to keep building: tools where speed, density, and clarity have to coexist for people whose work depends on the screen in front of them.</p>
+    <p class="sec-body">FinThrive was working inside a system that already existed — legacy patterns, established components, real users, teams that had been shipping the product for years. That is most of what design work actually is. Improving something without breaking what already works is a harder and more valuable skill than starting from scratch.</p>
+    <ul class="design-bullets" style="margin-top:22px;">
+      <li><strong>The Dallas week made the difference.</strong> A week on-site with the team, sitting in real meetings and learning directly from experienced designers and product leaders, shaped how I think about the work in ways a fully remote internship could not.</li>
+      <li><strong>The extension was the outcome.</strong> The internship was extended past its original term because the work was useful — the best signal I could ask for that I'm ready for enterprise product design.</li>
+      <li><strong>Density is a feature, not a bug.</strong> Dense enterprise interfaces exist because people live inside them for hours and need everything within glance distance. My interest going forward is exactly that: tools where speed, density, and clarity have to coexist for people whose work depends on the screen in front of them.</li>
+    </ul>
   </div>
 
 </div>
