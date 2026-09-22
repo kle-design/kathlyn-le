@@ -34,6 +34,7 @@ upload-missed-images.mjs
 upload-new-dashboards.mjs
 fix-sttr-thumb.mjs
 cloudinary-new-dashboards-map.json
+restructure-ft-claims.mjs
 cloudinary-polaroids-map.json
 cloudinary-missed-map.json
 cloudinary-map.json
