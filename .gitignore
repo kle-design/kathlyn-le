@@ -41,6 +41,9 @@ referenced-assets.json
 # Local dev artifacts
 temporary screenshots/
 .claude/
+.agents/
+agent/
+skills-lock.json
 
 # OS / editor
 .DS_Store
