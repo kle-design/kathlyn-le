@@ -21,7 +21,7 @@
     #pw-gate.unlocked { animation:pwFadeOut .38s ease forwards; pointer-events:none; }
     #pw-card { background:#fff; border-radius:20px; padding:52px 48px 44px; max-width:420px; width:90%; box-shadow:0 12px 48px rgba(51,51,51,0.09),0 2px 8px rgba(51,51,51,0.05); text-align:center; }
     #pw-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(22px,3vw,30px); color:#333; letter-spacing:-0.02em; word-spacing:-0.12em; margin-bottom:10px; }
-    #pw-sub { font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; color:#999; margin-bottom:28px; line-height:1.6; }
+    #pw-sub { font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; color:#555; margin-bottom:28px; line-height:1.6; }
     #pw-input-wrap { display:flex; gap:10px; }
     #pw-input { flex:1; font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; background:#f2f4f8; border:1.5px solid rgba(51,51,51,.12); border-radius:10px; padding:12px 16px; color:#333; outline:none; cursor:none; transition:border-color .18s ease; }
     #pw-input:focus { border-color:rgba(51,51,51,.32); }
@@ -47,13 +47,13 @@
 
     /* ── Tags + Title + Overview + Sidebar ── */
     .cs-hero-info { padding:52px 20% 0; }
-    .cs-tags { font-size:11px; font-weight:600; color:#aaa; letter-spacing:0.14em; text-transform:uppercase; display:block; margin-bottom:20px; }
+    .cs-tags { font-size:12px; font-weight:600; color:#555; letter-spacing:0.14em; text-transform:uppercase; display:block; margin-bottom:20px; }
     .cs-title { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:#333; letter-spacing:-0.04em; line-height:0.92; margin-bottom:40px; }
     .hero-grid { display:grid; grid-template-columns:1fr 200px; gap:52px; align-items:start; padding-bottom:64px; }
     .overview-text { font-size:15px; font-weight:400; color:#555; line-height:1.88; }
     .overview-text + .overview-text { margin-top:14px; }
     .hero-sidebar { display:flex; flex-direction:column; gap:22px; }
-    .sidebar-label { font-size:9px; font-weight:700; color:#bbb; letter-spacing:0.16em; text-transform:uppercase; display:block; margin-bottom:4px; }
+    .sidebar-label { font-size:11px; font-weight:700; color:#555; letter-spacing:0.16em; text-transform:uppercase; display:block; margin-bottom:4px; }
     .sidebar-value { font-size:13px; font-weight:600; color:#333; line-height:1.5; }
 
     /* ── FT Me photo ── */
@@ -63,7 +63,7 @@
     /* ── Section layout ── */
     .cs-section { padding:64px 20%; }
     .cs-divider { border:none; border-top:1px solid rgba(51,51,51,0.1); margin:0 20%; }
-    .sec-label { font-size:9px; font-weight:700; color:#aaa; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:14px; display:block; }
+    .sec-label { font-size:11px; font-weight:700; color:#555; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:14px; display:block; }
     .sec-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(24px,2.8vw,40px); font-weight:700; color:#333; letter-spacing:-0.03em; line-height:1.1; margin-bottom:20px; }
     .sec-body { font-size:15px; font-weight:400; color:#555; line-height:1.88; }
     .sec-body + .sec-body { margin-top:14px; }
@@ -79,7 +79,7 @@
     /* ── Process steps ── */
     .process-steps { display:flex; flex-direction:column; gap:32px; margin-top:36px; }
     .step { display:flex; gap:24px; align-items:flex-start; }
-    .step-num { font-size:10px; font-weight:700; color:#aaa; letter-spacing:0.1em; white-space:nowrap; padding-top:3px; flex-shrink:0; min-width:28px; }
+    .step-num { font-size:11px; font-weight:700; color:#555; letter-spacing:0.1em; white-space:nowrap; padding-top:3px; flex-shrink:0; min-width:28px; }
     .step-body h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:7px; }
     .step-body p { font-size:15px; font-weight:400; color:#666; line-height:1.84; }
 
@@ -87,7 +87,7 @@
     .design-sections { margin-top:48px; }
     .design-block { padding-top:56px; margin-top:56px; border-top:1px solid rgba(51,51,51,0.1); }
     .design-block:first-child { border-top:none; padding-top:0; margin-top:32px; }
-    .design-label { font-size:9px; font-weight:700; color:#aaa; letter-spacing:0.18em; text-transform:uppercase; display:block; margin-bottom:20px; }
+    .design-label { font-size:11px; font-weight:700; color:#555; letter-spacing:0.18em; text-transform:uppercase; display:block; margin-bottom:20px; }
     .design-img { width:100%; display:block; margin-bottom:28px; border-radius:16px; }
     .design-bullets { margin-top:20px; display:flex; flex-direction:column; gap:14px; list-style:none; padding-left:0; }
     .design-bullets li { font-size:14px; font-weight:400; color:#555; line-height:1.84; padding-left:22px; position:relative; }
@@ -166,7 +166,7 @@
 
     /* ── Dark strip ── */
     .dark-strip { background:#333; border-radius:40px; padding:52px 20% 64px; margin:40px 0; }
-    .dark-strip .sec-label { color:rgba(242,244,248,0.45); }
+    .dark-strip .sec-label { color:rgba(242,244,248,0.80); }
     .dark-strip .sec-heading { color:#f2f4f8; }
     .dark-strip .sec-body { color:rgba(242,244,248,0.82); }
     .dark-strip .sec-body strong { color:#f2f4f8; }
@@ -178,7 +178,7 @@
     .stat-num { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:#f2f4f8; letter-spacing:-0.04em; line-height:1; margin-bottom:8px; }
     .stat-label { font-size:13px; font-weight:500; color:rgba(242,244,248,0.65); line-height:1.55; }
     .manager-quote { font-size:14px; font-style:italic; color:rgba(242,244,248,0.82); line-height:1.8; margin-bottom:12px; }
-    .manager-attr { font-size:11px; font-weight:700; color:rgba(242,244,248,0.45); letter-spacing:0.1em; text-transform:uppercase; }
+    .manager-attr { font-size:12px; font-weight:700; color:rgba(242,244,248,0.80); letter-spacing:0.1em; text-transform:uppercase; }
 
     /* ── Footer ── */
     footer { text-align:center; padding:64px 40px 48px; display:flex; flex-direction:column; align-items:center; gap:20px; background:#f2f4f8; border-top:1px solid rgba(51,51,51,0.08); }
@@ -186,7 +186,7 @@
     .footer-links { display:flex; gap:32px; }
     .footer-links a { font-size:14px; font-weight:700; color:#333; opacity:.75; text-decoration:none; transition:opacity .2s; }
     .footer-links a:hover { opacity:1; }
-    .footer-copy { font-size:13px; font-weight:400; color:#999; }
+    .footer-copy { font-size:13px; font-weight:400; color:#555; }
 
     /* ── Cursor ── */
     #cdot { position:fixed; z-index:9999; width:6px; height:6px; border-radius:50%; background:rgba(51,51,51,.55); transform:translate(-50%,-50%); pointer-events:none; }
@@ -265,7 +265,7 @@
   <!-- ── HERO: Dashboard in dark container ── -->
   <div class="hero-dashboard-wrap">
     <div class="dashboard-container">
-      <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643331/portfolio/images/finthrive/ft-claims-dashboard.png" alt="FinThrive Claims Dashboard" />
+      <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1790053512/portfolio/images/finthrive/ft-claims-dashboard-home.jpg" alt="FinThrive Claims Dashboard — Home view with four KPI cards, a claims trend line chart, a status donut, and the recent claims table" />
     </div>
   </div>
 
@@ -343,7 +343,13 @@
         <span class="design-label">Anchor Project: Claims Dashboard</span>
         <div class="ft-carousel" id="claims-carousel">
           <div class="ft-slide active">
-            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643331/portfolio/images/finthrive/ft-claims-dashboard.png" alt="Claims Dashboard final design" />
+            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1790053512/portfolio/images/finthrive/ft-claims-dashboard-home.jpg" alt="Claims Dashboard — Home view. Four KPI cards (Total / Pending / Approved / Denied) span the top, a claims trend line chart and a status donut sit side-by-side beneath them, and a recent claims table with color-coded status badges anchors the bottom." />
+          </div>
+          <div class="ft-slide">
+            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1790053513/portfolio/images/finthrive/ft-claims-dashboard-all-claims.jpg" alt="Claims Dashboard — All Claims view. A persistent top-bar filter row (Search, Filters button, +New Claim CTA, then Date Range / Status / Provider / Claim Type dropdowns) sits above the full paginated claims table." />
+          </div>
+          <div class="ft-slide">
+            <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1790053514/portfolio/images/finthrive/ft-claims-dashboard-details.jpg" alt="Claims Dashboard — Claim Details view. A back link to All Claims, then the claim header (ID, status pill, amount), a details card grouping patient and payer meta fields, and a tabbed section (Claim Items / History / Payments) with a line-item table below." />
           </div>
           <div class="ft-slide">
             <div class="figjam-placeholder">
@@ -459,9 +465,11 @@
           <button class="ft-arrow ft-prev" aria-label="Previous">&#8249;</button>
           <button class="ft-arrow ft-next" aria-label="Next">&#8250;</button>
           <div class="ft-dots-bar">
-            <button class="ft-dot active" data-i="0" aria-label="Slide 1"></button>
-            <button class="ft-dot" data-i="1" aria-label="Slide 2"></button>
-            <button class="ft-dot" data-i="2" aria-label="Slide 3"></button>
+            <button class="ft-dot active" data-i="0" aria-label="Home view"></button>
+            <button class="ft-dot" data-i="1" aria-label="All Claims view"></button>
+            <button class="ft-dot" data-i="2" aria-label="Claim Details view"></button>
+            <button class="ft-dot" data-i="3" aria-label="FigJam brainstorm"></button>
+            <button class="ft-dot" data-i="4" aria-label="Figma lo-fi wireframe"></button>
           </div>
         </div>
         <h3 style="font-size:16px;font-weight:700;color:#333;margin:32px 0 10px;letter-spacing:-0.01em;">Who was struggling, and why</h3>
@@ -477,9 +485,10 @@
           <li><strong>Balanced ideal UX against technical feasibility</strong> at every round, so the final prototype was both practical for engineering to build and aligned with the user needs we mapped at the start.</li>
         </ul>
 
-        <h3 style="font-size:16px;font-weight:700;color:#333;margin:28px 0 10px;letter-spacing:-0.01em;">Two decisions I'd defend the loudest</h3>
-        <p class="sec-body"><strong>Persistent top-bar filters over a sidebar filter panel.</strong> I tested both. The sidebar lost because users repeatedly lost their scroll position when the filter panel sat next to the chart they were trying to compare against — every filter change dragged their eye off the data. The top-bar keeps the analyst's eye anchored to the chart and turns the active filters into a visible query state via chips.</p>
-        <p class="sec-body" style="margin-top:12px;"><strong>Summary cards at the top of the view, not KPIs buried inside the table.</strong> We debated whether the KPIs belonged inline with table rows to keep everything in one place. Research showed analysts almost always start their session by scanning the daily aggregate, then drill into specific rows — the cards let them do that at a glance, then jump into the table without losing context.</p>
+        <h3 style="font-size:16px;font-weight:700;color:#333;margin:28px 0 10px;letter-spacing:-0.01em;">Three decisions I'd defend the loudest</h3>
+        <p class="sec-body"><strong>Summary cards at the top of the view, not KPIs buried inside the table.</strong> Visible in the <em>Home</em> slide above: four glanceable cards (Total / Pending / Approved / Denied) sit under the greeting, with a trend line and a status donut immediately below. We debated inlining KPIs with the table rows to keep everything in one place; research showed analysts almost always start their session by scanning the daily aggregate before drilling into specific rows, so the cards let them do that at a glance and then jump into the table without losing context.</p>
+        <p class="sec-body" style="margin-top:14px;"><strong>Persistent top-bar filters over a sidebar filter panel.</strong> Visible in the <em>All Claims</em> slide above: a search bar and Filters button share the top row with the primary <em>+ New Claim</em> CTA, then Date Range / Status / Provider / Claim Type dropdowns sit as a persistent row beneath. I tested both patterns; the sidebar lost because users repeatedly lost their scroll position when the filter panel sat next to the chart they were trying to compare against — every filter change dragged their eye off the data. The top-bar keeps the analyst's eye anchored to the data, and each active filter reads as a visible query state.</p>
+        <p class="sec-body" style="margin-top:14px;"><strong>A drill-through pattern that preserves context, not a modal or a new tab.</strong> Visible in the <em>Claim Details</em> slide above: a clear back link to All Claims, then the claim header (ID + status pill + amount), a details card grouping the meta fields, and a tabbed section (Claim Items / History / Payments) that keeps drill-down interactions inside a single scrollable page. Analysts move between the aggregate and a single claim dozens of times a day; a modal or new tab breaks that rhythm, so the pattern is a full-page view that restores the prior filter state on return.</p>
 
         <h3 style="font-size:16px;font-weight:700;color:#333;margin:28px 0 10px;letter-spacing:-0.01em;">What changed as a result</h3>
         <p class="sec-body">The prototype was handed off to engineering with the interaction patterns and filter behaviors validated across our own team and stakeholder reviews. Pre/post usability testing across this and the two additional projects showed a <strong>15% improvement</strong> in task-completion and time-on-task (see Impact below). The internship was extended past its original term partly on the strength of this project.</p>

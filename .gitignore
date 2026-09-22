@@ -31,7 +31,9 @@ rewrite-missed-refs.mjs
 scan-assets.mjs
 upload-polaroids.mjs
 upload-missed-images.mjs
+upload-new-dashboards.mjs
 fix-sttr-thumb.mjs
+cloudinary-new-dashboards-map.json
 cloudinary-polaroids-map.json
 cloudinary-missed-map.json
 cloudinary-map.json
