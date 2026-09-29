@@ -7,8 +7,120 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script id="vs-fluid" type="x-shader/x-vertex">
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  </script>
+  <script id="fs-fluid" type="x-shader/x-fragment">
+precision highp float;
+uniform float uSoftReset; uniform float iTime; uniform vec2 iResolution;
+uniform vec4 iMouse; uniform int iFrame; uniform sampler2D iPreviousFrame;
+uniform float uBrushSize; uniform float uBrushStrength; uniform float uFluidDecay;
+uniform float uTrailLength; uniform float uStopDecay; uniform float uFlowSpeed;
+varying vec2 vUv;
+vec2 ur, U;
+float ln(vec2 p, vec2 a, vec2 b) {
+  return length(p - a - (b - a) * clamp(dot(p - a, b - a) / dot(b - a, b - a), 0.0, 1.0));
+}
+vec4 t(vec2 v, int a, int b) { return texture2D(iPreviousFrame, fract((v + vec2(float(a), float(b))) / ur)); }
+vec4 t(vec2 v) { return texture2D(iPreviousFrame, fract(v / ur)); }
+float area(vec2 a, vec2 b, vec2 c) {
+  float A = length(b-c), B = length(c-a), C = length(a-b), s = 0.5*(A+B+C);
+  return sqrt(max(0.0, s*(s-A)*(s-B)*(s-C)));
+}
+void main() {
+  U = vUv * iResolution; ur = iResolution.xy;
+  if (iFrame < 1) {
+    float w = 0.5 + sin(0.2 * U.x) * 0.5;
+    float q = length(U - 0.5 * ur);
+    gl_FragColor = vec4(0.1 * exp(-0.001 * q * q), 0.0, 0.0, w);
+  } else {
+    vec2 v = U, A = v+vec2(1,1), B = v+vec2(1,-1), C = v+vec2(-1,1), D = v+vec2(-1,-1);
+    for (int i = 0; i < 8; i++) {
+      v -= uFlowSpeed * t(v).xy; A -= uFlowSpeed * t(A).xy;
+      B -= uFlowSpeed * t(B).xy; C -= uFlowSpeed * t(C).xy; D -= uFlowSpeed * t(D).xy;
+    }
+    vec4 me = t(v);
+    vec4 n = t(v,0,1), e = t(v,1,0), s = t(v,0,-1), wv = t(v,-1,0);
+    me = mix(t(v), 0.25*(n+e+s+wv), vec4(0.15,0.15,0.95,0.0));
+    me.z -= uFlowSpeed * 0.01 * ((area(A,B,C)+area(B,C,D)) - 4.0);
+    vec4 pr = vec4(e.z, wv.z, n.z, s.z);
+    me.xy = me.xy + (100.0*uFlowSpeed) * vec2(pr.x-pr.y, pr.z-pr.w) / ur;
+    me.xy *= pow(uFluidDecay, uFlowSpeed); me.z *= uTrailLength;
+    if (iMouse.z > 0.0) {
+      vec2 mousePos = iMouse.xy, mousePrev = iMouse.zw;
+      float q = ln(U, mousePos, mousePrev);
+      vec2 m = mousePos - mousePrev; float l = length(m);
+      if (l > 0.0) m = min(l, 10.0) * m / l;
+      float falloff = pow(exp(-1e-4 / uBrushSize * q*q*q), 0.5);
+      me.xyw += (0.03*uBrushStrength*uFlowSpeed) * falloff * vec3(m, 10.0);
+      if (length(mousePos-mousePrev) < 2.0) {
+        float d = length(U - mousePos);
+        me.xy *= mix(1.0, uStopDecay, exp(-d * 0.01));
+        me.z  *= mix(1.0, uStopDecay, exp(-d * 0.01));
+      }
+    }
+    me = mix(me, vec4(0.0), uSoftReset);
+    gl_FragColor = clamp(me, -0.4, 0.4);
+  }
+}
+  </script>
+  <script id="fs-display" type="x-shader/x-fragment">
+precision highp float; precision highp int;
+uniform float iTime; uniform vec2 iResolution; uniform sampler2D iFluid;
+uniform float uDistortionAmount; uniform vec3 uColor1; uniform vec3 uColor2;
+uniform vec3 uColor3; uniform vec3 uColor4; uniform float uColorIntensity;
+uniform float uSoftness; uniform float uIdleSpeed;
+varying vec2 vUv;
+void main() {
+  vec2 fragCoord = vUv * iResolution;
+  vec4 fluid = texture2D(iFluid, vUv);
+  float mr = min(iResolution.x, iResolution.y);
+  vec2 uv = (fragCoord * 2.0 - iResolution.xy) / mr;
+  uv += fluid.xy * (0.5 * uDistortionAmount);
+  float tt = iTime * uIdleSpeed, d = -tt * 0.5, a = 0.0;
+  for (float i = 0.0; i < 8.0; ++i) { a += cos(i - d - a * uv.x); d += sin(uv.y * i + a); }
+  d += tt * 0.5;
+  float m1 = cos(uv.x*d)*0.5+0.5, m2 = cos(uv.y*a)*0.5+0.5, m3 = sin(d+a)*0.5+0.5;
+  float sm = clamp(uSoftness*0.1, 0.0, 0.9);
+  m1 = mix(m1,0.5,sm); m2 = mix(m2,0.5,sm); m3 = mix(m3,0.5,sm);
+  vec3 col = mix(uColor1, uColor2, m1);
+  col = mix(col, uColor3, m2);
+  col = mix(col, uColor4, m3 * 0.4);
+  col *= uColorIntensity;
+  gl_FragColor = vec4(col, 1.0);
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+}
+  </script>
   <style>
     @font-face { font-family:'JayaGiri'; src:url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype'); }
+
+    /* WebGL fluid animation background (ported from homepage) */
+    #bg {
+      position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0;
+    }
+    #bg canvas { display: block; }
+
+    #grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    }
+    #grain::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 160px 160px; opacity: .10; mix-blend-mode: multiply;
+    }
+    #grain::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.90' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='70' height='70' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 70px 70px; opacity: .06; mix-blend-mode: multiply;
+    }
+    /* Make body transparent so #bg shows through the whole page */
+    body { background:transparent !important; }
+
     *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
     html { scroll-behavior:smooth; }
     body { font-family:'Quicksand',sans-serif; background:#f2f4f8; color:#333; overflow-y:auto; overflow-x:hidden; cursor:none; }
@@ -23,7 +135,8 @@
     .nav-hamburger span { width:22px; height:2px; background:#fff; border-radius:2px; display:block; }
     .nav-mobile { display:none; }
 
-    .page-wrap { padding-top:54px; }
+    .page-wrap { padding-top:54px; position:relative; z-index:2; }
+    footer { position:relative; z-index:2; }
 
     /* ── Hero ── */
     .pg-hero { padding:88px 20% 40px; }
@@ -32,7 +145,7 @@
     .pg-subtitle { font-family:'Quicksand',sans-serif; font-size:clamp(16px,1.4vw,18px); font-weight:500; color:#555; line-height:1.7; max-width:720px; }
 
     /* ── Folder strip: dark background matches .dark-strip padding used on other pages ── */
-    .pg-folder-strip { background:#333; padding:52px 20% 0; margin-top:24px; }
+    .pg-folder-strip { background:transparent; padding:52px 20% 0; margin-top:24px; }
     .pg-folder { position:relative; }
     /* Tabs stay inside the main container inset */
     .folder-tabs-row { display:flex; gap:6px; padding:0; position:relative; z-index:2; }
@@ -40,7 +153,7 @@
     .folder-tab:hover { background:rgba(242,244,248,0.85); color:#333; }
     .folder-tab.is-active { background:#f2f4f8; color:#333; padding-bottom:26px; z-index:3; }
     /* Folder body breaks out to full viewport width (edge-to-edge band under the tabs) */
-    .folder-body { background:#f2f4f8; overflow:hidden; margin-top:-2px; width:100vw; margin-left:calc(-50vw + 50%); box-shadow:0 12px 32px rgba(0,0,0,0.14); }
+    .folder-body { background:#f2f4f8; overflow:hidden; margin-top:-2px; width:calc(100vw - 32px); margin-left:calc(-50vw + 50% + 16px); border-radius:24px; box-shadow:0 16px 44px rgba(0,0,0,0.14),0 4px 12px rgba(0,0,0,0.08); }
     .folder-panel { display:none; }
     .folder-panel.is-shown { display:block; }
     .folder-embed-wrap { position:relative; min-height:600px; }
@@ -90,6 +203,25 @@
 </head>
 <body>
 
+<div id="bg"
+    fc-fluid-gradient="component"
+    fc-fluid-gradient-color-1="#bdc2ca"
+    fc-fluid-gradient-color-2="#d5d9e0"
+    fc-fluid-gradient-color-3="#ebeef3"
+    fc-fluid-gradient-color-4="#f8f9fc"
+    fc-fluid-gradient-softness="2.0"
+    fc-fluid-gradient-color-intensity="1.3"
+    fc-fluid-gradient-idle-speed="0.65"
+    fc-fluid-gradient-distortion-amount="2.0"
+    fc-fluid-gradient-brush-size="28"
+    fc-fluid-gradient-brush-strength="0.48"
+    fc-fluid-gradient-fluid-decay="0.985"
+    fc-fluid-gradient-trail-length="0.82"
+    fc-fluid-gradient-stop-decay="0.85"
+    fc-fluid-gradient-flow-speed="1.0"
+  ></div>
+  <div id="grain"></div>
+
 <nav>
   <a href="index.html" class="logo">k.l&#234;</a>
   <div class="nav-links">
@@ -111,7 +243,7 @@
 
   <section class="pg-hero">
     <span class="pg-eyebrow">OTHER WORK I HAVE DONE</span>
-    <h1 class="pg-title">playground</h1>
+    <h1 class="pg-title">welcome to my playground!</h1>
     <p class="pg-subtitle">What else do I do? UX research explorations, freelance content, a running design journal, and a lot of time spent in communities and activities that keep me growing as a designer.</p>
   </section>
 
@@ -167,7 +299,7 @@
       const doc = iframe.contentDocument;
       if (!doc || !doc.body) return;
       const h = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight, 600);
-      iframe.style.height = (h + 20) + 'px';
+      iframe.style.height = h + 'px';
     } catch (e) { /* ignore */ }
   }
 
@@ -248,6 +380,131 @@
     })();
   }
 </script>
+
+<script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
+
+    const asNumber = (v, d) => { const n = parseFloat(v); return Number.isFinite(n) ? n : d; };
+    const asColorLinear = (hex, fallback = '#ffffff') => {
+      let c; try { c = new THREE.Color(hex || fallback); } catch { c = new THREE.Color(fallback); }
+      c.convertSRGBToLinear(); return [c.r, c.g, c.b];
+    };
+    const getShader = id => document.getElementById(id).textContent;
+
+    const el   = document.querySelector('[fc-fluid-gradient="component"]') || document.body;
+    const attr = name => el.getAttribute(name);
+
+    const cfg = {
+      brushSize:        asNumber(attr('fc-fluid-gradient-brush-size'),        28),
+      brushStrength:    asNumber(attr('fc-fluid-gradient-brush-strength'),    0.48),
+      distortionAmount: asNumber(attr('fc-fluid-gradient-distortion-amount'), 2.0),
+      fluidDecay:       asNumber(attr('fc-fluid-gradient-fluid-decay'),       0.985),
+      trailLength:      asNumber(attr('fc-fluid-gradient-trail-length'),      0.82),
+      stopDecay:        asNumber(attr('fc-fluid-gradient-stop-decay'),        0.85),
+      color1:           attr('fc-fluid-gradient-color-1') || '#acb0b8',
+      color2:           attr('fc-fluid-gradient-color-2') || '#c8ccd3',
+      color3:           attr('fc-fluid-gradient-color-3') || '#e2e5ea',
+      color4:           attr('fc-fluid-gradient-color-4') || '#f5f7fa',
+      colorIntensity:   asNumber(attr('fc-fluid-gradient-color-intensity'),   1.0),
+      softness:         asNumber(attr('fc-fluid-gradient-softness'),          2.0),
+      flowSpeed:        asNumber(attr('fc-fluid-gradient-flow-speed'),        1.0),
+      idleSpeed:        asNumber(attr('fc-fluid-gradient-idle-speed'),        0.65),
+      dprMax: 2.0,
+    };
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.NoToneMapping;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, cfg.dprMax));
+    el.appendChild(renderer.domElement);
+
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const rtOpts = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, type: THREE.HalfFloatType, depthBuffer: false, stencilBuffer: false };
+    const rt1 = new THREE.WebGLRenderTarget(1, 1, rtOpts);
+    const rt2 = rt1.clone();
+    let cur = rt1, prev = rt2;
+
+    const [c1r,c1g,c1b] = asColorLinear(cfg.color1);
+    const [c2r,c2g,c2b] = asColorLinear(cfg.color2);
+    const [c3r,c3g,c3b] = asColorLinear(cfg.color3);
+    const [c4r,c4g,c4b] = asColorLinear(cfg.color4);
+
+    const fMat = new THREE.ShaderMaterial({
+      uniforms: {
+        iTime: {value:0}, iResolution: {value: new THREE.Vector2(1,1)},
+        iMouse: {value: new THREE.Vector4(0,0,0,0)}, iFrame: {value:0},
+        iPreviousFrame: {value:null}, uBrushSize: {value:cfg.brushSize},
+        uBrushStrength: {value:cfg.brushStrength}, uFluidDecay: {value:cfg.fluidDecay},
+        uTrailLength: {value:cfg.trailLength}, uStopDecay: {value:cfg.stopDecay},
+        uSoftReset: {value:0.0}, uFlowSpeed: {value:cfg.flowSpeed},
+      },
+      vertexShader: getShader('vs-fluid'), fragmentShader: getShader('fs-fluid'),
+    });
+
+    const dMat = new THREE.ShaderMaterial({
+      uniforms: {
+        iTime: {value:0}, iResolution: {value: new THREE.Vector2(1,1)},
+        iFluid: {value:null}, uDistortionAmount: {value:cfg.distortionAmount},
+        uColor1: {value: new THREE.Vector3(c1r,c1g,c1b)},
+        uColor2: {value: new THREE.Vector3(c2r,c2g,c2b)},
+        uColor3: {value: new THREE.Vector3(c3r,c3g,c3b)},
+        uColor4: {value: new THREE.Vector3(c4r,c4g,c4b)},
+        uColorIntensity: {value:cfg.colorIntensity}, uSoftness: {value:cfg.softness},
+        uIdleSpeed: {value:cfg.idleSpeed},
+      },
+      vertexShader: getShader('vs-fluid'), fragmentShader: getShader('fs-display'), toneMapped: false,
+    });
+
+    function resize() {
+      const r = el.getBoundingClientRect();
+      const w = Math.max(1, r.width), h = Math.max(1, r.height);
+      renderer.setSize(w, h);
+      fMat.uniforms.iResolution.value.set(w, h);
+      dMat.uniforms.iResolution.value.set(w, h);
+      rt1.setSize(w, h); rt2.setSize(w, h);
+    }
+    resize();
+
+    const geo = new THREE.PlaneGeometry(2, 2);
+    const fPlane = new THREE.Mesh(geo, fMat);
+    const dPlane = new THREE.Mesh(geo, dMat);
+
+    const isFine = window.matchMedia('(pointer:fine)').matches;
+    let mx=0, my=0, pmx=0, pmy=0, lastMove=0;
+    if (isFine) {
+      window.addEventListener('pointermove', e => {
+        if (e.pointerType !== 'mouse') return;
+        const r = el.getBoundingClientRect();
+        const x = e.clientX - r.left, y = r.height - (e.clientY - r.top);
+        const spd = Math.hypot(x-mx, y-my);
+        fMat.uniforms.uBrushSize.value = cfg.brushSize * Math.min(1.2, Math.max(0.8, 0.8 + spd * 0.003));
+        pmx=mx; pmy=my; mx=x; my=y; lastMove=performance.now();
+        fMat.uniforms.iMouse.value.set(mx, my, pmx, pmy);
+      });
+    }
+
+    let frame = 0;
+    (function animate() {
+      requestAnimationFrame(animate);
+      const t = performance.now() * 0.001;
+      fMat.uniforms.iTime.value = t;
+      dMat.uniforms.iTime.value = t;
+      fMat.uniforms.iFrame.value = frame;
+      if (performance.now() - lastMove > 120) fMat.uniforms.iMouse.value.set(0,0,0,0);
+      fMat.uniforms.iPreviousFrame.value = prev.texture;
+      renderer.setRenderTarget(cur); renderer.render(fPlane, camera);
+      dMat.uniforms.iFluid.value = cur.texture;
+      renderer.setRenderTarget(null); renderer.render(dPlane, camera);
+      [cur, prev] = [prev, cur];
+      frame++;
+    })();
+
+    let raf = null;
+    window.addEventListener('resize', () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(resize);
+    });
+  </script>
 
 </body>
 </html>
