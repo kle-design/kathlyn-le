@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Design Journal — k.le</title>
+  <script>
+    try { if (new URLSearchParams(location.search).get('embed') === '1') { document.documentElement.classList.add('embed'); } } catch(e) {}
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -319,6 +322,16 @@ void main() {
       transform: translate(-50%,-50%); pointer-events: none;
       transition: border-color .3s ease;
     }
+      /* ── Embed mode: hides nav / footer / cursor when loaded via ?embed=1 in an iframe (playground.html) ── */
+    html.embed nav,
+    html.embed .nav-mobile,
+    html.embed #nav-mobile,
+    html.embed footer,
+    html.embed #cdot,
+    html.embed #cring,
+    html.embed #pw-gate { display:none !important; }
+    html.embed .page-wrap { padding-top:0 !important; }
+    html.embed body { cursor:auto !important; background:#f2f4f8; }
   </style>
 </head>
 <body>

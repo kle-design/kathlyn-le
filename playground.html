@@ -13,7 +13,7 @@
     html { scroll-behavior:smooth; }
     body { font-family:'Quicksand',sans-serif; background:#f2f4f8; color:#333; overflow-y:auto; overflow-x:hidden; cursor:none; }
 
-    /* ── Nav (same as case-study pages) ── */
+    /* ── Nav ── */
     nav { position:fixed; top:0; left:0; right:0; z-index:35; display:flex; align-items:center; justify-content:space-between; padding:0 20%; height:54px; background:rgba(51,51,51,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
     .logo { font-family:'JayaGiri','Quicksand',sans-serif; font-size:22px; font-weight:600; color:#f2f4f8; letter-spacing:-0.02em; text-decoration:none; }
     .nav-links { display:flex; gap:24px; }
@@ -28,28 +28,23 @@
     /* ── Hero ── */
     .pg-hero { padding:88px 20% 40px; }
     .pg-eyebrow { font-family:'Quicksand',sans-serif; font-size:12px; font-weight:700; color:#555; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:22px; display:block; }
-    .pg-title { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(56px,7vw,96px); font-weight:700; color:#333; letter-spacing:-0.05em; line-height:0.94; margin-bottom:28px; }
+    .pg-title { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:#333; letter-spacing:-0.05em; line-height:1.0; margin-bottom:28px; }
     .pg-subtitle { font-family:'Quicksand',sans-serif; font-size:clamp(16px,1.4vw,18px); font-weight:500; color:#555; line-height:1.7; max-width:720px; }
 
-    /* ── Folder container: dark background with paper-tab UI on top ── */
-    .folder-wrap { padding:16px 20% 88px; }
-    .folder { background:#333; border-radius:24px; overflow:visible; box-shadow:0 32px 80px rgba(0,0,0,0.12),0 8px 24px rgba(0,0,0,0.08); position:relative; }
-    .folder-tabs-row { display:flex; gap:6px; padding:0 24px; margin-bottom:0; position:relative; top:14px; z-index:2; }
-    .folder-tab { background:rgba(242,244,248,0.42); border:none; font-family:'Quicksand',sans-serif; font-size:13px; font-weight:600; color:#f2f4f8; letter-spacing:0.02em; padding:14px 22px 22px; border-radius:12px 12px 0 0; cursor:none; transition:background 0.28s cubic-bezier(0.22,1,0.36,1), color 0.28s cubic-bezier(0.22,1,0.36,1), transform 0.28s cubic-bezier(0.22,1,0.36,1); position:relative; }
+    /* ── Folder strip: dark background spans full page, tabs stay inside main container inset ── */
+    .pg-folder-strip { background:#333; padding:56px 20% 96px; margin-top:24px; }
+    .pg-folder { position:relative; }
+    .folder-tabs-row { display:flex; gap:6px; padding:0; position:relative; z-index:2; }
+    .folder-tab { background:rgba(242,244,248,0.42); border:none; font-family:'Quicksand',sans-serif; font-size:13px; font-weight:600; color:#f2f4f8; letter-spacing:0.02em; padding:14px 22px 22px; border-radius:12px 12px 0 0; cursor:none; transition:background 0.28s cubic-bezier(0.22,1,0.36,1), color 0.28s cubic-bezier(0.22,1,0.36,1); position:relative; }
     .folder-tab:hover { background:rgba(242,244,248,0.85); color:#333; }
     .folder-tab.is-active { background:#f2f4f8; color:#333; padding-bottom:26px; z-index:3; }
-    .folder-body { background:#f2f4f8; border-radius:0 20px 20px 20px; padding:52px 48px; min-height:420px; position:relative; margin:0 8px 8px; box-shadow:0 6px 24px rgba(0,0,0,0.06) inset; }
-    .folder-panel { display:none; animation:panelIn 0.5s cubic-bezier(0.22,1,0.36,1); }
+    .folder-body { background:#f2f4f8; border-radius:0 20px 20px 20px; overflow:hidden; margin-top:-2px; box-shadow:0 20px 60px rgba(0,0,0,0.18),0 6px 18px rgba(0,0,0,0.10); }
+    .folder-panel { display:none; }
     .folder-panel.is-shown { display:block; }
-    @keyframes panelIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-    .folder-panel h2 { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(28px,3vw,44px); font-weight:700; color:#333; letter-spacing:-0.04em; line-height:1.06; margin-bottom:14px; }
-    .folder-panel .panel-sub { font-family:'Quicksand',sans-serif; font-size:13px; font-weight:600; color:#555; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:22px; display:block; }
-    .folder-panel p { font-size:15px; font-weight:400; color:#555; line-height:1.85; margin-bottom:16px; max-width:640px; }
-    .folder-panel .placeholder-note { display:block; margin-top:26px; padding:18px 22px; background:rgba(51,51,51,0.05); border:1px dashed rgba(51,51,51,0.15); border-radius:12px; font-size:13px; color:#666; font-style:italic; line-height:1.6; max-width:640px; }
-    .folder-cta { display:inline-flex; align-items:center; gap:10px; margin-top:24px; background:#333; color:#f2f4f8; text-decoration:none; padding:14px 26px; border-radius:10px; font-family:'Quicksand',sans-serif; font-size:14px; font-weight:600; letter-spacing:0.02em; transition:background 0.24s cubic-bezier(0.22,1,0.36,1), transform 0.2s cubic-bezier(0.22,1,0.36,1); }
-    .folder-cta:hover { background:#1a1a1a; transform:translateY(-2px); }
-    .folder-cta .arrow { display:inline-block; transition:transform 0.24s cubic-bezier(0.22,1,0.36,1); }
-    .folder-cta:hover .arrow { transform:translateX(4px); }
+    .folder-embed-wrap { position:relative; min-height:600px; }
+    .folder-embed { width:100%; min-height:600px; border:none; display:block; background:#f2f4f8; transition:height 0.24s cubic-bezier(0.22,1,0.36,1); }
+    .folder-embed-loading { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; background:#f2f4f8; color:#555; font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; pointer-events:none; opacity:0; transition:opacity 0.2s ease; }
+    .folder-embed-loading.is-visible { opacity:1; }
 
     /* ── Footer ── */
     footer { padding:64px 20% 44px; text-align:center; }
@@ -68,8 +63,7 @@
     @media (max-width:1024px) {
       nav { padding:0 5%; }
       .pg-hero { padding:72px 5% 32px; }
-      .folder-wrap { padding:16px 5% 64px; }
-      .folder-body { padding:40px 32px; }
+      .pg-folder-strip { padding:44px 5% 72px; }
       footer { padding:52px 5% 36px; }
     }
     @media (max-width:768px) {
@@ -83,13 +77,11 @@
       .nav-mobile a { font-family:'Quicksand',sans-serif; font-size:15px; font-weight:500; color:rgba(255,255,255,0.85); text-decoration:none; padding:8px 0; }
       .nav-mobile a.active { color:#fff; }
       .pg-hero { padding:56px 20px 28px; }
-      .pg-title { font-size:44px; }
-      .folder-wrap { padding:12px 20px 48px; }
-      .folder-tabs-row { flex-wrap:wrap; padding:0 12px; top:10px; gap:4px; }
+      .pg-folder-strip { padding:32px 20px 56px; }
+      .folder-tabs-row { flex-wrap:wrap; gap:4px; }
       .folder-tab { font-size:11.5px; padding:11px 14px 18px; }
       .folder-tab.is-active { padding-bottom:22px; }
-      .folder-body { padding:32px 22px; min-height:320px; margin:0 6px 6px; border-radius:0 16px 16px 16px; }
-      .folder-panel h2 { font-size:28px; }
+      .folder-body { border-radius:0 16px 16px 16px; }
       footer { padding:40px 20px 32px; }
       .footer-links { gap:16px; }
     }
@@ -117,39 +109,36 @@
 <div class="page-wrap">
 
   <section class="pg-hero">
-    <span class="pg-eyebrow">And what else?</span>
-    <h1 class="pg-title">playground.</h1>
-    <p class="pg-subtitle">A peek into the other work I keep making outside of case-study land: freelance content production, UX research explorations, and the design journal I keep for myself. Full write-ups live in each tab below.</p>
+    <span class="pg-eyebrow">OTHER WORK I HAVE DONE</span>
+    <h1 class="pg-title">playground</h1>
+    <p class="pg-subtitle">What else do I do? UX research explorations, freelance content, a running design journal, and a lot of time spent in communities and activities that keep me growing as a designer.</p>
   </section>
 
-  <div class="folder-wrap">
-    <div class="folder">
+  <div class="pg-folder-strip">
+    <div class="pg-folder">
       <div class="folder-tabs-row" role="tablist">
-        <button class="folder-tab is-active" role="tab" aria-selected="true" data-tab="dcp">Digital Content Producer</button>
-        <button class="folder-tab" role="tab" aria-selected="false" data-tab="uxr">UX Research Projects</button>
+        <button class="folder-tab is-active" role="tab" aria-selected="true" data-tab="uxr">UX Research Projects</button>
+        <button class="folder-tab" role="tab" aria-selected="false" data-tab="dcp">Digital Content Producer</button>
         <button class="folder-tab" role="tab" aria-selected="false" data-tab="journal">Design Journal</button>
       </div>
       <div class="folder-body">
-        <div class="folder-panel is-shown" data-panel="dcp" role="tabpanel">
-          <span class="panel-sub">Freelance · Content Strategy</span>
-          <h2>Digital Content Producer</h2>
-          <p>Freelance content strategy and production for three brands: <strong>The Million</strong>, <strong>The Nuu Moon</strong>, and <strong>Tiffany G'lam Pro</strong>. Grew each following by at least 20% and planned a three-day public event for The Million that drew 200+ vendors and 1,000+ attendees.</p>
-          <span class="placeholder-note">Playground content coming soon — for now, the full case study lives on its own page.</span>
-          <a class="folder-cta" href="dcp.html">Open the full case <span class="arrow">→</span></a>
+        <div class="folder-panel is-shown" data-panel="uxr" role="tabpanel">
+          <div class="folder-embed-wrap">
+            <iframe data-src="uxresearch.html?embed=1" class="folder-embed" title="UX Research Projects"></iframe>
+            <div class="folder-embed-loading"><span>Loading UX Research Projects…</span></div>
+          </div>
         </div>
-        <div class="folder-panel" data-panel="uxr" role="tabpanel">
-          <span class="panel-sub">Research · Field & Usability</span>
-          <h2>UX Research Projects</h2>
-          <p>Field research and usability analysis across three engagements: <strong>Ethnote</strong> (mobile ethnographic notes), <strong>JOLO AI</strong> (early-stage founder validation), and <strong>Toyota Center</strong> (venue wayfinding study). Includes protocols, findings, and how the design recommendations landed.</p>
-          <span class="placeholder-note">Playground content coming soon — for now, the full case study lives on its own page.</span>
-          <a class="folder-cta" href="uxresearch.html">Open the full case <span class="arrow">→</span></a>
+        <div class="folder-panel" data-panel="dcp" role="tabpanel">
+          <div class="folder-embed-wrap">
+            <iframe data-src="dcp.html?embed=1" class="folder-embed" title="Digital Content Producer"></iframe>
+            <div class="folder-embed-loading"><span>Loading Digital Content Producer…</span></div>
+          </div>
         </div>
         <div class="folder-panel" data-panel="journal" role="tabpanel">
-          <span class="panel-sub">Personal · Graphic Design & Art</span>
-          <h2>Design Journal</h2>
-          <p>Graphic design, branding studies, and visual art I've made outside of professional work: Studio Ghibli tributes, Yoasobi album covers, Digifest posters, and the occasional pencil sketch. A place for the stuff that doesn't fit in a case study.</p>
-          <span class="placeholder-note">Playground content coming soon — for now, the full journal lives on its own page.</span>
-          <a class="folder-cta" href="journal.html">Open the full journal <span class="arrow">→</span></a>
+          <div class="folder-embed-wrap">
+            <iframe data-src="journal.html?embed=1" class="folder-embed" title="Design Journal"></iframe>
+            <div class="folder-embed-loading"><span>Loading Design Journal…</span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -171,6 +160,42 @@
 <div id="cring"></div>
 
 <script>
+  /* ── Iframe lazy-load + auto-resize ── */
+  function resizeIframe(iframe) {
+    try {
+      const doc = iframe.contentDocument;
+      if (!doc || !doc.body) return;
+      const h = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight, 600);
+      iframe.style.height = (h + 20) + 'px';
+    } catch (e) { /* ignore */ }
+  }
+
+  const iframeObservers = new WeakMap();
+
+  function loadTabIframe(panel) {
+    const iframe = panel.querySelector('iframe.folder-embed');
+    const loader = panel.querySelector('.folder-embed-loading');
+    if (!iframe) return;
+    if (!iframe.getAttribute('src') && iframe.dataset.src) {
+      if (loader) loader.classList.add('is-visible');
+      iframe.setAttribute('src', iframe.dataset.src);
+      iframe.addEventListener('load', () => {
+        resizeIframe(iframe);
+        if (loader) loader.classList.remove('is-visible');
+        try {
+          const ro = new ResizeObserver(() => resizeIframe(iframe));
+          ro.observe(iframe.contentDocument.body);
+          iframeObservers.set(iframe, ro);
+        } catch (e) { /* ignore */ }
+        // Occasional recheck for late-rendered content (fonts, images)
+        setTimeout(() => resizeIframe(iframe), 400);
+        setTimeout(() => resizeIframe(iframe), 1200);
+      });
+    } else {
+      setTimeout(() => resizeIframe(iframe), 60);
+    }
+  }
+
   /* Tabs */
   document.querySelectorAll('.folder-tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -181,9 +206,17 @@
         t.setAttribute('aria-selected', String(active));
       });
       document.querySelectorAll('.folder-panel').forEach(p => {
-        p.classList.toggle('is-shown', p.dataset.panel === key);
+        const shown = p.dataset.panel === key;
+        p.classList.toggle('is-shown', shown);
+        if (shown) loadTabIframe(p);
       });
     });
+  });
+
+  /* Load the initially active tab's iframe */
+  document.addEventListener('DOMContentLoaded', () => {
+    const activePanel = document.querySelector('.folder-panel.is-shown');
+    if (activePanel) loadTabIframe(activePanel);
   });
 
   /* Mobile nav */
