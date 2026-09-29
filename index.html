@@ -309,8 +309,8 @@ void main() {
       color: #fefefe; margin-bottom: 28px;
     }
 
-    /* Scroll reveal */
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.72s cubic-bezier(0.16, 1, 0.3, 1), transform 0.72s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform; }
+    /* Scroll reveal — repeats on scroll away + return */
+    .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.95s cubic-bezier(0.22, 1, 0.36, 1), transform 0.95s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform; }
     .reveal.is-revealed { opacity: 1; transform: translateY(0); }
     @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
@@ -521,6 +521,7 @@ void main() {
     <a href="#" class="logo">k.l&#234;</a>
     <div class="nav-links">
       <a href="#projects" class="active">Work</a>
+      <a href="playground.html">Playground</a>
       <a href="about.html">About</a>
       <a href="https://www.dropbox.com/scl/fi/xgbnkxe5gx43fwqydfz30/Kathlyn-Le-Resume.pdf?rlkey=9aznfdszl2gtrf9pr0js8mzw6&st=fai9iziw&dl=0" target="_blank" rel="noopener">Resume</a>
     </div>
@@ -528,6 +529,7 @@ void main() {
   </nav>
   <div class="nav-mobile" id="nav-mobile">
     <a href="#projects" class="active">Work</a>
+    <a href="playground.html">Playground</a>
     <a href="about.html">About</a>
     <a href="https://www.dropbox.com/scl/fi/xgbnkxe5gx43fwqydfz30/Kathlyn-Le-Resume.pdf?rlkey=9aznfdszl2gtrf9pr0js8mzw6&st=fai9iziw&dl=0" target="_blank" rel="noopener">Resume</a>
   </div>
@@ -606,39 +608,6 @@ void main() {
       </a>
     </div>
 
-    <!-- Row 3: 1fr + 1fr + 1fr -->
-    <div class="row-3">
-      <a href="dcp.html" class="card" style="background:#c4c4e0;">
-        <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643368/portfolio/images/gradients/gradient-5.png" class="card-bg" alt="" />
-        <div class="card-thumb-wrap" style="align-items:flex-end;padding:0 10px 0;"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643351/portfolio/images/thumbnail-pngs/icons-png.png" class="card-thumb card-thumb-sphere" alt="" style="max-width:108%;max-height:108%;margin-bottom:-30px;" /></div>
-        <div class="card-info">
-          <div class="card-info-left">
-            <span class="card-info-title">Digital Content Producer</span>
-            <span class="card-info-sub">The Million &#x2726; The Nuu Moon &#x2726; Tiffany G'lam Pro</span>
-          </div>
-          <span class="card-info-right">Freelance</span>
-        </div>
-      </a>
-      <a href="uxresearch.html" class="card" style="background:#f06050;">
-        <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643368/portfolio/images/gradients/gradient-6.png" class="card-bg" alt="" />
-        <div class="card-thumb-wrap"><img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643357/portfolio/images/thumbnail-pngs/uxr-png.png" class="card-thumb" alt="" style="max-width:200%;max-height:200%;" /></div>
-        <div class="card-info">
-          <div class="card-info-left">
-            <span class="card-info-title">UX Research Projects</span>
-            <span class="card-info-sub">Ethnote &#x2726; JOLO AI &#x2726; Toyota Center</span>
-          </div>
-        </div>
-      </a>
-      <a href="journal.html" class="card" style="background:#dedcda;">
-        <img src="https://res.cloudinary.com/dzuzsoi1i/image/upload/v1779643365/portfolio/images/root/yoasobi-album-cover.jpg" alt="My Design Journal" style="object-fit: cover; object-position: center; width: 100%; height: 100%;" />
-        <div class="card-info">
-          <div class="card-info-left">
-            <span class="card-info-title">My Design Journal</span>
-            <span class="card-info-sub">Graphic Design &#x2726; Branding Design &#x2726; Various Art I Created</span>
-          </div>
-        </div>
-      </a>
-    </div>
   </section>
 
   <!-- FOOTER -->
@@ -702,14 +671,13 @@ void main() {
       }, { threshold: 0 }).observe(footerEl);
     }
 
-    /* SCROLL REVEAL — fade + lift for content as it enters the viewport */
+    /* SCROLL REVEAL — fade + lift as content enters/leaves viewport (re-triggers) */
     (function () {
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const revealSelectors = [
         '.projects-eyebrow',
         '#projects .row-1 > .card',
         '#projects .row-2 > .card',
-        '#projects .row-3 > .card',
         'footer .footer-heading',
         'footer .footer-links',
         'footer .footer-copy'
@@ -718,16 +686,13 @@ void main() {
       if (prefersReduced) { revealTargets.forEach(el => el.classList.add('is-revealed', 'reveal')); return; }
       revealTargets.forEach((el, i) => {
         el.classList.add('reveal');
-        el.style.transitionDelay = Math.min(i * 60, 240) + 'ms';
+        el.style.transitionDelay = Math.min(i * 70, 280) + 'ms';
       });
       const io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-revealed');
-            io.unobserve(entry.target);
-          }
+          entry.target.classList.toggle('is-revealed', entry.isIntersecting);
         });
-      }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+      }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
       revealTargets.forEach(el => io.observe(el));
     })();
 
