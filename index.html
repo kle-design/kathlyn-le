@@ -309,6 +309,11 @@ void main() {
       color: #fefefe; margin-bottom: 28px;
     }
 
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.72s cubic-bezier(0.16, 1, 0.3, 1), transform 0.72s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform; }
+    .reveal.is-revealed { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
     /* Card grid rows */
     .row-1 {
       display: grid; grid-template-columns: 2fr 1fr;
@@ -696,6 +701,35 @@ void main() {
         homeEl.style.pointerEvents = entry.isIntersecting ? 'none' : '';
       }, { threshold: 0 }).observe(footerEl);
     }
+
+    /* SCROLL REVEAL — fade + lift for content as it enters the viewport */
+    (function () {
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const revealSelectors = [
+        '.projects-eyebrow',
+        '#projects .row-1 > .card',
+        '#projects .row-2 > .card',
+        '#projects .row-3 > .card',
+        'footer .footer-heading',
+        'footer .footer-links',
+        'footer .footer-copy'
+      ];
+      const revealTargets = document.querySelectorAll(revealSelectors.join(','));
+      if (prefersReduced) { revealTargets.forEach(el => el.classList.add('is-revealed', 'reveal')); return; }
+      revealTargets.forEach((el, i) => {
+        el.classList.add('reveal');
+        el.style.transitionDelay = Math.min(i * 60, 240) + 'ms';
+      });
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+      revealTargets.forEach(el => io.observe(el));
+    })();
 
     /* SCROLL ARROW — fades as user scrolls */
     const scrollArrow = document.getElementById('scroll-arrow');

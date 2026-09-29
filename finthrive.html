@@ -187,10 +187,17 @@
     .dark-strip .design-bullets li::before { color:rgba(242,244,248,0.55); }
     .dark-strip .design-bullets strong { color:#f2f4f8; }
     .dark-strip .cs-subheading { color:#f2f4f8; margin-top:0; }
-    .dark-strip-nested { padding:44px 44px 48px !important; margin:52px 0 !important; border-radius:24px !important; }
+    /* Nested dark-strip: break out of parent padding to span full viewport width, matching Impact's visual weight */
+    .dark-strip-nested { width:100vw !important; margin-left:calc(-50vw + 50%) !important; margin-right:0 !important; margin-top:56px !important; margin-bottom:56px !important; padding:52px 20% 64px !important; border-radius:40px !important; box-sizing:border-box; }
     .dark-strip-2col { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
     .dark-strip-2col > div > .cs-subheading:first-child { margin-top:0; }
-    @media (max-width:900px) { .dark-strip-2col { grid-template-columns:1fr; gap:32px; } .dark-strip-nested { padding:32px 24px 36px !important; } }
+    /* Sub-cards for dark-strip subsections (styled like Impact's stat-cards) */
+    .sub-cards { display:flex; flex-direction:column; gap:14px; margin-top:22px; }
+    .sub-card { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:20px 22px; font-size:14px; line-height:1.7; color:rgba(242,244,248,0.88); }
+    .sub-card strong { color:#f2f4f8; font-weight:700; }
+    .sub-card + .sub-card { margin-top:0; }
+    .dark-strip .sub-cards + p, .dark-strip .sub-cards { margin-top:20px; }
+    @media (max-width:900px) { .dark-strip-2col { grid-template-columns:1fr; gap:36px; } .dark-strip-nested { padding:36px 5% 44px !important; border-radius:20px !important; margin-top:32px !important; margin-bottom:32px !important; } }
     .reflect-heading { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(22px,2.8vw,36px); font-weight:700; color:#f2f4f8; letter-spacing:-0.03em; line-height:1.15; margin-bottom:24px; max-width:680px; }
 
     /* ── Impact dark strip stat cards ── */
@@ -370,36 +377,63 @@
         <h3 class="cs-subheading">Who was struggling, and why</h3>
         <p class="sec-body">Revenue cycle analysts and platform admins used this screen every day to check claim statuses, track denial trends across payers, drill into individual claims, and export filtered views for their teams. In the incumbent dashboard, filters were long and hard to remember, the hierarchy was inconsistent, comparing payers required visual gymnastics, and drilling into a claim broke context. Every second of friction added up: unworked denied claims are lost revenue for the hospital, and analysts are measured on how fast they can move through their queue.</p>
 
-        <figure class="ft-inline"><div class="figjam-placeholder">
-              <div class="fj-header">
-                <div class="fj-dots"><span class="rd"></span><span class="yl"></span><span class="gn"></span></div>
-                <span class="fj-title">FigJam: Claims Dashboard Brainstorm</span>
+        <figure class="ft-inline">
+          <div class="figjam-placeholder">
+            <div class="fj-header">
+              <div class="fj-dots"><span class="rd"></span><span class="yl"></span><span class="gn"></span></div>
+              <span class="fj-title">FigJam: Claims Dashboard Brainstorm</span>
+            </div>
+            <div class="fj-board">
+              <div class="fj-col">
+                <div class="fj-col-head">User Pain Points</div>
+                <div class="sticky pink">Hard to find specific claim status</div>
+                <div class="sticky pink">Too many filter options</div>
+                <div class="sticky pink">Confusing data hierarchy</div>
+                <div class="sticky pink">Can't compare payer data easily</div>
               </div>
-              <div class="fj-board">
-                <div class="fj-col">
-                  <div class="fj-col-head">User Pain Points</div>
-                  <div class="sticky pink">Hard to find specific claim status</div>
-                  <div class="sticky pink">Too many filter options</div>
-                  <div class="sticky pink">Confusing data hierarchy</div>
-                  <div class="sticky pink">Can't compare payer data easily</div><figcaption class="ft-caption">FigJam board — mapping user pain points, goals, design decisions, and technical constraints before any screen work started.</figcaption></figure>
+              <div class="fj-col">
+                <div class="fj-col-head">User Goals</div>
+                <div class="sticky yellow">Quick claim status checks</div>
+                <div class="sticky yellow">Track denial trends over time</div>
+                <div class="sticky yellow">Drill into specific claims</div>
+                <div class="sticky yellow">Export and share filtered data</div>
+              </div>
+              <div class="fj-col">
+                <div class="fj-col-head">Design Decisions</div>
+                <div class="sticky green">Clear visual hierarchy</div>
+                <div class="sticky green">Summary cards at top</div>
+                <div class="sticky green">Smart persistent filters</div>
+                <div class="sticky green">Color-coded status badges</div>
+              </div>
+              <div class="fj-col">
+                <div class="fj-col-head">Constraints</div>
+                <div class="sticky blue">Power BI limitations</div>
+                <div class="sticky blue">Existing data models</div>
+                <div class="sticky blue">Custom interaction limits</div>
+                <div class="sticky blue">Dynamic layout constraints</div>
+              </div>
+            </div>
+          </div>
+          <figcaption class="ft-caption">FigJam board — mapping user pain points, goals, design decisions, and technical constraints before any screen work started.</figcaption>
+        </figure>
 
         <div class="dark-strip dark-strip-nested dark-strip-2col">
           <div>
             <h3 class="cs-subheading">My role and where I collaborated</h3>
             <p class="sec-body">I paired with another product designer on this project from the FigJam kickoff through the fully built prototype. Rough ownership split:</p>
-            <ul class="design-bullets">
-              <li><strong>What I owned:</strong> interaction design for the filter system, the drill-through pattern, and the tradeoff calls documented below.</li>
-              <li><strong>What we co-owned:</strong> the FigJam sessions where we mapped user pain points and goals against Power BI constraints, plus every upstream design decision.</li>
-              <li><strong>What engineering owned:</strong> technical implementation and the Power BI plumbing.</li>
-            </ul>
+            <div class="sub-cards">
+              <div class="sub-card"><strong>What I owned:</strong> interaction design for the filter system, the drill-through pattern, and the tradeoff calls documented below.</div>
+              <div class="sub-card"><strong>What we co-owned:</strong> the FigJam sessions where we mapped user pain points and goals against Power BI constraints, plus every upstream design decision.</div>
+              <div class="sub-card"><strong>What engineering owned:</strong> technical implementation and the Power BI plumbing.</div>
+            </div>
           </div>
           <div>
             <h3 class="cs-subheading">How I approached it</h3>
-            <ul class="design-bullets">
-              <li><strong>Defined core user flows</strong> for how analysts navigate filters, drill into claims, and compare payer data, all grounded in real behavior surfaced in the FigJam sessions rather than what looked clean on paper.</li>
-              <li><strong>Iterated through multiple feedback cycles</strong> with design and engineering, surfacing Power BI constraints that forced us to rethink filter and drill-down interaction patterns midway through.</li>
-              <li><strong>Balanced ideal UX against technical feasibility</strong> at every round, so the final prototype was both practical for engineering to build and aligned with the user needs we mapped at the start.</li>
-            </ul>
+            <div class="sub-cards">
+              <div class="sub-card"><strong>Defined core user flows</strong> for how analysts navigate filters, drill into claims, and compare payer data, all grounded in real behavior surfaced in the FigJam sessions rather than what looked clean on paper.</div>
+              <div class="sub-card"><strong>Iterated through multiple feedback cycles</strong> with design and engineering, surfacing Power BI constraints that forced us to rethink filter and drill-down interaction patterns midway through.</div>
+              <div class="sub-card"><strong>Balanced ideal UX against technical feasibility</strong> at every round, so the final prototype was both practical for engineering to build and aligned with the user needs we mapped at the start.</div>
+            </div>
           </div>
         </div>
 
@@ -594,11 +628,11 @@
     <span class="sec-label">Reflection</span>
     <h2 class="reflect-heading">the best design work happens inside systems you didn't build</h2>
     <p class="sec-body">FinThrive was working inside a system that already existed: legacy patterns, established components, real users, teams who had been shipping the product for years. Turns out that's most of what design work actually is. Learning to improve something without breaking what already works is a harder, more valuable skill than starting from scratch.</p>
-    <ul class="design-bullets" style="margin-top:22px;">
-      <li><strong>The Dallas week made the difference.</strong> Being on-site for a week let me sit in real meetings and learn from experienced designers and product leaders in person. It shaped how I think about design work in ways a fully remote internship never could have.</li>
-      <li><strong>The extension was the real outcome.</strong> The internship was extended past its original term because the work was useful. That's the best signal I could have asked for that I'm ready for enterprise product design.</li>
-      <li><strong>Density is a feature, not a bug.</strong> Dense enterprise interfaces exist because people spend hours inside them and need everything within glance distance. That's the kind of work I want to keep building: tools where speed, density, and clarity all have to coexist for people whose day depends on the screen in front of them.</li>
-    </ul>
+    <div class="sub-cards" style="margin-top:24px;">
+      <div class="sub-card"><strong>The Dallas week made the difference.</strong> Being on-site for a week let me sit in real meetings and learn from experienced designers and product leaders in person. It shaped how I think about design work in ways a fully remote internship never could have.</div>
+      <div class="sub-card"><strong>The extension was the real outcome.</strong> The internship was extended past its original term because the work was useful. That's the best signal I could have asked for that I'm ready for enterprise product design.</div>
+      <div class="sub-card"><strong>Density is a feature, not a bug.</strong> Dense enterprise interfaces exist because people spend hours inside them and need everything within glance distance. That's the kind of work I want to keep building: tools where speed, density, and clarity all have to coexist for people whose day depends on the screen in front of them.</div>
+    </div>
   </div>
 
 </div>
