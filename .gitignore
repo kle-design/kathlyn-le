@@ -36,6 +36,7 @@ fix-sttr-thumb.mjs
 cloudinary-new-dashboards-map.json
 restructure-ft-claims.mjs
 rewrite-ft-copy.mjs
+rewrite-ft-round2.mjs
 cloudinary-polaroids-map.json
 cloudinary-missed-map.json
 cloudinary-map.json
