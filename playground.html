@@ -36,22 +36,22 @@
     .pg-title { font-family:'JayaGiri','Quicksand',sans-serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:#333; letter-spacing:-0.05em; line-height:1.0; margin-bottom:28px; }
     .pg-subtitle { font-family:'Quicksand',sans-serif; font-size:clamp(16px,1.4vw,18px); font-weight:500; color:#555; line-height:1.7; max-width:720px; }
 
-    /* ── Folder strip: dark background matches .dark-strip padding used on other pages ── */
-    .pg-folder-strip { background:#333; padding:44px 44px 44px; margin:24px 20% 72px; border-radius:32px; box-shadow:0 24px 60px rgba(0,0,0,0.14),0 8px 20px rgba(0,0,0,0.08); }
+    /* ── Folder strip: dark, full-width, tabs stay inset to the 20% container ── */
+    .pg-folder-strip { background:#333; padding:52px 20% 0; margin:24px 0 0; }
     .pg-folder { position:relative; }
-    /* Tabs stay inside the main container inset */
     .folder-tabs-row { display:flex; gap:6px; padding:0; position:relative; z-index:2; }
     .folder-tab { background:rgba(255,255,255,0.14); border:none; font-family:'Quicksand',sans-serif; font-size:13px; font-weight:600; color:rgba(255,255,255,0.82); letter-spacing:0.02em; padding:14px 22px 22px; border-radius:12px 12px 0 0; cursor:none; transition:background 0.28s cubic-bezier(0.22,1,0.36,1), color 0.28s cubic-bezier(0.22,1,0.36,1); position:relative; }
     .folder-tab:hover { background:rgba(255,255,255,0.28); color:#fff; }
-    .folder-tab.is-active { background:#f2f4f8; color:#333; padding-bottom:26px; z-index:3; box-shadow:0 -8px 24px rgba(0,0,0,0.10); }
-    /* Folder body breaks out to the full viewport edge, flush with screen sides */
-    .folder-body { background:#f2f4f8; overflow:hidden; margin-top:-2px; border-radius:0 14px 14px 14px; box-shadow:0 8px 24px rgba(0,0,0,0.15); }
+    /* Active tab now matches the dark folder body (inverted from the previous light active state) */
+    .folder-tab.is-active { background:#2a2a2a; color:#f2f4f8; padding-bottom:26px; z-index:3; box-shadow:0 -8px 24px rgba(0,0,0,0.18); }
+    /* Folder body: dark bg, full viewport edge to edge — iframe rides inside with its own light page content */
+    .folder-body { background:#2a2a2a; overflow:hidden; margin-top:-2px; width:100vw; margin-left:calc(-50vw + 50%); border-radius:0; box-shadow:0 12px 28px rgba(0,0,0,0.18); }
     .folder-panel { display:none; }
     .folder-panel.is-shown { display:block; }
     .folder-embed-wrap { position:relative; min-height:600px; }
-    .folder-embed { width:100%; min-height:600px; border:none; display:block; background:#f2f4f8; scrollbar-width:none; -ms-overflow-style:none; overflow:hidden; }
+    .folder-embed { width:100%; min-height:600px; border:none; display:block; background:#2a2a2a; scrollbar-width:none; -ms-overflow-style:none; overflow:hidden; }
     .folder-embed::-webkit-scrollbar { display:none; width:0; height:0; }
-    .folder-embed-loading { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; background:#f2f4f8; color:#555; font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; pointer-events:none; opacity:0; transition:opacity 0.2s ease; }
+    .folder-embed-loading { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; background:#2a2a2a; color:rgba(242,244,248,0.7); font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; pointer-events:none; opacity:0; transition:opacity 0.2s ease; }
     .folder-embed-loading.is-visible { opacity:1; }
 
     /* ── Footer ── */
@@ -71,7 +71,7 @@
     @media (max-width:1024px) {
       nav { padding:0 5%; }
       .pg-hero { padding:72px 5% 32px; }
-      .pg-folder-strip { padding:32px 24px 32px; margin:20px 5% 48px; border-radius:24px; }
+      .pg-folder-strip { padding:44px 5% 0; margin:20px 0 0; }
       footer { padding:52px 5% 36px; }
     }
     @media (max-width:768px) {
@@ -85,7 +85,7 @@
       .nav-mobile a { font-family:'Quicksand',sans-serif; font-size:15px; font-weight:500; color:rgba(255,255,255,0.85); text-decoration:none; padding:8px 0; }
       .nav-mobile a.active { color:#fff; }
       .pg-hero { padding:56px 20px 28px; }
-      .pg-folder-strip { padding:24px 16px 24px; margin:16px 12px 32px; border-radius:20px; }
+      .pg-folder-strip { padding:32px 20px 0; margin:16px 0 0; }
       .folder-tabs-row { flex-wrap:wrap; gap:4px; }
       .folder-tab { font-size:11.5px; padding:11px 14px 18px; }
       .folder-tab.is-active { padding-bottom:22px; }
