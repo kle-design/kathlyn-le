@@ -173,7 +173,7 @@ void main() {
     .folder-tab:hover { background:rgba(255,255,255,0.85); color:#333; }
     .folder-tab.is-active { background:#f2f4f8; color:#333; padding-bottom:26px; z-index:3; box-shadow:0 -8px 24px rgba(0,0,0,0.10); }
     /* Folder body breaks out to the full viewport edge, flush with screen sides */
-    .folder-body { background:#f2f4f8; overflow:hidden; margin-top:-2px; width:100vw; margin-left:calc(-50vw + 50%); border-radius:0; box-shadow:0 16px 44px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08), 0 -16px 44px rgba(0,0,0,0.14), 0 -4px 12px rgba(0,0,0,0.08); }
+    .folder-body { background:#f2f4f8; overflow:hidden; margin-top:-2px; width:100vw; margin-left:calc(-50vw + 50%); border-radius:40px; box-shadow:0 16px 44px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08), 0 -16px 44px rgba(0,0,0,0.14), 0 -4px 12px rgba(0,0,0,0.08); }
     .folder-panel { display:none; }
     .folder-panel.is-shown { display:block; }
     .folder-embed-wrap { position:relative; min-height:600px; }
@@ -200,6 +200,7 @@ void main() {
       nav { padding:0 5%; }
       .pg-hero { padding:72px 5% 32px; }
       .pg-folder-strip { padding:44px 5% 0; }
+      .folder-body { border-radius:28px; }
       footer { padding:52px 5% 36px; }
     }
     @media (max-width:768px) {
@@ -214,6 +215,7 @@ void main() {
       .nav-mobile a.active { color:#fff; }
       .pg-hero { padding:56px 20px 28px; }
       .pg-folder-strip { padding:32px 20px 0; }
+      .folder-body { border-radius:20px; }
       .folder-tabs-row { flex-wrap:wrap; gap:4px; }
       .folder-tab { font-size:11.5px; padding:11px 14px 18px; }
       .folder-tab.is-active { padding-bottom:22px; }
