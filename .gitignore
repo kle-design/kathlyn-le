@@ -42,6 +42,7 @@ round5.mjs
 add-embed-mode.mjs
 port-webgl-to-playground.mjs
 sweep-a11y.mjs
+darken-cursor.mjs
 .impeccable/
 cloudinary-polaroids-map.json
 cloudinary-missed-map.json
