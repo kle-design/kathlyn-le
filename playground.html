@@ -99,15 +99,10 @@ void main() {
   <style>
     @font-face { font-family:'JayaGiri'; src:url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype'); }
 
-    /* WebGL fluid animation background (ported from homepage) */
-    /* Fallback gradient behind the canvas so pixel edge cases never expose stark white */
-    #bg {
-      position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0;
-      background: linear-gradient(135deg, #8a90a0 0%, #b4bac6 35%, #d0d5de 70%, #e8ebf0 100%);
-    }
+    /* WebGL fluid animation background (ported from homepage) — no fallback color; only the animated canvas paints behind content */
+    #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; background: transparent; }
     #bg canvas { display: block; width: 100%; height: 100%; }
-    /* Body itself carries a fixed-attachment matching gradient so the animation palette is visible behind every scroll region — a defensive backdrop if the WebGL canvas ever fails to fully cover a pixel */
-    body { background: linear-gradient(135deg, #8a90a0 0%, #b4bac6 30%, #d0d5de 65%, #e8ebf0 100%) fixed !important; }
+    body { background: transparent !important; }
 
     #grain {
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
