@@ -310,7 +310,7 @@ void main() {
     }
 
     /* Scroll reveal — repeats on scroll away + return */
-    .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.95s cubic-bezier(0.22, 1, 0.36, 1), transform 0.95s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform; }
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform; }
     .reveal.is-revealed { opacity: 1; transform: translateY(0); }
     @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
@@ -686,13 +686,13 @@ void main() {
       if (prefersReduced) { revealTargets.forEach(el => el.classList.add('is-revealed', 'reveal')); return; }
       revealTargets.forEach((el, i) => {
         el.classList.add('reveal');
-        el.style.transitionDelay = Math.min(i * 70, 280) + 'ms';
+        el.style.transitionDelay = Math.min(i * 25, 90) + 'ms';
       });
       const io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           entry.target.classList.toggle('is-revealed', entry.isIntersecting);
         });
-      }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
+      }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
       revealTargets.forEach(el => io.observe(el));
     })();
 
