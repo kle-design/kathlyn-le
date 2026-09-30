@@ -118,12 +118,16 @@ void main() {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.90' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='70' height='70' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 70px 70px; opacity: .06; mix-blend-mode: multiply;
     }
-    /* Make body transparent so #bg shows through the whole page */
+    /* Make body + wrappers transparent so #bg shows through the whole page (including behind hero + footer) */
+    html { background:transparent; }
     body { background:transparent !important; }
+    .page-wrap { background:transparent; }
+    .pg-hero { background:transparent; }
+    footer { background:transparent; }
 
     *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
     html { scroll-behavior:smooth; }
-    body { font-family:'Quicksand',sans-serif; background:#f2f4f8; color:#333; overflow-y:auto; overflow-x:hidden; cursor:none; }
+    body { font-family:'Quicksand',sans-serif; color:#333; overflow-y:auto; overflow-x:hidden; cursor:none; }
 
     /* ── Nav ── */
     nav { position:fixed; top:0; left:0; right:0; z-index:35; display:flex; align-items:center; justify-content:space-between; padding:0 20%; height:54px; background:rgba(51,51,51,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
