@@ -99,10 +99,22 @@ void main() {
   <style>
     @font-face { font-family:'JayaGiri'; src:url('brand_assets/JA JayaGiri-Sans.ttf') format('truetype'); }
 
-    /* WebGL fluid animation background — absolute + full page height so the animation covers hero + tabs + footer regions equally (fixed positioning only lived in the viewport, leaving screenshots white outside the current scroll strip) */
-    #bg { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; background: transparent; pointer-events: none; }
+    /* Animated gradient backdrop — CSS-only, always visible behind every scroll region, animates on its own so no static "white block" appears anywhere on the page */
+    @keyframes fluidBg {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    body {
+      background: linear-gradient(135deg, #8a90a0 0%, #b4bac6 25%, #d0d5de 50%, #e8ebf0 75%, #b4bac6 100%) !important;
+      background-size: 300% 300%;
+      background-attachment: fixed;
+      animation: fluidBg 28s ease-in-out infinite;
+      min-height: 100vh;
+    }
+    /* WebGL fluid canvas rides on top of the gradient as extra polish */
+    #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; background: transparent; pointer-events: none; }
     #bg canvas { display: block; width: 100%; height: 100%; }
-    body { background: transparent !important; position: relative; }
 
     #grain {
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
@@ -506,34 +518,7 @@ void main() {
     let raf = null;
     window.addEventListener('resize', () => {
       if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => { fitBgToPage(); });
-    });
-
-    // Size #bg to the full page height (not just viewport). Measures from footer's actual bottom so #bg's own size never contaminates the measurement.
-    function fitBgToPage() {
-      const footer = document.querySelector('footer');
-      const pageHeight = footer
-        ? Math.max(footer.offsetTop + footer.offsetHeight, window.innerHeight)
-        : Math.max(document.body.scrollHeight, window.innerHeight);
-      el.style.height = pageHeight + 'px';
-      resize();
-    }
-
-    // Initial fit + refits on load, iframe loads (which grow the page), and tab switches
-    window.addEventListener('load', () => fitBgToPage());
-    setTimeout(fitBgToPage, 200);
-    setTimeout(fitBgToPage, 1000);
-    document.querySelectorAll('iframe.folder-embed').forEach(iframe => {
-      iframe.addEventListener('load', () => {
-        setTimeout(fitBgToPage, 300);
-        setTimeout(fitBgToPage, 1500);
-      });
-    });
-    document.querySelectorAll('.folder-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        setTimeout(fitBgToPage, 200);
-        setTimeout(fitBgToPage, 800);
-      });
+      raf = requestAnimationFrame(resize);
     });
   </script>
 
