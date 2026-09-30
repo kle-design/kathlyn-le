@@ -149,15 +149,16 @@ void main() {
     .pg-folder { position:relative; }
     /* Tabs stay inside the main container inset */
     .folder-tabs-row { display:flex; gap:6px; padding:0; position:relative; z-index:2; }
-    .folder-tab { background:rgba(242,244,248,0.42); border:none; font-family:'Quicksand',sans-serif; font-size:13px; font-weight:600; color:#f2f4f8; letter-spacing:0.02em; padding:14px 22px 22px; border-radius:12px 12px 0 0; cursor:none; transition:background 0.28s cubic-bezier(0.22,1,0.36,1), color 0.28s cubic-bezier(0.22,1,0.36,1); position:relative; }
-    .folder-tab:hover { background:rgba(242,244,248,0.85); color:#333; }
-    .folder-tab.is-active { background:#f2f4f8; color:#333; padding-bottom:26px; z-index:3; }
-    /* Folder body breaks out to full viewport width (edge-to-edge band under the tabs) */
-    .folder-body { background:#f2f4f8; overflow:hidden; margin-top:-2px; width:calc(100vw - 32px); margin-left:calc(-50vw + 50% + 16px); border-radius:24px; box-shadow:0 16px 44px rgba(0,0,0,0.14),0 4px 12px rgba(0,0,0,0.08); }
+    .folder-tab { background:rgba(255,255,255,0.55); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border:none; font-family:'Quicksand',sans-serif; font-size:13px; font-weight:600; color:#555; letter-spacing:0.02em; padding:14px 22px 22px; border-radius:12px 12px 0 0; cursor:none; transition:background 0.28s cubic-bezier(0.22,1,0.36,1), color 0.28s cubic-bezier(0.22,1,0.36,1); position:relative; box-shadow:0 -6px 18px rgba(0,0,0,0.06); }
+    .folder-tab:hover { background:rgba(255,255,255,0.85); color:#333; }
+    .folder-tab.is-active { background:#f2f4f8; color:#333; padding-bottom:26px; z-index:3; box-shadow:0 -8px 24px rgba(0,0,0,0.10); }
+    /* Folder body breaks out to the full viewport edge, flush with screen sides */
+    .folder-body { background:#f2f4f8; overflow:hidden; margin-top:-2px; width:100vw; margin-left:calc(-50vw + 50%); border-radius:0; box-shadow:0 16px 44px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08), 0 -16px 44px rgba(0,0,0,0.14), 0 -4px 12px rgba(0,0,0,0.08); }
     .folder-panel { display:none; }
     .folder-panel.is-shown { display:block; }
     .folder-embed-wrap { position:relative; min-height:600px; }
-    .folder-embed { width:100%; min-height:600px; border:none; display:block; background:#f2f4f8; }
+    .folder-embed { width:100%; min-height:600px; border:none; display:block; background:#f2f4f8; scrollbar-width:none; -ms-overflow-style:none; overflow:hidden; }
+    .folder-embed::-webkit-scrollbar { display:none; width:0; height:0; }
     .folder-embed-loading { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; background:#f2f4f8; color:#555; font-family:'Quicksand',sans-serif; font-size:14px; font-weight:500; pointer-events:none; opacity:0; transition:opacity 0.2s ease; }
     .folder-embed-loading.is-visible { opacity:1; }
 
@@ -257,19 +258,19 @@ void main() {
       <div class="folder-body">
         <div class="folder-panel is-shown" data-panel="uxr" role="tabpanel">
           <div class="folder-embed-wrap">
-            <iframe data-src="uxresearch.html?embed=1" class="folder-embed" title="UX Research Projects"></iframe>
+            <iframe data-src="uxresearch.html?embed=1" class="folder-embed" scrolling="no" title="UX Research Projects"></iframe>
             <div class="folder-embed-loading"><span>Loading UX Research Projects…</span></div>
           </div>
         </div>
         <div class="folder-panel" data-panel="dcp" role="tabpanel">
           <div class="folder-embed-wrap">
-            <iframe data-src="dcp.html?embed=1" class="folder-embed" title="Digital Content Producer"></iframe>
+            <iframe data-src="dcp.html?embed=1" class="folder-embed" scrolling="no" title="Digital Content Producer"></iframe>
             <div class="folder-embed-loading"><span>Loading Digital Content Producer…</span></div>
           </div>
         </div>
         <div class="folder-panel" data-panel="journal" role="tabpanel">
           <div class="folder-embed-wrap">
-            <iframe data-src="journal.html?embed=1" class="folder-embed" title="Design Journal"></iframe>
+            <iframe data-src="journal.html?embed=1" class="folder-embed" scrolling="no" title="Design Journal"></iframe>
             <div class="folder-embed-loading"><span>Loading Design Journal…</span></div>
           </div>
         </div>
